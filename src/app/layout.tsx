@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./ui/header";
+import { PT_Sans, PT_Serif } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const ptSans = PT_Sans({ weight: ["400"], subsets: ["latin"] });
+export const ptSerif = PT_Serif({ weight: ["400"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={ptSans.className}>
         <Header />
         {children}
       </body>
