@@ -7,7 +7,7 @@ export default function RegisterPage() {
         <div className="container max-w-[1400px] flex justify-center py-5">
           <form
             action="\"
-            className="register flex flex-col items-center justify-start gap-10 min-h-[500px] px-5 py-4 rounded-3xl bg-gradient-to-tr from-[#ff85ce33] via-[#ff00995a] to-[#ff019933] w-[40%] border-pink border"
+            className="register flex flex-col items-center justify-start gap-10 min-h-[500px] px-5 py-4 rounded-3xl bg-gradient-to-tr from-[#00b4d866] via-[#00b4d88a] to-[#00b4d866] w-[40%] border-lightblue border"
           >
             <div className={`heading pt-8 ${ptSerif.className}`} >
               <h1 className="text-3xl">Register your account</h1>
