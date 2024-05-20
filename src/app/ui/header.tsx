@@ -9,18 +9,18 @@ const links = [
 export default function Header() {
   return (
     <>
-      <header className="flex items-center justify-center">
-        <div className="container max-w-[1400px] px-20 py-3 flex justify-between">
+      <header className="flex items-center justify-center ">
+        <div className="container max-w-[1400px] px-20 py-3 flex justify-between items-center">
           <div className="logo min-w-[4rem]">
-            <p className="text-pink text-2xl">Some LOGO</p>
+            <p className="text-white text-2xl">Some LOGO</p>
           </div>
           <nav>
-            <ul className="flex justify-center gap-3">
+            <ul className="flex justify-center gap-4">
               {links.map((link) => (
                 <li key={link.href + link.label}>
                   <Link
                     href={link.href}
-                    className="text-pink text-md rounded-md border-pink border px-2 py-1 hover:border-lightblue hover:text-lightblue duration-200"
+                    className="text-white text-lg px-3 py-1 hover:border-pink hover:text-lightblue duration-200"
                   >
                     {link.label}
                   </Link>
