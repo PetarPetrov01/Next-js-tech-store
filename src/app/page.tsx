@@ -3,7 +3,7 @@ export default function Home() {
     <main className="bg-darkblue min-h-[200px] flex justify-center">
       <div className="container max-w-[1400px] px-40">
         <section className="left flex flex-col max-w-[60%] pt-32 w-[65ch]">
-          <h1 className="text-6xl text-lightblue [text-shadow:_0_0_25px_rgb(0_180_216_/0.5)]">Welcome to SmName</h1>
+          <h1 className="text-5xl text-lightblue [text-shadow:_0_0_25px_rgb(0_180_216_/0.5)]">Welcome to HR Assistant</h1>
           <p className="text-white text-2xl">
             Find your dream job or the perfect candidate here.{" "}
           </p>

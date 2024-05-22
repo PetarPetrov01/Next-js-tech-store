@@ -1,10 +1,34 @@
 import Link from "next/link";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "board", label: "Board" },
-  { href: "register", label: "Register" },
+const guestLinks = [
+  { href: "/", label: "HOME" },
+  { href: "about", label: "ABOUT" },
+  { href: "contact", label: "CONTACT US" },
+  { href: "login", label: "LOGIN" },
+  { href: "register", label: "REGISTER" },
 ];
+
+const employyLinks = [
+  { href: "/", label: "HOME" },
+  { href: "look-for-job", label: "LOOK FOR JOB" },
+  { href: "create-job", label: "CREATE JOB" },
+  { href: "about", label: "ABOUT US" },
+  { href: "contact", label: "CONTACT US" },
+  { href: "profile", label: "PROFILE" },
+]
+
+const companyLinks = [
+  { href: "/", label: "HOME" },
+  { href: "create", label: "CREATE JOBS" },
+  { href: "questionannaires", label: "CREATE QUESTIONNAIRES" },
+  { href: "contact", label: "MY STUFF" },
+  { href: "cv", label: "CV LIBRARY" },
+  { href: "profile", label: "PROFILE" },
+]
+
+
+
+
 
 export default function Header() {
   return (
@@ -12,11 +36,11 @@ export default function Header() {
       <header className="flex items-center justify-center ">
         <div className="container max-w-[1400px] px-20 py-3 flex justify-between items-center">
           <div className="logo min-w-[4rem]">
-            <p className="text-white text-2xl">Some LOGO</p>
+            <p className="text-white text-2xl">HR Assistant</p>
           </div>
           <nav>
             <ul className="flex justify-center gap-4">
-              {links.map((link) => (
+              {guestLinks.map((link) => (
                 <li key={link.href + link.label}>
                   <Link
                     href={link.href}
