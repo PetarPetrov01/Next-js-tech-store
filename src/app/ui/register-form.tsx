@@ -14,25 +14,25 @@ export default function RegisterForm({ptSerif}: {ptSerif: NextFont}) {
       <div className="input-group w-[80%]">
         <input
           type="text"
-          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-lightblue"
+          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
           placeholder="Email"
         />
       </div>
       <div className="input-group w-[80%]">
         <input
           type="password"
-          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-pink"
+          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
           placeholder="Password"
         />
       </div>
       <div className="input-group w-[80%]">
         <input
           type="password"
-          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-pink"
+          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink focus:border-0"
           placeholder="Repeat password"
         />
       </div>
-      <button className="relative w-[80%] py-1 text-xl rounded-md bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%]">
+      <button className="relative w-[80%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] hover:border-white">
         Register
       </button>
     </form>

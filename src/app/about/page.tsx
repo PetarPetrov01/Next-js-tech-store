@@ -1,7 +1,11 @@
+import { Metadata } from "next";
 import { getProds } from "../lib/data";
 
-export default async function Page() {
+export const metadata: Metadata = {
+  title: 'About',
+};
 
+export default async function Page() {
   const prods = await getProds();
 
   return (
