@@ -1,31 +1,6 @@
-import Image from "next/image";
-
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  image: string;
-  category: string[];
-  style: string;
-  dimensions: {
-    height: number;
-    width: number;
-    depth: number;
-  };
-  material: string[];
-  color: string;
-  price: number;
-  _ownerId: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+import { getProds } from "../lib/data";
 
 export default async function Page() {
-  const getProds = async (): Promise<Product[]> => {
-    const res = await fetch("http://localhost:3030/products");
-    return res.json();
-  };
 
   const prods = await getProds();
 
