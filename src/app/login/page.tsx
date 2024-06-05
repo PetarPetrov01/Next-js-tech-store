@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ptSerif } from "../layout";
 import LoginForm from "../ui/login-form";
 
@@ -9,12 +10,12 @@ export default function LoginPage(){
             <LoginForm ptSerif={ptSerif}/>
           <div className="login-redirect flex flex-col items-center w-4/5 gap-2 mt-4">
             <p className="text-white">or</p>
-            <a
-              href=""
+            <Link
+              href="/register"
               className="block w-[80%] py-1 text-xl text-center rounded-md bg-lightblue text-white"
             >
               Register
-            </a>
+            </Link>
           </div>
         </section>
       </div>

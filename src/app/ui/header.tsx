@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const guestLinks = [
@@ -26,17 +27,13 @@ const companyLinks = [
   { href: "profile", label: "PROFILE" },
 ]
 
-
-
-
-
 export default function Header() {
   return (
     <>
       <header className="flex items-center justify-center ">
         <div className="container max-w-[1400px] px-20 py-3 flex justify-between items-center">
           <div className="logo min-w-[4rem]">
-            <p className="text-white text-2xl">HR Assistant</p>
+            <Image src='/hr-logo.png' alt="logo" width={120} height={120}/>
           </div>
           <nav>
             <ul className="flex justify-center gap-4">

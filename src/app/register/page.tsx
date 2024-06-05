@@ -1,6 +1,7 @@
 import RegisterForm from "../ui/register-form";
 
 import { ptSerif } from "../layout";
+import Link from "next/link";
 
 export default function RegisterPage() {
   return (
@@ -10,12 +11,12 @@ export default function RegisterPage() {
           <RegisterForm ptSerif={ptSerif}/>
           <div className="login-redirect flex flex-col items-center w-4/5 gap-2 mt-4">
             <p className="text-white">or</p>
-            <a
-              href=""
+            <Link
+              href="/login"
               className="block w-[80%] py-1 text-xl text-center rounded-md bg-lightblue text-white"
             >
               Login
-            </a>
+            </Link>
           </div>
         </section>
       </div>
