@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./ui/header";
 import { PT_Sans, PT_Serif } from "next/font/google";
+import Footer from "./ui/footer";
 
 const ptSans = PT_Sans({ weight: ["400"], subsets: ["latin"] });
 export const ptSerif = PT_Serif({ weight: ["400"], subsets: ["latin"] });
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={ptSans.className}>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
