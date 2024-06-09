@@ -3,28 +3,28 @@ import Link from "next/link";
 
 const guestLinks = [
   { href: "/", label: "HOME" },
-  { href: "about", label: "ABOUT" },
-  { href: "contact", label: "CONTACT US" },
-  { href: "login", label: "LOGIN" },
-  { href: "register", label: "REGISTER" },
+  { href: "/products", label: "PRODUCTS" },
+  { href: "/contact", label: "CONTACT US" },
+  { href: "/login", label: "LOGIN" },
+  { href: "/register", label: "REGISTER" },
 ];
 
 const employyLinks = [
   { href: "/", label: "HOME" },
-  { href: "look-for-job", label: "LOOK FOR JOB" },
-  { href: "create-job", label: "CREATE JOB" },
-  { href: "about", label: "ABOUT US" },
-  { href: "contact", label: "CONTACT US" },
-  { href: "profile", label: "PROFILE" },
+  { href: "/look-for-job", label: "LOOK FOR JOB" },
+  { href: "/create-job", label: "CREATE JOB" },
+  { href: "/products", label: "PRODUCTS" },
+  { href: "/contact", label: "CONTACT US" },
+  { href: "/profile", label: "PROFILE" },
 ]
 
 const companyLinks = [
   { href: "/", label: "HOME" },
-  { href: "create", label: "CREATE JOBS" },
-  { href: "questionannaires", label: "CREATE QUESTIONNAIRES" },
-  { href: "contact", label: "MY STUFF" },
-  { href: "cv", label: "CV LIBRARY" },
-  { href: "profile", label: "PROFILE" },
+  { href: "/create", label: "CREATE JOBS" },
+  { href: "/questionannaires", label: "CREATE QUESTIONNAIRES" },
+  { href: "/contact", label: "MY STUFF" },
+  { href: "/cv", label: "CV LIBRARY" },
+  { href: "/profile", label: "PROFILE" },
 ]
 
 export default function Header() {
