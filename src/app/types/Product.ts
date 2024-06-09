@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export type Product = {
   _id: string;
   name: string;
@@ -18,3 +20,12 @@ export type Product = {
   updatedAt: string;
   __v: number;
 };
+
+export type APIProduct = Product & {
+  _id: string;
+  _ownerId: string;
+  __v: string;
+  createdAt: string;
+};
+
+export type PopulatedProduct = Omit<APIProduct, '_ownerId'> & { _ownerId: User };
