@@ -1,11 +1,15 @@
 "use client";
 
 import { NextFont } from "next/dist/compiled/@next/font";
+import { useFormState } from "react-dom";
+import { login } from "../lib/data";
 
-export default function LoginForm({ptSerif}: {ptSerif: NextFont}) {
+export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
+  const [errorMessage, dispatch] = useFormState(login, undefined);
+
   return (
     <form
-      action="\"
+      action={dispatch}
       className="login flex flex-col items-center justify-start gap-8  w-[80%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
@@ -14,6 +18,7 @@ export default function LoginForm({ptSerif}: {ptSerif: NextFont}) {
       <div className="input-group w-[80%]">
         <input
           type="text"
+          name="email"
           className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
           placeholder="Email"
         />
@@ -21,6 +26,7 @@ export default function LoginForm({ptSerif}: {ptSerif: NextFont}) {
       <div className="input-group w-[80%]">
         <input
           type="password"
+          name="password"
           className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
           placeholder="Password"
         />
