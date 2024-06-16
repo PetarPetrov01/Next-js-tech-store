@@ -2,7 +2,7 @@
 
 import { NextFont } from "next/dist/compiled/@next/font";
 import { useFormState } from "react-dom";
-import { login } from "../lib/data";
+import { login } from "../lib/actions";
 
 export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const [errorMessage, dispatch] = useFormState(login, undefined);
@@ -31,6 +31,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
           placeholder="Password"
         />
       </div>
+      <p>{errorMessage}</p>
       <button className="relative w-[80%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] hover:border-white">
         Login
       </button>
