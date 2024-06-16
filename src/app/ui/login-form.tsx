@@ -5,7 +5,8 @@ import { useFormState } from "react-dom";
 import { login } from "../lib/actions";
 
 export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
-  const [errorMessage, dispatch] = useFormState(login, undefined);
+  const initialState = { message: "", errors: {} };
+  const [state, dispatch] = useFormState(login, initialState);
 
   return (
     <form
@@ -31,10 +32,12 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
           placeholder="Password"
         />
       </div>
-      <p>{errorMessage}</p>
-      <button className="relative w-[80%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] hover:border-white">
-        Login
-      </button>
+      <div className="w-[80%] relative ">
+        <p className="absolute -top-6 text-center w-[100%]">{state?.message}</p>
+        <button className="relative w-[100%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] hover:border-white">
+          Login
+        </button>
+      </div>
     </form>
   );
 }

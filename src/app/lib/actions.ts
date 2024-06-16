@@ -21,10 +21,19 @@ const UserSchema = z.object({
 
 export const login = async (prevState: State, formData: FormData) => {
   try {
-    const data = {
+    const validatedFields = UserSchema.safeParse({
       email: formData.get("email"),
       password: formData.get("password"),
-    };
+    });
+
+    if (!validatedFields.success) {
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+        message: "Missing fields",
+      };
+    }
+
+    const data = validatedFields.data;
 
     const res = await fetch("http://localhost:3030/auth/login", {
       method: "POST",
@@ -44,16 +53,13 @@ export const login = async (prevState: State, formData: FormData) => {
       cookies().set(cookieName, authToken, { path: cookiePath });
     }
     const result = await res.json();
-    
+
     if (res.statusText != "OK") {
-      console.log(result);
       throw new Error(result.message);
     }
   } catch (error: any) {
-    console.log("in catch");
     const message = error.message;
-    return message;
+    return { message };
   }
-  console.log("out of try");
   redirect("/");
 };
