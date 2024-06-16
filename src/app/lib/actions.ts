@@ -2,11 +2,24 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
-export const login = async (
-  prevState: string | undefined,
-  formData: FormData
-) => {
+export type State = {
+  errors?: {
+    email?: string[];
+    password?: string[];
+  };
+  message?: null | string;
+};
+
+const UserSchema = z.object({
+  email: z.string().email({ message: "Invalid email" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be atleast 6 characters long" }),
+});
+
+export const login = async (prevState: State, formData: FormData) => {
   try {
     const data = {
       email: formData.get("email"),
