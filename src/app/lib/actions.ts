@@ -3,14 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-
-export type State = {
-  errors?: {
-    email?: string[];
-    password?: string[];
-  };
-  message?: null | string;
-};
+import { ErrorsState } from "../../types/Errors";
 
 const UserSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -19,7 +12,7 @@ const UserSchema = z.object({
     .min(6, { message: "Password must be atleast 6 characters long" }),
 });
 
-export const login = async (prevState: State, formData: FormData) => {
+export const login = async (prevState: ErrorsState, formData: FormData) => {
   try {
     const validatedFields = UserSchema.safeParse({
       email: formData.get("email"),

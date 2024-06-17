@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { PopulatedProduct, Product } from "../types/Product";
+import { PopulatedProduct, Product } from "../../types/Product";
 
 
 export const getProds = async (): Promise<Product[]> => {
