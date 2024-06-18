@@ -14,13 +14,23 @@ export default function RegisterForm({ptSerif}: {ptSerif: NextFont}) {
       <div className="input-group w-[80%]">
         <input
           type="text"
+          name="email"
           className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
           placeholder="Email"
         />
       </div>
       <div className="input-group w-[80%]">
         <input
+          type="text"
+          name="username"
+          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
+          placeholder="Username"
+        />
+      </div>
+      <div className="input-group w-[80%]">
+        <input
           type="password"
+          name="password"
           className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
           placeholder="Password"
         />
@@ -28,6 +38,7 @@ export default function RegisterForm({ptSerif}: {ptSerif: NextFont}) {
       <div className="input-group w-[80%]">
         <input
           type="password"
+          name="repassword"
           className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink focus:border-0"
           placeholder="Repeat password"
         />

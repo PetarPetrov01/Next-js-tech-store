@@ -5,16 +5,25 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ErrorsState } from "../../types/Errors";
 
-const UserSchema = z.object({
+const UserLoginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z
     .string()
     .min(6, { message: "Password must be atleast 6 characters long" }),
 });
 
+const UserRegisterSchema = UserLoginSchema.extend({
+  username: z
+    .string()
+    .min(3, { message: "Username must be atleast 3 characters long" }),
+  repassword: z
+    .string()
+    .min(6, { message: "Password must be atleast 6 characters long" }),
+});
+
 export const login = async (prevState: ErrorsState, formData: FormData) => {
   try {
-    const validatedFields = UserSchema.safeParse({
+    const validatedFields = UserLoginSchema.safeParse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
