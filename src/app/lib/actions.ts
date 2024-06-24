@@ -5,22 +5,16 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ErrorsState } from "../../types/Errors";
 
+interface User {
+  email: string,
+  username: string,
+  password: string,
+  repassword: string
+}
+
 const UserLoginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z
-    .string()
-    .trim()
-    .min(1,{message: 'Password is required'})
-    .min(6, { message: "Password must be atleast 6 characters long" }),
-});
-
-export const UserRegisterSchema = UserLoginSchema.extend({
-  username: z
-    .string()
-    .trim()
-    .min(1,{message: 'Username is required'})
-    .min(3, { message: "Username must be atleast 3 characters long" }),
-  repassword: z
     .string()
     .trim()
     .min(1,{message: 'Password is required'})
@@ -72,51 +66,34 @@ export const login = async (prevState: ErrorsState, formData: FormData) => {
   redirect("/");
 };
 
-export const register = async (prevState: ErrorsState, formData: FormData) => {
+export const registerUser = async (formData: FormData) => {
   try {
-    const validatedFields = UserRegisterSchema.safeParse({
-      email: formData.get("email"),
-      username: formData.get("username"),
-      password: formData.get("password"),
-      repassword: formData.get("repassword"),
-    });
+    const data = Object.fromEntries(formData.entries())
 
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-        message: "Missing fields",
-      };
-    }
+    console.log(data);
+    
 
-    if (validatedFields.data.password != validatedFields.data.repassword) {
-      return {
-        message: "Passwords do not match",
-      };
-    }
+    // const res = await fetch("http://localhost:3030/auth/register", {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: { "Content-Type": "application/json" },
+    //   credentials: "same-origin",
+    //   cache: "no-store",
+    // });
 
-    const data = validatedFields.data;
+    // const authCookie = res.headers.getSetCookie()[0];
 
-    const res = await fetch("http://localhost:3030/auth/register", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      cache: "no-store",
-    });
+    // if (authCookie && res.statusText == "OK") {
+    //   const [cookieString, cookiePathString] = authCookie.split("; ");
+    //   const [cookieName, authToken] = cookieString.split("=");
+    //   const cookiePath = cookiePathString.split("=")[1];
 
-    const authCookie = res.headers.getSetCookie()[0];
+    //   cookies().set(cookieName, authToken, { path: cookiePath });
+    // }
+    // const result = await res.json();
 
-    if (authCookie && res.statusText == "OK") {
-      const [cookieString, cookiePathString] = authCookie.split("; ");
-      const [cookieName, authToken] = cookieString.split("=");
-      const cookiePath = cookiePathString.split("=")[1];
-
-      cookies().set(cookieName, authToken, { path: cookiePath });
-    }
-    const result = await res.json();
-
-    if (res.statusText != "OK") {
-      throw new Error(result.message);
-    }
+    // if (res.statusText != "OK") {
+    //   throw new Error(result.message);
+    // }
   } catch (error) {}
 };
