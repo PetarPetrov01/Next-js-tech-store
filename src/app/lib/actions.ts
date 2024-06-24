@@ -9,15 +9,21 @@ const UserLoginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z
     .string()
+    .trim()
+    .min(1,{message: 'Password is required'})
     .min(6, { message: "Password must be atleast 6 characters long" }),
 });
 
-const UserRegisterSchema = UserLoginSchema.extend({
+export const UserRegisterSchema = UserLoginSchema.extend({
   username: z
     .string()
+    .trim()
+    .min(1,{message: 'Username is required'})
     .min(3, { message: "Username must be atleast 3 characters long" }),
   repassword: z
     .string()
+    .trim()
+    .min(1,{message: 'Password is required'})
     .min(6, { message: "Password must be atleast 6 characters long" }),
 });
 
