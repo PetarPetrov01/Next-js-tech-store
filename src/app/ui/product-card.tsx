@@ -1,6 +1,6 @@
 'use client'
 
-import { Product } from "../types/Product";
+import { Product } from "../../types/Product";
 import { useRouter } from "next/navigation";
 
 export default function ProductCard({ prod }: { prod: Product }) {
