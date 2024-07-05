@@ -10,7 +10,6 @@
 /coverage
 
 # next.js
-/.next/
 /out/
 
 # debug
@@ -21,3 +20,4 @@ npm-debug.log*
 
 # typescript
 *.tsbuildinfo
+.env
