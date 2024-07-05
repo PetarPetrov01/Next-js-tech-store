@@ -1,13 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { Application } from "express";
-import cors from 'cors'
+import cors from "cors";
 
 import express from "express";
 
 const app: Application = express();
 const prisma = new PrismaClient();
 
-app.use(cors())
+app.use(express.json());
+app.use(cors());
 
 app.get("/", async (req, res) => {
   const user = await prisma.user.findMany();
@@ -15,14 +16,36 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/create", async (req, res) => {
-  const { email, username, password } = req.body;
+  const data = await req.body;
+  console.log(data);
   try {
     const createdUser = await prisma.user.create({
-      data: { email, username, password },
+      data: {
+        email: data?.email,
+        username: data?.username,
+        password: data?.password,
+      },
     });
     res.send(createdUser);
   } catch (error) {
     console.log(error);
+    res.end();
+  }
+});
+
+app.delete("/user", async (req, res) => {
+  try {
+    const id = req.body?.id;
+
+    await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(200).end()
+  } catch (error) {
+    console.log(error)
+    res.end();
   }
 });
 
