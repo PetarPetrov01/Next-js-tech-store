@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { prisma } from "../config/db-config";
 import { User } from "@prisma/client";
 
-const secret = process.env.jwtsecret || "1qsc2wdv3efv";
+const secret = process.env.JWT_SECRET || "1qsc2wdv3efv";
 
 export async function login(email: string, password: string) {
   const existingUser = await prisma.user.findUnique({
@@ -28,7 +28,7 @@ export async function login(email: string, password: string) {
   }
 }
 
-async function createToken(user: User) {
+function createToken(user: User) {
   const payload = {
     _id: user.id,
     email: user.email,
@@ -44,8 +44,24 @@ async function createToken(user: User) {
   };
 }
 
-export async function verifyJWT(token: string){
+export async function verifyJWT(token: string) {
   return jwt.verify(token, secret);
 }
 
-export async function register() {}
+export async function register(
+  email: string,
+  username: string,
+  password: string
+) {
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+
+  if (existingUser) {
+    throw new Error("This email is already taken");
+  }
+
+  const newUser = await prisma.user.create({
+    data: { email, username, password },
+  });
+
+  return createToken(newUser);
+}
