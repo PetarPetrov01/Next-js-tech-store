@@ -1,9 +1,14 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { prisma } from "../config/db-config";
 import { User } from "@prisma/client";
 
 const secret = process.env.JWT_SECRET || "1qsc2wdv3efv";
+
+interface CustomJwtPayload extends JwtPayload{
+  _id: string
+  email: string
+}
 
 export async function login(email: string, password: string) {
   const existingUser = await prisma.user.findUnique({
@@ -44,8 +49,8 @@ function createToken(user: User) {
   };
 }
 
-export async function verifyJWT(token: string) {
-  return jwt.verify(token, secret);
+export function verifyJWT(token: string): CustomJwtPayload {
+  return jwt.verify(token, secret) as CustomJwtPayload;
 }
 
 export async function register(
