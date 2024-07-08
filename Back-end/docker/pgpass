@@ -1,0 +1,1 @@
+host.docker.internal:16543:postgres_db:postgres:postgres

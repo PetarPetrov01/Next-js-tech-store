@@ -1,0 +1,16 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Postgre_db",
+      "Group": "Servers",
+      "Host": "host.docker.internal",
+      "Port": 16543,
+      "MaintenanceDB": "postgres_db",
+      "Username": "postgres",
+      "PassFile": "/pgpass",
+      "SSLMode": "prefer",
+      "FGColor": "#000000",
+      "BGColor": "#aeff80"
+    }
+  }
+}
