@@ -5,12 +5,12 @@ import { User } from "@prisma/client";
 
 const secret = process.env.JWT_SECRET || "1qsc2wdv3efv";
 
-interface CustomJwtPayload extends JwtPayload{
-  _id: string
-  email: string
+interface UserPayload extends JwtPayload {
+  _id: string;
+  email: string;
 }
 
-export async function login(email: string, password: string) {
+async function login(email: string, password: string) {
   const existingUser = await prisma.user.findUnique({
     where: {
       email,
@@ -33,8 +33,22 @@ export async function login(email: string, password: string) {
   }
 }
 
+async function register(email: string, username: string, password: string) {
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+
+  if (existingUser) {
+    throw new Error("This email is already taken");
+  }
+
+  const newUser = await prisma.user.create({
+    data: { email, username, password },
+  });
+
+  return createToken(newUser);
+}
+
 function createToken(user: User) {
-  const payload = {
+  const payload: UserPayload = {
     _id: user.id,
     email: user.email,
   };
@@ -49,24 +63,12 @@ function createToken(user: User) {
   };
 }
 
-export function verifyJWT(token: string): CustomJwtPayload {
-  return jwt.verify(token, secret) as CustomJwtPayload;
+export function verifyJWT(token: string): UserPayload {
+  return jwt.verify(token, secret) as UserPayload;
 }
 
-export async function register(
-  email: string,
-  username: string,
-  password: string
-) {
-  const existingUser = await prisma.user.findUnique({ where: { email } });
-
-  if (existingUser) {
-    throw new Error("This email is already taken");
-  }
-
-  const newUser = await prisma.user.create({
-    data: { email, username, password },
-  });
-
-  return createToken(newUser);
-}
+const authService = {
+  login,
+  register,
+};
+export default authService;
