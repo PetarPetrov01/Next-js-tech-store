@@ -7,7 +7,7 @@ const ensureUploadDirectory = (
   res: Response,
   next: NextFunction
 ) => {
-  const dir = path.join(__dirname, "..", "uploads");
+  const dir = path.join(__dirname, "..", "..","uploads");
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
