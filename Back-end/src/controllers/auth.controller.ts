@@ -3,13 +3,19 @@ import authService from "../services/authService";
 
 async function login(req: Request, res: Response) {
   try {
-    const {email, password} = req.body;
-    const result = await authService.login(email, password);
-    
-    res.status(200).json(result);
-  } catch (error) {
+    const { email, password } = req.body;
+    const { authToken, user } = await authService.login(email, password);
+
+    res.cookie("authToken", authToken, {
+      domain: "localhost",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json(user);
+  } catch (error: any) {
     console.log(error);
-    res.status(400).end();
+    res.status(401).json({message: error.message});
   }
 }
 
