@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={ptSans.className}>
+      <body className={`${ptSans.className} min-h-[100vh]`}>
         <AuthProvider>
           <Header />
           {children}

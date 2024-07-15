@@ -13,7 +13,7 @@ async function start(): Promise<void> {
   await dbConfig();
   routesConfig(app);
 
-  app.listen(3000, () => {
+  app.listen(3001, () => {
     console.log("Server listening to 3000");
   });
 }

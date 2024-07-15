@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { login, verifyJWT } from "../services/authService";
-import { User } from "@prisma/client";
+import { verifyJWT } from "../services/authService";
 const authCookieName = "authcookie";
 
 interface CustomRequest extends Request {
   user?: {
-    _id: string
-    email: string,
+    _id: string;
+    email: string;
   };
 }
 
