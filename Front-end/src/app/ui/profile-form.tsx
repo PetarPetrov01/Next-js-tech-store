@@ -1,14 +1,30 @@
 "use client";
 
 import { CameraIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const ImageSchema = z.object({
+  image: z
+    .instanceof(File)
+    .refine((file) => /jpg|png|jpeg/.test(file.name.toLocaleLowerCase()), {
+      message: "File type not allowed",
+    })
+    .refine((file)=>/image\/png|image\/jpeg|image\/gif|image\/webp/.test(file.type),{message: 'This file is not allowed'})
+    .refine((file) => file.size <= 1024 * 200, {
+      message: "File is too large",
+    })
+});
+
+type Inputs = z.infer<typeof ImageSchema>;
 
 export default function ProfileForm() {
   const [selectedImage, setSelectedImage] = useState<null | string>(null);
 
-  const imageInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef< HTMLInputElement| null>( null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleImageClick = () => {
@@ -17,19 +33,53 @@ export default function ProfileForm() {
 
   const onImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      console.log(event.target.files[0]);
-      setSelectedImage(event.target.files[0].name);
+      const file = event.target.files[0];
+      console.log(file.type)
+      setSelectedImage(file.name);
+      setValue('image',file);
     }
   };
 
+  const {
+    handleSubmit,
+    formState: { errors, dirtyFields },
+    reset,
+    register,
+    setValue
+  } = useForm<Inputs>({
+    resolver: zodResolver(ImageSchema),
+  });
+
+  const { ref, ...rest } = register("image");
+
   const onClose = () => {
     setSelectedImage(null);
+    reset();
+  };
+
+  const processSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (formRef.current) {
+      //If new FormData(formRef.current) is used, the file size appears to be 0 !?
+      const formData = new FormData();
+      formData.append('image',data.image)
+      try {
+        const response = await fetch('http://localhost:3001/api/upload/image',{
+          method: 'POST',
+          body: formData
+        })
+        const result = await response.json();
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
+      console.log(formData);
+    }
   };
 
   return (
     <div>
-      <form action="" ref={formRef}>
-        <article className="flex w-full flex-col items-center gap-4">
+      <form action="" ref={formRef} encType="multipart/form-data" onSubmit={handleSubmit(processSubmit)}>
+        <article className="relative flex w-full flex-col items-center gap-4">
           <h2 className="mt-4 text-dark-blue">Profile</h2>
           <div className="relative rounded-full border-4 border-[#00b4d8cc] shadow-md shadow-[#00b4d866]">
             <Image
@@ -45,7 +95,11 @@ export default function ProfileForm() {
             <input
               type="file"
               className="hidden"
-              ref={imageInputRef}
+              ref={(e) => {
+                ref(e)
+                imageInputRef.current = e
+              }}
+              {...rest}
               onChange={onImageChange}
             />
           </div>
@@ -60,10 +114,19 @@ export default function ProfileForm() {
               </a>
             </div>
           )}
-            <div>
-                <a href="">Save</a>
-            </div>
+          {selectedImage && errors?.image && (
+            <span className="absolute bottom-[-1.5em] mt-1  text-sm italic text-pink ">
+              {errors.image.message}
+            </span>
+          )}
         </article>
+        {selectedImage && (
+          <div className="flex justify-center mt-8">
+            <button type="submit" className="px-4 py-2 bg-[#00b4d888]">
+              Save
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );
