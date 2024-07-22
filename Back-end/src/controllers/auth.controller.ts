@@ -15,13 +15,36 @@ async function login(req: Request, res: Response) {
     res.status(201).json(user);
   } catch (error: any) {
     console.log(error);
-    res.status(401).json({message: error.message});
+    res.status(401).json({ message: error.message });
   }
 }
 
 async function register(req: Request, res: Response) {
-  console.log(req.body);
-  res.status(200).json({ message: "Register request" });
+  console.log('Request')
+  try {
+    
+    const { email, username, password } = req.body;
+    console.log(email);
+    const { authToken, user } = await authService.register(
+      email,
+      username,
+      password
+    );
+
+    console.log(user);
+
+    res.cookie("authToken", authToken, {
+      domain: "localhost",
+      path: "",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json(user)
+
+  } catch (error: any) {
+    console.log(error);
+    res.status(401).json({ message: error.message });
+  }
 }
 
 const authController = { login, register };
