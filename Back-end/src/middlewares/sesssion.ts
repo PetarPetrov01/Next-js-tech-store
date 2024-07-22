@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { verifyJWT } from "../services/authService";
 const authCookieName = "authcookie";
 
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
   user?: {
     _id: string;
     email: string;
