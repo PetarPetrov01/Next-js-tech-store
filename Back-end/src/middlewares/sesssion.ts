@@ -27,6 +27,7 @@ export default function session(
       return;
     }
   }
+  console.log(token);
 
   next();
 }

@@ -37,7 +37,7 @@ export const login = async (prevState: ErrorsState, formData: FormData) => {
 
     const data = validatedFields.data;
 
-    const res = await fetch("http://localhost:3030/auth/login", {
+    const res = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
@@ -69,31 +69,31 @@ export const login = async (prevState: ErrorsState, formData: FormData) => {
 export const registerUser = async (formData: FormData) => {
   try {
     const data = Object.fromEntries(formData.entries())
-
-    console.log(data);
     
+    const res = await fetch("http://localhost:3001/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      cache: "no-store",
+    });
 
-    // const res = await fetch("http://localhost:3030/auth/register", {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    //   headers: { "Content-Type": "application/json" },
-    //   credentials: "same-origin",
-    //   cache: "no-store",
-    // });
+    const authCookie = res.headers.getSetCookie()[0];
+    console.log(authCookie);
 
-    // const authCookie = res.headers.getSetCookie()[0];
+    if (authCookie && res.statusText == "OK") {
+      const [cookieString, cookiePathString] = authCookie.split("; ");
+      const [cookieName, authToken] = cookieString.split("=");
+      const cookiePath = cookiePathString.split("=")[1];
 
-    // if (authCookie && res.statusText == "OK") {
-    //   const [cookieString, cookiePathString] = authCookie.split("; ");
-    //   const [cookieName, authToken] = cookieString.split("=");
-    //   const cookiePath = cookiePathString.split("=")[1];
+      cookies().set(cookieName, authToken, { path: cookiePath });
+    }
+    const result = await res.json();
 
-    //   cookies().set(cookieName, authToken, { path: cookiePath });
-    // }
-    // const result = await res.json();
-
-    // if (res.statusText != "OK") {
-    //   throw new Error(result.message);
-    // }
-  } catch (error) {}
+    if (res.statusText != "OK") {
+      throw new Error(result.message);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

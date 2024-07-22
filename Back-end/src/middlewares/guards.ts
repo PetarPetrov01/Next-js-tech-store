@@ -11,3 +11,13 @@ export function isUser() {
   };
 }
 
+export function isGuest(){
+  return (req: CustomRequest, res: Response, next: NextFunction) => {
+    if(req.user){
+      res.status(403).json({ message: "You are already logged in" });
+    } else {
+      next()
+    }
+  }
+}
+
