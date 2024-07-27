@@ -4,45 +4,52 @@ import { NextFont } from "next/dist/compiled/@next/font";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {  registerUser } from "../lib/actions";
+import { registerUser } from "../lib/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/contexts/AuthProvider";
 
-const UserRegisterSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email" }),
-  username: z
-    .string()
-    .trim()
-    .min(1, { message: "Username is required" })
-    .min(3, { message: "Username must be atleast 3 characters long" }),
-  password: z
-    .string()
-    .trim()
-    .min(1, { message: "Password is required" })
-    .min(6, { message: "Password must be atleast 6 characters long" }),
-  repassword: z
-    .string()
-    .trim()
-    .min(1, { message: "Password is required" })
-    .min(6, { message: "Password must be atleast 6 characters long" }),
-}).refine(data=> data.password == data.repassword, {
-  message: 'Passwords do not match',
-  path: ["repassword"]
-})
+const UserRegisterSchema = z
+  .object({
+    email: z
+      .string()
+      .trim()
+      .min(1, { message: "Email is required" })
+      .email({ message: "Invalid email" }),
+    username: z
+      .string()
+      .trim()
+      .min(1, { message: "Username is required" })
+      .min(3, { message: "Username must be atleast 3 characters long" }),
+    password: z
+      .string()
+      .trim()
+      .min(1, { message: "Password is required" })
+      .min(6, { message: "Password must be atleast 6 characters long" }),
+    repassword: z
+      .string()
+      .trim()
+      .min(1, { message: "Password is required" })
+      .min(6, { message: "Password must be atleast 6 characters long" }),
+  })
+  .refine((data) => data.password == data.repassword, {
+    message: "Passwords do not match",
+    path: ["repassword"],
+  });
 
 type Inputs = z.infer<typeof UserRegisterSchema>;
 
 export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const {setAuth} = useAuthContext();
 
   const {
     formState: { errors },
     handleSubmit,
     register,
     reset,
+    setError,
   } = useForm<Inputs>({
     resolver: zodResolver(UserRegisterSchema),
     defaultValues: {
@@ -53,16 +60,28 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     },
   });
 
-  const processSubmit = () => {
-    if (formRef.current) {
-      const formData = new FormData(formRef?.current);
-      registerUser(formData);
+  const processSubmit = handleSubmit(async (data) => {
+    const res = await fetch("http://localhost:3001/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      //Check the error from the res itself
+      setError("root.apiError", { message: "Registration failed" });
     }
-  };
+
+    const result = await res.json();
+    setAuth(result);
+    router.replace('/')
+  });
 
   return (
     <form
-      onSubmit={handleSubmit(processSubmit)}
+      onSubmit={processSubmit}
       ref={formRef}
       className="register flex flex-col items-center justify-start gap-8  w-[80%] "
     >
