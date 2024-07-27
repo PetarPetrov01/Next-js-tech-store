@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyJWT } from "../services/authService";
-const authCookieName = "authcookie";
+const authCookieName = "authToken";
 
 export interface CustomRequest extends Request {
   user?: {
@@ -15,7 +15,6 @@ export default function session(
   next: NextFunction
 ) {
   const token = req.cookies[authCookieName];
-
   if (token) {
     try {
       const payload = verifyJWT(token);
@@ -27,7 +26,6 @@ export default function session(
       return;
     }
   }
-  console.log(token);
 
   next();
 }
