@@ -41,10 +41,17 @@ async function register(email: string, username: string, password: string) {
   }
 
   const newUser = await prisma.user.create({
-    data: { email, username, password },
+    data: { email, username, password: await bcrypt.hash(password, 10) },
   });
 
   return createToken(newUser);
+}
+
+async function updateImage(imageUrl: string, id: string) {
+  return await prisma.user.update({
+    where: { id: id },
+    data: { image: imageUrl },
+  });
 }
 
 function createToken(user: User) {
@@ -70,5 +77,6 @@ export function verifyJWT(token: string): UserPayload {
 const authService = {
   login,
   register,
+  updateImage,
 };
 export default authService;
