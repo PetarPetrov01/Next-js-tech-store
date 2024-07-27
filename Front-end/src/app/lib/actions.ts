@@ -21,21 +21,9 @@ const UserLoginSchema = z.object({
     .min(6, { message: "Password must be atleast 6 characters long" }),
 });
 
-export const login = async (prevState: ErrorsState, formData: FormData) => {
+export const login = async (email: string, password: string) => {
   try {
-    const validatedFields = UserLoginSchema.safeParse({
-      email: formData.get("email"),
-      password: formData.get("password"),
-    });
-
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-        message: "Missing fields",
-      };
-    }
-
-    const data = validatedFields.data;
+    const data = {email, password}
 
     const res = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
@@ -86,6 +74,7 @@ export const registerUser = async (formData: FormData) => {
       const [cookieName, authToken] = cookieString.split("=");
       const cookiePath = cookiePathString.split("=")[1];
 
+      console.log('setting cookie!!')
       cookies().set(cookieName, authToken, { path: cookiePath });
     }
     const result = await res.json();

@@ -3,10 +3,12 @@
 import { NextFont } from "next/dist/compiled/@next/font";
 import { useFormState } from "react-dom";
 import { login } from "../lib/actions";
-import { z } from "zod";
+import { set, z } from "zod";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthContext } from "@/contexts/AuthProvider";
+import { useRouter } from "next/router";
 
 const UserLoginSchema = z.object({
   email: z
@@ -14,16 +16,15 @@ const UserLoginSchema = z.object({
     .trim()
     .min(1, { message: "Email is required" })
     .email({ message: "Invalid email" }),
-  password: z
-    .string()
-    .trim()
-    .min(1, { message: "Password is required" })
+  password: z.string().trim().min(1, { message: "Password is required" }),
 });
 
 type Inputs = z.infer<typeof UserLoginSchema>;
 
 export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const { setAuth } = useAuthContext();
+  const router = useRouter();
 
   // const initialState = { message: "", errors: {} };
   // const [state, dispatch] = useFormState(login, initialState);
@@ -32,6 +33,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<Inputs>({
     resolver: zodResolver(UserLoginSchema),
     defaultValues: {
@@ -40,19 +42,30 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
     },
   });
 
-  const processSubmit = () => {
-    if (formRef.current) {
-      const formData = new FormData(formRef?.current);
-      console.log(formData);
-      // registerUser(formData);
+  const processSubmit = handleSubmit(async (data) => {
+    const res = await fetch("http://localhost:3001/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      setError("root.serverError", { message: "Invalid email or password!" });
+      return;
     }
-  };
+
+    const result = await res.json();
+    setAuth(result);
+    router.replace("/");
+  });
 
   return (
     <form
       ref={formRef}
       // action={dispatch}
-      onSubmit={handleSubmit(processSubmit)}
+      onSubmit={processSubmit}
       className="login flex flex-col items-center justify-start gap-8  w-[80%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
