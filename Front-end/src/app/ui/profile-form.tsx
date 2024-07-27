@@ -65,14 +65,15 @@ export default function ProfileForm() {
       try {
         const response = await fetch('http://localhost:3001/api/upload/image',{
           method: 'POST',
-          body: formData
+          body: formData,
+          credentials: "include",
         })
+
         const result = await response.json();
         console.log(result);
       } catch (error) {
         console.log(error);
       }
-      console.log(formData);
     }
   };
 

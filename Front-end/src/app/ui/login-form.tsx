@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthContext } from "@/contexts/AuthProvider";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const UserLoginSchema = z.object({
   email: z
@@ -43,7 +43,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   });
 
   const processSubmit = handleSubmit(async (data) => {
-    const res = await fetch("http://localhost:3001/api/auth/register", {
+    const res = await fetch("http://localhost:3001/api/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
     });
 
     if (!res.ok) {
-      setError("root.serverError", { message: "Invalid email or password!" });
+      setError("root.apiError", { message: "Invalid email or password!" });
       return;
     }
 
