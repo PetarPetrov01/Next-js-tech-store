@@ -1,5 +1,6 @@
 import { CookieOptions, Request, Response } from "express";
-import authService from "../services/authService";
+import authService, { SecuredUser } from "../services/authService";
+import { CustomRequest } from "../middlewares/sesssion";
 
 const cookieOptions: CookieOptions = {
   domain: "localhost",
@@ -45,6 +46,19 @@ async function register(req: Request, res: Response) {
   }
 }
 
-const authController = { login, register };
+async function getProfile(req: CustomRequest, res: Response) {
+  try {
+    if (!req.user?._id) {
+      throw new Error("You must be logged in");
+    }
+    const data = await authService.getProfile(req?.user?._id);
+    res.status(200).json(data)
+  } catch (error: any) {
+    console.log(error);
+    res.status(401).json({ message: error.message });
+  }
+}
+
+const authController = { login, register,getProfile };
 
 export default authController;
