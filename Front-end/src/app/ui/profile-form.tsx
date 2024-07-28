@@ -1,8 +1,10 @@
 "use client";
 
+import { User } from "@/types/User";
 import { CameraIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -21,11 +23,13 @@ const ImageSchema = z.object({
 
 type Inputs = z.infer<typeof ImageSchema>;
 
-export default function ProfileForm() {
+export default function ProfileForm({user}:{user: User}) {
   const [selectedImage, setSelectedImage] = useState<null | string>(null);
 
   const imageInputRef = useRef< HTMLInputElement| null>( null);
   const formRef = useRef<HTMLFormElement>(null);
+
+  const router = useRouter();
 
   const handleImageClick = () => {
     imageInputRef.current?.click();
@@ -39,6 +43,9 @@ export default function ProfileForm() {
       setValue('image',file);
     }
   };
+
+  console.log('IMAGE')
+  console.log(user?.image)
 
   const {
     handleSubmit,
@@ -70,7 +77,7 @@ export default function ProfileForm() {
         })
 
         const result = await response.json();
-        console.log(result);
+        router.refresh();
       } catch (error) {
         console.log(error);
       }
@@ -84,7 +91,7 @@ export default function ProfileForm() {
           <h2 className="mt-4 text-dark-blue">Profile</h2>
           <div className="relative rounded-full border-4 border-[#00b4d8cc] shadow-md shadow-[#00b4d866]">
             <Image
-              src={"/default-company-pic.png"}
+              src={user?.image ? user.image : "/default-company-pic.png"}
               alt="profile pic"
               width={150}
               height={150}
