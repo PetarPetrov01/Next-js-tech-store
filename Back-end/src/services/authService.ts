@@ -10,6 +10,13 @@ interface UserPayload extends JwtPayload {
   email: string;
 }
 
+export interface SecuredUser {
+  id: string;
+  email: string;
+  username: string;
+  image: string
+}
+
 async function login(email: string, password: string) {
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -54,6 +61,13 @@ async function updateImage(imageUrl: string, id: string) {
   });
 }
 
+async function getProfile(id: string) {
+  return await prisma.user.findUnique({
+    where: { id },
+    select: { email: true, username: true, id: true, image: true },
+  });
+}
+
 function createToken(user: User) {
   const payload: UserPayload = {
     _id: user.id,
@@ -78,5 +92,6 @@ const authService = {
   login,
   register,
   updateImage,
+  getProfile,
 };
 export default authService;

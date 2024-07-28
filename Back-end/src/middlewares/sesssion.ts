@@ -6,7 +6,7 @@ export interface CustomRequest extends Request {
   user?: {
     _id: string;
     email: string;
-  };
+  }
 }
 
 export default function session(
@@ -14,6 +14,8 @@ export default function session(
   res: Response,
   next: NextFunction
 ) {
+  console.log('COOKIES')
+  console.log(req.cookies)
   const token = req.cookies[authCookieName];
   if (token) {
     try {
