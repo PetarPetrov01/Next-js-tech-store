@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validateRequest } from "zod-express";
+import { validateRequest, validateRequestBody } from "zod-express";
 
 const userSchema = z.object({
     email: z
@@ -27,3 +27,17 @@ const userSchema = z.object({
   message: "Passwords do not match",
   path: ["repassword"],
 });
+
+const validateRegister = validateRequestBody(userSchema,{
+    sendErrors(errors, res) {
+        const errs = errors[0].errors.issues.map((err)=>{
+            return {
+                //consider path
+                message: err.message
+            }
+        })
+        res.status(400).json(errs);
+    }
+})
+
+export default validateRegister
