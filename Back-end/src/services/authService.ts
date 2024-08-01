@@ -61,13 +61,6 @@ async function updateImage(imageUrl: string, id: string) {
   });
 }
 
-async function getProfile(id: string) {
-  return await prisma.user.findUnique({
-    where: { id },
-    select: { email: true, username: true, id: true, image: true },
-  });
-}
-
 function createToken(user: User) {
   const payload: UserPayload = {
     _id: user.id,
@@ -92,6 +85,5 @@ const authService = {
   login,
   register,
   updateImage,
-  getProfile,
 };
 export default authService;
