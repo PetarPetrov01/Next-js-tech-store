@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
-import { uploadToCloudinary } from "../utils/cloudinary";
 import fs from "fs";
+
+import { uploadToCloudinary } from "../utils/cloudinary";
 import authService from "../services/authService";
+import userService from "../services/userService";
+
 import { CustomRequest } from "../middlewares/sesssion";
 
 async function uploadImage(req: CustomRequest, res: Response) {
@@ -9,24 +12,29 @@ async function uploadImage(req: CustomRequest, res: Response) {
     return res.status(400).send({ message: "No file uploaded." });
   }
 
-  if(!req.user?._id){
-    return res.status(403).send({message: "You are not logged in"})
+  if (!req.user?._id) {
+    return res.status(403).send({ message: "You are not logged in" });
   }
 
   try {
     const result = await uploadToCloudinary(req.file.path, "Images");
     const imageUrl = result.secure_url;
 
-    await authService.updateImage(imageUrl, req.user?._id)
+    const oldImage = await userService.getProfileImage(req.user._id);
+    if (oldImage) {
+      //Delete the old image from cloudinary if the upload is successful
+    }
+
+    await authService.updateImage(imageUrl, req.user?._id);
     console.log(imageUrl);
 
-    fs.unlink(req.file.path,(err)=>{
-        if(err){
-            console.error(err)
-        } else {
-            console.log('Sucessfully deleted from file system')
-        }
-    })
+    fs.unlink(req.file.path, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("Sucessfully deleted from file system");
+      }
+    });
 
     res.status(200).send({
       message: "File uploaded successfully.",
