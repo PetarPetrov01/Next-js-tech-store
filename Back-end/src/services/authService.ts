@@ -10,6 +10,13 @@ interface UserPayload extends JwtPayload {
   email: string;
 }
 
+export interface SecuredUser {
+  id: string;
+  email: string;
+  username: string;
+  image: string
+}
+
 async function login(email: string, password: string) {
   const existingUser = await prisma.user.findUnique({
     where: {
