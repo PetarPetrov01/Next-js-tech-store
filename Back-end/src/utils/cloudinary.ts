@@ -1,8 +1,7 @@
-import { UploadApiResponse } from "cloudinary";
+import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import cloudinary from "../config/cloudinary-config";
-import { rejects } from "assert";
 
-export function uploadToCloudinary(file: string, folder: string): Promise<any> {
+export function uploadToCloudinary(file: string, folder: string): Promise<UploadApiResponse | UploadApiErrorResponse> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       file,
@@ -14,21 +13,23 @@ export function uploadToCloudinary(file: string, folder: string): Promise<any> {
         if (error) {
           reject(error);
         } else {
-          resolve(result);
+          resolve(result!);
         }
       }
     );
   });
 }
 
-export function deleteFromCloudinary(publicId: string) {
+export function deleteFromCloudinary(publicId: string): Promise<{result: string}> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.destroy(publicId, {}, (error, result) => {
       if (error) {
-        reject(error);
+        // reject(error); Should not reject as that would stop the update of the next image!
+        resolve(error)
       } else {
         resolve(result);
       }
     });
   });
 }
+
