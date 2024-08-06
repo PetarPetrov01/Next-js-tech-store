@@ -16,9 +16,21 @@ async function getProfileImage(id: string) {
   return user?.image;
 }
 
+async function updateUsername(id: string, username: string) {
+  const newUser = await prisma.user.update({
+    where: { id },
+    data: {
+      username,
+    },
+  });
+
+  return newUser
+}
+
 const userService = {
   getProfile,
   getProfileImage,
+  updateUsername
 };
 
 export default userService;
