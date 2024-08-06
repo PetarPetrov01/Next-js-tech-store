@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validateRequest, validateRequestBody } from "zod-express";
+import {  validateRequestBody } from "zod-express";
 
 const userSchema = z.object({
     email: z
@@ -17,16 +17,8 @@ const userSchema = z.object({
     .trim()
     .min(1, { message: "Password is required" })
     .min(6, { message: "Password must be atleast 6 characters long" }),
-  repassword: z
-    .string()
-    .trim()
-    .min(1, { message: "Password is required" })
-    .min(6, { message: "Password must be atleast 6 characters long" }),
 })
-.refine((data) => data.password == data.repassword, {
-  message: "Passwords do not match",
-  path: ["repassword"],
-});
+
 
 const validateRegister = validateRequestBody(userSchema,{
     sendErrors(errors, res) {
