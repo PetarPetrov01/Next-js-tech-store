@@ -1,8 +1,9 @@
 import { CookieOptions, Request, Response } from "express";
-import authService, { SecuredUser } from "../services/authService";
-import { CustomRequest } from "../middlewares/sesssion";
+
+import authService from "../services/authService";
 import userService from "../services/userService";
-import { any, date } from "zod";
+
+import { CustomRequest } from "../middlewares/sesssion";
 
 const cookieOptions: CookieOptions = {
   domain: "localhost",
