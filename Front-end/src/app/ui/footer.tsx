@@ -8,15 +8,15 @@ import {
 export default function Footer() {
   return (
     <>
-      <footer className="flex items-center justify-center bg-lightblue min-h-20">
-        <div className="container max-w-[1400px] px-20 py-3 flex justify-evenly items-center text-darkblue">
+      <footer className="flex items-center justify-center bg-new-teal min-h-20">
+        <div className="container max-w-[1400px] px-20 py-3 flex justify-evenly items-center text-new-mint">
           <article>
             <Image
-              src="/hr-logo-no-text.png"
+              src="/hr-logo-no-text-2.png"
               alt="logo"
               width={100}
               height={100}
-              className="bg-darkblue rounded-full"
+              className="rounded-full"
             />
           </article>
           <article>
