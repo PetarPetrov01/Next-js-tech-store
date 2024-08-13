@@ -1,6 +1,7 @@
-import cookieParser from "cookie-parser";
 import express, { Application } from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
+
 import { ensureUploadDirectory } from "../middlewares/uploadDirectory";
 import { logger } from "../middlewares/logger";
 import session from "../middlewares/sesssion";

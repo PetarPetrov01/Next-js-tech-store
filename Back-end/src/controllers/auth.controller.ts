@@ -1,7 +1,9 @@
 import { CookieOptions, Request, Response } from "express";
-import authService, { SecuredUser } from "../services/authService";
-import { CustomRequest } from "../middlewares/sesssion";
+
+import authService from "../services/authService";
 import userService from "../services/userService";
+
+import { CustomRequest } from "../middlewares/sesssion";
 
 const cookieOptions: CookieOptions = {
   domain: "localhost",
@@ -53,13 +55,29 @@ async function getProfile(req: CustomRequest, res: Response) {
       throw new Error("You must be logged in");
     }
     const data = await userService.getProfile(req?.user?._id);
-    res.status(200).json(data)
+    res.status(200).json(data);
   } catch (error: any) {
     console.log(error);
     res.status(401).json({ message: error.message });
   }
 }
 
-const authController = { login, register,getProfile };
+async function updateUsername(req: CustomRequest, res: Response) {
+  try {
+    if (!req.user?._id) {
+      throw new Error("You must be logged in");
+    }
+    const data = await userService.updateUsername(
+      req.user._id,
+      req.body.username
+    );
+    res.status(200).json(data);
+  } catch (error: any) {
+    console.log(error);
+    res.status(401).json({ message: error.message });
+  }
+}
+
+const authController = { login, register, getProfile, updateUsername };
 
 export default authController;

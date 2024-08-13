@@ -1,6 +1,8 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
+
 import { prisma } from "../config/db-config";
+
 import { User } from "@prisma/client";
 
 const secret = process.env.JWT_SECRET || "1qsc2wdv3efv";

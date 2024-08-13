@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import path from "path";
 import fs from "fs";
+import path from "path";
 
 const ensureUploadDirectory = (
   req: Request,

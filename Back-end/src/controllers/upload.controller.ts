@@ -1,12 +1,11 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import fs from "fs";
 
-import { uploadToCloudinary } from "../utils/cloudinary";
+import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary";
 import authService from "../services/authService";
 import userService from "../services/userService";
 
 import { CustomRequest } from "../middlewares/sesssion";
-import { UploadApiResponse } from "cloudinary";
 
 async function uploadImage(req: CustomRequest, res: Response) {
   if (!req.file) {
@@ -18,25 +17,21 @@ async function uploadImage(req: CustomRequest, res: Response) {
   }
 
   try {
-    const result: UploadApiResponse = await uploadToCloudinary(req.file.path, "Images");
-    const imageUrl = result.secure_url;
-    const imageId = result.public_id;// Needs to be stored in the database 
+    const existingImage = await userService.getProfileImage(req.user._id);
 
-    const oldImage = await userService.getProfileImage(req.user._id);
-    if (oldImage) {
-      //Delete the old image from cloudinary if the upload is successful
+    const uploadResult = await uploadToCloudinary(req.file.path, "Images");
+    const imageUrl = uploadResult.secure_url;
+
+    if (existingImage) {
+      const oldImageId = existingImage.substring(
+        existingImage.indexOf("Images/"),
+        existingImage.lastIndexOf(".")
+      );
+      console.log("Deleting old image: " + oldImageId);
+      const deleted = await deleteFromCloudinary(oldImageId);
+      console.log(`Result: ${deleted.result}`)
     }
-
     await authService.updateImage(imageUrl, req.user?._id);
-    console.log(imageUrl);
-
-    fs.unlink(req.file.path, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("Sucessfully deleted from file system");
-      }
-    });
 
     res.status(200).send({
       message: "File uploaded successfully.",
@@ -47,6 +42,14 @@ async function uploadImage(req: CustomRequest, res: Response) {
     res.status(500).send({
       message: "File upload failed.",
       error: error.message,
+    });
+  } finally {
+    fs.unlink(req.file.path, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("Sucessfully deleted from file system");
+      }
     });
   }
 }

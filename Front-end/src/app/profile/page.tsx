@@ -1,6 +1,7 @@
 import ProfileForm from "@/app/ui/profile-form";
 import { User } from "@/types/User";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Profile() {
 
@@ -13,6 +14,7 @@ export default async function Profile() {
   })
   if(!res.ok){
     console.log('fail')
+    redirect('/')
   }
   const profile: User = await res.json()
 

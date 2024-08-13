@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+
 import { verifyJWT } from "../services/authService";
 const authCookieName = "authToken";
 
@@ -14,8 +15,6 @@ export default function session(
   res: Response,
   next: NextFunction
 ) {
-  console.log('COOKIES')
-  console.log(req.cookies)
   const token = req.cookies[authCookieName];
   if (token) {
     try {

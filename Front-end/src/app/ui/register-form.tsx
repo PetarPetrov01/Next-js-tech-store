@@ -1,7 +1,7 @@
 "use client";
 
 import { NextFont } from "next/dist/compiled/@next/font";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { registerUser } from "../lib/actions";
@@ -40,9 +40,10 @@ const UserRegisterSchema = z
 type Inputs = z.infer<typeof UserRegisterSchema>;
 
 export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
+  const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
-  const {setAuth} = useAuthContext();
+  const { setAuth } = useAuthContext();
 
   const {
     formState: { errors },
@@ -61,6 +62,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   });
 
   const processSubmit = handleSubmit(async (data) => {
+    setIsLoading(true);
     const res = await fetch("http://localhost:3001/api/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
@@ -72,11 +74,13 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     if (!res.ok) {
       //Check the error from the res itself
       setError("root.apiError", { message: "Registration failed" });
+      setIsLoading(false);
     }
 
     const result = await res.json();
     setAuth(result);
-    router.replace('/')
+    setIsLoading(false);
+    router.replace("/");
   });
 
   return (
@@ -139,9 +143,22 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
             {errors.repassword.message}
           </span>
         )}
+        {errors.root?.apiError && (
+          <span className="absolute bottom-[-1.5em]">
+            {errors.root.apiError.message}
+          </span>
+        )}
       </div>
-      <button className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] hover:border-white">
-        Register
+      <button disabled={isLoading} className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-white disabled:cursor-default">
+        {isLoading ? (
+          <div className="flex flex-row justify-center gap-2 p-1.5">
+            <div className="w-3 h-3 rounded-full bg-white animate-bounce"></div>
+            <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+            <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+          </div>
+        ) : (
+          <p>Register</p>
+        )}
       </button>
     </form>
   );
