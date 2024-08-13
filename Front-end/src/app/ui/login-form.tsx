@@ -96,6 +96,11 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
             {errors.password.message}
           </span>
         )}
+        {errors.root?.apiError && (
+          <span className="absolute bottom-[-1.5em]">
+          {errors.root?.apiError.message}
+        </span>
+        )}
       </div>
       <div className="w-[80%] relative ">
         {/* <p className="absolute -top-6 text-center w-[100%]">{state?.message}</p> */}

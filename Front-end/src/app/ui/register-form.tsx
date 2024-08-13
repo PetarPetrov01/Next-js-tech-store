@@ -139,6 +139,11 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
             {errors.repassword.message}
           </span>
         )}
+        {errors.root?.apiError && (
+          <span className="absolute bottom-[-1.5em]">
+            {errors.root.apiError.message}
+          </span>
+        )}
       </div>
       <button className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] hover:border-white">
         Register
