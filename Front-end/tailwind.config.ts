@@ -19,6 +19,13 @@ const config: Config = {
         purple: "#cb00bb",
         pink: "#ff0198",
         green: "#88d42b",
+        new: {
+          gray: "#2c3531",
+          teal: "#116466",
+          sandstone: "#d9b08c",
+          peach: "#ffcB9a",
+          mint: "#d1e8e2"
+        },
       },
     },
   },
