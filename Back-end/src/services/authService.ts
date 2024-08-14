@@ -16,7 +16,7 @@ export interface SecuredUser {
   id: string;
   email: string;
   username: string;
-  image: string
+  image: string;
 }
 
 async function login(email: string, password: string) {
@@ -42,7 +42,13 @@ async function login(email: string, password: string) {
   }
 }
 
-async function register(email: string, username: string, password: string) {
+async function register(
+  email: string,
+  firstName: string,
+  lastName: string,
+  username: string,
+  password: string
+) {
   const existingUser = await prisma.user.findUnique({ where: { email } });
 
   if (existingUser) {
@@ -50,7 +56,13 @@ async function register(email: string, username: string, password: string) {
   }
 
   const newUser = await prisma.user.create({
-    data: { email, username, password: await bcrypt.hash(password, 10) },
+    data: {
+      email,
+      firstName,
+      lastName,
+      username,
+      password: await bcrypt.hash(password, 10),
+    },
   });
 
   return createToken(newUser);
