@@ -3,7 +3,14 @@ import { prisma } from "../config/db-config";
 async function getProfile(id: string) {
   return await prisma.user.findUnique({
     where: { id },
-    select: { email: true, username: true, id: true, image: true },
+    select: {
+      email: true,
+      firstName: true,
+      lastName: true,
+      username: true,
+      id: true,
+      image: true,
+    },
   });
 }
 
@@ -24,13 +31,13 @@ async function updateUsername(id: string, username: string) {
     },
   });
 
-  return newUser
+  return newUser;
 }
 
 const userService = {
   getProfile,
   getProfileImage,
-  updateUsername
+  updateUsername,
 };
 
 export default userService;
