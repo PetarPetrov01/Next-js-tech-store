@@ -11,6 +11,16 @@ import { useAuthContext } from "@/contexts/AuthProvider";
 
 const UserRegisterSchema = z
   .object({
+    firstName: z
+      .string()
+      .trim()
+      .min(1, { message: "First name is required" })
+      .min(3, { message: "First name must be atleast 3 characters long" }),
+    lastName: z
+      .string()
+      .trim()
+      .min(1, { message: "Last name is required" })
+      .min(3, { message: "Last name must be atleast 3 characters long" }),
     email: z
       .string()
       .trim()
@@ -54,6 +64,8 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   } = useForm<Inputs>({
     resolver: zodResolver(UserRegisterSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       repassword: "",
@@ -109,6 +121,32 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
         <input
           type="text"
           className="text-new-gray rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
+          placeholder="First name"
+          {...register("firstName")}
+        />
+        {errors.firstName && (
+          <span className="absolute bottom-[-1.5em]">
+            {errors.firstName.message}
+          </span>
+        )}
+      </div>
+      <div className="relative flex flex-col input-group w-[80%]">
+        <input
+          type="text"
+          className="text-new-gray rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
+          placeholder="Last name"
+          {...register("lastName")}
+        />
+        {errors.lastName && (
+          <span className="absolute bottom-[-1.5em]">
+            {errors.lastName.message}
+          </span>
+        )}
+      </div>
+      <div className="relative flex flex-col input-group w-[80%]">
+        <input
+          type="text"
+          className="text-new-gray rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
           placeholder="Username"
           {...register("username")}
         />
@@ -149,7 +187,10 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           </span>
         )}
       </div>
-      <button disabled={isLoading} className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-new-peach border-[1px] duration-150 bg-new-peach text-new-gray after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-mint disabled:cursor-default">
+      <button
+        disabled={isLoading}
+        className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-new-peach border-[1px] duration-150 bg-new-peach text-new-gray after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-mint disabled:cursor-default"
+      >
         {isLoading ? (
           <div className="flex flex-row justify-center gap-2 p-1.5">
             <div className="w-3 h-3 rounded-full bg-white animate-bounce"></div>
