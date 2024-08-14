@@ -80,7 +80,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
       <div className="relative flex flex-col input-group w-[80%]">
         <input
           type="text"
-          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
+          className="text-new-gray rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-new-mint"
           placeholder="Email"
           {...register("email")}
         />
@@ -93,7 +93,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
       <div className="relative flex flex-col input-group w-[80%]">
         <input
           type="password"
-          className="rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-pink"
+          className="text-new-gray rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-new-mint"
           placeholder="Password"
           {...register("password")}
         />
@@ -110,7 +110,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
       </div>
       <div className="w-[80%] relative ">
         {/* <p className="absolute -top-6 text-center w-[100%]">{state?.message}</p> */}
-        <button disabled={isLoading} className="relative w-[100%] py-1 text-xl rounded-md border-pink border-[1px] duration-150 bg-pink text-white after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-white disabled:cursor-default">
+        <button disabled={isLoading} className="relative w-[100%] py-1 rounded-md border-new-mint border-[1px] duration-150 bg-new-mint text-new-gray after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-sandstone disabled:cursor-default">
           {isLoading ? (
             <div className="flex flex-row justify-center gap-2 p-1.5">
               <div className="w-3 h-3 rounded-full bg-white animate-bounce"></div>
@@ -118,7 +118,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
               <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
             </div>
           ) : (
-            <p>Login</p>
+            <p className="text-xl">Login</p>
           )}
         </button>
       </div>
