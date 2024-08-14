@@ -24,7 +24,16 @@ const config: Config = {
           teal: "#116466",
           sandstone: "#d9b08c",
           peach: "#ffcB9a",
-          mint: "#d1e8e2"
+          mint: "#d1e8e2",
+        },
+      },
+      animation: {
+        "fast-bounce": "bounceFast 0.7s infinite",
+      },
+      keyframes: {
+        bounceFast: {
+          "0%, 100%": { transform: "translateY(-35%)" },
+          "50%": { transform: "none" },
         },
       },
     },
