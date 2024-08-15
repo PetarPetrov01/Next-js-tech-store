@@ -4,6 +4,8 @@ import authService from "../services/authService";
 import userService from "../services/userService";
 
 import { CustomRequest } from "../middlewares/sesssion";
+import { TypedRequestBody } from "zod-express";
+import { RegisterSchemaType } from "../middlewares/validations/register-request";
 
 const cookieOptions: CookieOptions = {
   domain: "localhost",
@@ -27,13 +29,15 @@ async function login(req: Request, res: Response) {
   }
 }
 
-async function register(req: Request, res: Response) {
+async function register(req: TypedRequestBody<RegisterSchemaType>, res: Response) {
   console.log("Request");
   try {
-    const { email, username, password } = req.body;
+    const { email, firstName, lastName, username, password } = req.body;
     console.log(email);
     const { authToken, user } = await authService.register(
       email,
+      firstName,
+      lastName,
       username,
       password
     );
