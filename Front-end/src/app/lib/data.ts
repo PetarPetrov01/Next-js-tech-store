@@ -11,7 +11,7 @@ export const getProds = async (): Promise<Product[]> => {
     ? { Cookie: `${authCookie.name}=${authCookie.value}` }
     : undefined;
 
-  const res = await fetch("http://localhost:3030/products", {
+  const res = await fetch("http://localhost:3001/api/products", {
     headers,
     next: {
       revalidate: 10,
