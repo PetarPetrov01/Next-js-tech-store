@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="container max-w-[1400px] px-20 py-3 flex justify-evenly items-center text-new-mint">
           <article>
             <Image
-              src="/hr-logo-no-text-2.png"
+              src="/logo.png"
               alt="logo"
               width={100}
               height={100}
@@ -20,7 +20,7 @@ export default function Footer() {
             />
           </article>
           <article>
-            <h2 className="text-3xl ">HR Assistant</h2>
+            <h2 className="text-3xl ">Tech Store</h2>
           </article>
           <article className="flex flex-col text-lg">
             <div className="flex gap-1" >
