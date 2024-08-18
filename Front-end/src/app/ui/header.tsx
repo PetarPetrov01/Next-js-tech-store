@@ -42,7 +42,7 @@ export default function Header() {
       <header className="flex items-center justify-center ">
         <div className="container max-w-[1400px] px-20 py-3 flex justify-between items-center">
           <div className="logo min-w-[4rem]">
-            <Image src="/hr-logo-2.png" alt="logo" width={120} height={120} />
+            <Image src="/logo-text.png" alt="logo" width={110} height={110} />
           </div>
           <nav>
             <ul className="flex justify-center gap-4">
