@@ -27,17 +27,19 @@ export default function Header() {
     <>
       <header className="flex items-center justify-center ">
         <div className="container max-w-[1400px] px-20 py-3 flex justify-between items-center">
-          <div className="logo min-w-[4rem]">
+          <Link href={'/'} className="logo min-w-[4rem]">
             <Image src="/logo-text.png" alt="logo" width={110} height={110} />
-          </div>
+          </Link>
           <nav>
             <ul className="flex justify-center gap-4 items-center">
               {user?.email && (
-                <li className="flex items-center gap-2 text-white text-lg px-3 py-1">
+                <li className="text-white text-lg px-3 py-1 hover:text-lightblue duration-200">
+                  <Link href={'profile'} className="flex items-center gap-2">
                   <div className="rounded-full overflow-hidden flex justify-center items-center">
                     <Image src={user.image || '/default-profile.jpg'} width={40} height={40} alt={user.email} className="aspect-square object-cover"/>
                   </div>
                   <p className="text-lg">PROFILEE</p>
+                  </Link>
                 </li>
               )}
               {user?.email
