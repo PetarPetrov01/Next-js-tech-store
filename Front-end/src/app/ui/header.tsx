@@ -1,40 +1,26 @@
-'use client'
+"use client";
 import { useAuthContext } from "@/contexts/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
 
 const guestLinks = [
-  { href: "/", label: "HOME" },
   { href: "/products", label: "PRODUCTS" },
-  { href: "/contact", label: "CONTACT US" },
   { href: "/login", label: "LOGIN" },
   { href: "/register", label: "REGISTER" },
 ];
 
 const employyLinks = [
-  { href: "/", label: "HOME" },
-  { href: "/look-for-job", label: "LOOK FOR JOB" },
-  { href: "/create-job", label: "CREATE JOB" },
   { href: "/products", label: "PRODUCTS" },
-  { href: "/contact", label: "CONTACT US" },
-  { href: "/profile", label: "PROFILE" },
-];
-
-const companyLinks = [
-  { href: "/", label: "HOME" },
-  { href: "/create", label: "CREATE JOBS" },
-  { href: "/questionannaires", label: "CREATE QUESTIONNAIRES" },
-  { href: "/contact", label: "MY STUFF" },
-  { href: "/cv", label: "CV LIBRARY" },
+  { href: "/create", label: "POST PRODUCT" },
   { href: "/profile", label: "PROFILE" },
 ];
 
 export default function Header() {
   const { user, clearAuth } = useAuthContext();
 
-  function logout(){
-    console.log('Clear')
-    clearAuth()
+  function logout() {
+    console.log("Clear");
+    clearAuth();
   }
 
   return (
@@ -45,9 +31,17 @@ export default function Header() {
             <Image src="/logo-text.png" alt="logo" width={110} height={110} />
           </div>
           <nav>
-            <ul className="flex justify-center gap-4">
+            <ul className="flex justify-center gap-4 items-center">
+              {user?.email && (
+                <li className="flex items-center gap-2 text-white text-lg px-3 py-1">
+                  <div className="rounded-full overflow-hidden flex justify-center items-center">
+                    <Image src={user.image || '/default-profile.jpg'} width={40} height={40} alt={user.email} className="aspect-square object-cover"/>
+                  </div>
+                  <p className="text-lg">PROFILEE</p>
+                </li>
+              )}
               {user?.email
-                ? (employyLinks.map((link) => (
+                ? employyLinks.map((link) => (
                     <li key={link.href + link.label}>
                       <Link
                         href={link.href}
@@ -57,7 +51,6 @@ export default function Header() {
                       </Link>
                     </li>
                   ))
-                )
                 : guestLinks.map((link) => (
                     <li key={link.href + link.label}>
                       <Link
@@ -68,9 +61,16 @@ export default function Header() {
                       </Link>
                     </li>
                   ))}
-                  {user?.email && <li>
-                    <a onClick={logout} className="text-white text-lg px-3 py-1 hover:border-pink hover:text-lightblue duration-200 cursor-pointer">LOGOUT</a>
-                  </li>}
+              {user?.email && (
+                <li>
+                  <a
+                    onClick={logout}
+                    className="text-white text-lg px-3 py-1 hover:border-pink hover:text-lightblue duration-200 cursor-pointer"
+                  >
+                    LOGOUT
+                  </a>
+                </li>
+              )}
             </ul>
           </nav>
         </div>

@@ -36,6 +36,8 @@ interface AuthInterface extends AuthDataInterface, AuthHandlersInterface {}
 
 const initialState: ReducerState = {
   user: {
+    firstName: "",
+    lastName: "",
     email: "",
     username: "",
   },
@@ -90,8 +92,11 @@ const authReducer = (state: ReducerState, action: Action): ReducerState => {
         user:
           action.payload?.email && action.payload.username
             ? {
+                firstName: action.payload.firstName,
+                lastName: action.payload.lastName,
                 email: action.payload.email,
                 username: action.payload.username,
+                image: action.payload.image || "",
               }
             : null,
       };
