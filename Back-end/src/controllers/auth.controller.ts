@@ -29,7 +29,10 @@ async function login(req: Request, res: Response) {
   }
 }
 
-async function register(req: TypedRequestBody<RegisterSchemaType>, res: Response) {
+async function register(
+  req: TypedRequestBody<RegisterSchemaType>,
+  res: Response
+) {
   console.log("Request");
   try {
     const { email, firstName, lastName, username, password } = req.body;
@@ -49,6 +52,19 @@ async function register(req: TypedRequestBody<RegisterSchemaType>, res: Response
     res.status(201).json(user);
   } catch (error: any) {
     console.log(error);
+    res.status(401).json({ message: error.message });
+  }
+}
+
+async function validate(req: CustomRequest, res: Response) {
+  try {
+    if (req.user) {
+      const user = await userService.getProfile(req.user._id)
+      res.status(200).json(user);
+    } else {
+      throw new Error("Missing token");
+    }
+  } catch (error: any) {
     res.status(401).json({ message: error.message });
   }
 }
@@ -82,6 +98,12 @@ async function updateUsername(req: CustomRequest, res: Response) {
   }
 }
 
-const authController = { login, register, getProfile, updateUsername };
+const authController = {
+  login,
+  register,
+  validate,
+  getProfile,
+  updateUsername,
+};
 
 export default authController;
