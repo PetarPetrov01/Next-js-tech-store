@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProfileDropdown from "./profile-dropdown";
+import { cookies } from "next/headers";
 
 const guestLinks = [
   { href: "/products", label: "PRODUCTS" },
@@ -44,7 +45,6 @@ export default function Header() {
   }, [profileDropdown]);
 
   function logout() {
-    console.log("Clear");
     clearAuth();
   }
 

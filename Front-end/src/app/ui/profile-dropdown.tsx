@@ -1,6 +1,5 @@
 import { User } from "@/types/User";
 import Link from "next/link";
-import { forwardRef, RefObject } from "react";
 
 export function ProfileDropdown({
   user,
