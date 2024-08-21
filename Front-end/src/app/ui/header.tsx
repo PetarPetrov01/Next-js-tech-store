@@ -20,7 +20,7 @@ const employyLinks = [
 export default function Header() {
   const { user, clearAuth } = useAuthContext();
   const [profileDropdown, setProfileDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLLIElement>(null);
 
   const handleOutsideClick = (event: Event) => {
     console.log(dropdownRef.current);
@@ -34,18 +34,33 @@ export default function Header() {
 
   useEffect(() => {
     if (profileDropdown) {
-      document.addEventListener("pointerdown", handleOutsideClick);
+      document.addEventListener("click", handleOutsideClick);
     } else {
-      document.removeEventListener("pointerdown", handleOutsideClick);
+      document.removeEventListener("click", handleOutsideClick);
     }
 
     return () => {
-      document.removeEventListener("pointerdown", handleOutsideClick);
+      document.removeEventListener("click", handleOutsideClick);
     };
   }, [profileDropdown]);
 
-  function logout() {
-    clearAuth();
+  async function logout() {
+    try {
+      const res = await fetch("http://localhost:3001/api/auth/logout", {
+        credentials: "include",
+        cache: 'no-cache'
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        console.log(result);
+        clearAuth();
+      } else {
+        throw new Error(await res.json());
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
   }
 
   const toggleProfileDropdown = () => {
@@ -61,31 +76,6 @@ export default function Header() {
           </Link>
           <nav>
             <ul className="flex justify-center gap-4 items-center">
-              {user?.email && (
-                <div
-                  ref={dropdownRef}
-                  onClick={toggleProfileDropdown}
-                  className="flex items-center gap-2 relative text-white text-lg mx-3 py-1 "
-                >
-                  <ProfileDropdown
-                    user={user}
-                    profileDropdown={profileDropdown}
-                    logout={logout}
-                  />
-                  <div className="rounded-full overflow-hidden flex justify-center items-center">
-                    <Image
-                      src={user.image || "/default-profile.jpg"}
-                      width={40}
-                      height={40}
-                      alt={user.email}
-                      className="aspect-square object-cover"
-                    />
-                  </div>
-                  <p className="text-lg hover:text-lightblue duration-200">
-                    PROFILE
-                  </p>
-                </div>
-              )}
               {user?.email
                 ? employyLinks.map((link) => (
                     <li key={link.href + link.label}>
@@ -107,6 +97,31 @@ export default function Header() {
                       </Link>
                     </li>
                   ))}
+                  {user?.email && (
+                <li
+                  ref={dropdownRef}
+                  onClick={toggleProfileDropdown}
+                  className="flex items-center gap-2 cursor-pointer relative text-white text-lg mx-3 py-1 "
+                >
+                  <ProfileDropdown
+                    user={user}
+                    profileDropdown={profileDropdown}
+                    logout={logout}
+                  />
+                  <div className="rounded-full overflow-hidden flex justify-center items-center">
+                    <Image
+                      src={user.image || "/default-profile.jpg"}
+                      width={40}
+                      height={40}
+                      alt={user.email}
+                      className="aspect-square object-cover"
+                    />
+                  </div>
+                  <p className="text-lg hover:text-lightblue duration-200">
+                    PROFILE
+                  </p>
+                </li>
+              )}
             </ul>
           </nav>
         </div>

@@ -15,6 +15,14 @@ const cookieOptions: CookieOptions = {
   secure: true,
 };
 
+const expireCookie: CookieOptions = {
+  domain: "localhost",
+  path: "/",
+  sameSite: "none",
+  secure: true,
+  expires: new Date(0),
+};
+
 async function login(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
@@ -59,13 +67,22 @@ async function register(
 async function validate(req: CustomRequest, res: Response) {
   try {
     if (req.user) {
-      const user = await userService.getProfile(req.user._id)
+      const user = await userService.getProfile(req.user._id);
       res.status(200).json(user);
     } else {
       throw new Error("Missing token");
     }
   } catch (error: any) {
     res.status(401).json({ message: error.message });
+  }
+}
+
+async function logout(req: CustomRequest, res: Response) {
+  try {
+    res.cookie("authToken", "", expireCookie);
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Logout failed" });
   }
 }
 
@@ -102,6 +119,7 @@ const authController = {
   login,
   register,
   validate,
+  logout,
   getProfile,
   updateUsername,
 };
