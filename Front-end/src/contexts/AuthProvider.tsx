@@ -1,10 +1,12 @@
 "use client";
 
+import { checkAuth } from "@/app/utils/checkAuth";
 import { User } from "@/types/User";
 import {
   ReactNode,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useReducer,
 } from "react";
@@ -48,6 +50,19 @@ const AuthContext = createContext<AuthInterface | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  useEffect(() => {
+    const initAuth = async () => {
+      const user = await checkAuth();
+      if (user) {
+        dispatch({ type: ActionTypes.SETAUTH, payload: user });
+      } else {
+        dispatch({ type: ActionTypes.CLEARAUTH });
+      }
+    };
+
+    initAuth();
+  }, []);
+
   const data: AuthDataInterface = useMemo(() => {
     return {
       user: { ...state.user! },
@@ -63,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       },
       clearAuth: () => dispatch({ type: ActionTypes.CLEARAUTH }),
     };
-  }, []);
+  }, [state]);
 
   const context = {
     ...data,

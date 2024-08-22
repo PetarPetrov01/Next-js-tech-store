@@ -15,6 +15,14 @@ const cookieOptions: CookieOptions = {
   secure: true,
 };
 
+const expireCookie: CookieOptions = {
+  domain: "localhost",
+  path: "/",
+  sameSite: "none",
+  secure: true,
+  expires: new Date(0),
+};
+
 async function login(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
@@ -29,7 +37,10 @@ async function login(req: Request, res: Response) {
   }
 }
 
-async function register(req: TypedRequestBody<RegisterSchemaType>, res: Response) {
+async function register(
+  req: TypedRequestBody<RegisterSchemaType>,
+  res: Response
+) {
   console.log("Request");
   try {
     const { email, firstName, lastName, username, password } = req.body;
@@ -50,6 +61,28 @@ async function register(req: TypedRequestBody<RegisterSchemaType>, res: Response
   } catch (error: any) {
     console.log(error);
     res.status(401).json({ message: error.message });
+  }
+}
+
+async function validate(req: CustomRequest, res: Response) {
+  try {
+    if (req.user) {
+      const user = await userService.getProfile(req.user._id);
+      res.status(200).json(user);
+    } else {
+      throw new Error("Missing token");
+    }
+  } catch (error: any) {
+    res.status(401).json({ message: error.message });
+  }
+}
+
+async function logout(req: CustomRequest, res: Response) {
+  try {
+    res.cookie("authToken", "", expireCookie);
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Logout failed" });
   }
 }
 
@@ -82,6 +115,13 @@ async function updateUsername(req: CustomRequest, res: Response) {
   }
 }
 
-const authController = { login, register, getProfile, updateUsername };
+const authController = {
+  login,
+  register,
+  validate,
+  logout,
+  getProfile,
+  updateUsername,
+};
 
 export default authController;
