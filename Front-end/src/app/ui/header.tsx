@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProfileDropdown from "./profile-dropdown";
-import { cookies } from "next/headers";
 
 const guestLinks = [
   { href: "/products", label: "PRODUCTS" },
@@ -12,7 +11,7 @@ const guestLinks = [
   { href: "/register", label: "REGISTER" },
 ];
 
-const employyLinks = [
+const userLinks = [
   { href: "/products", label: "PRODUCTS" },
   { href: "/create", label: "POST PRODUCT" },
 ];
@@ -23,7 +22,6 @@ export default function Header() {
   const dropdownRef = useRef<HTMLLIElement>(null);
 
   const handleOutsideClick = (event: Event) => {
-    console.log(dropdownRef.current);
     if (
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node)
@@ -48,7 +46,7 @@ export default function Header() {
     try {
       const res = await fetch("http://localhost:3001/api/auth/logout", {
         credentials: "include",
-        cache: 'no-cache'
+        cache: "no-cache",
       });
 
       if (res.ok) {
@@ -76,18 +74,9 @@ export default function Header() {
           </Link>
           <nav>
             <ul className="flex justify-center gap-4 items-center">
-              {user?.email
-                ? employyLinks.map((link) => (
-                    <li key={link.href + link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-white text-lg px-3 py-1 hover:border-pink hover:text-lightblue duration-200"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))
-                : guestLinks.map((link) => (
+              {user?.email ? (
+                <>
+                  {userLinks.map((link) => (
                     <li key={link.href + link.label}>
                       <Link
                         href={link.href}
@@ -97,30 +86,43 @@ export default function Header() {
                       </Link>
                     </li>
                   ))}
-                  {user?.email && (
-                <li
-                  ref={dropdownRef}
-                  onClick={toggleProfileDropdown}
-                  className="flex items-center gap-2 cursor-pointer relative text-white text-lg mx-3 py-1 "
-                >
-                  <ProfileDropdown
-                    user={user}
-                    profileDropdown={profileDropdown}
-                    logout={logout}
-                  />
-                  <div className="rounded-full overflow-hidden flex justify-center items-center">
-                    <Image
-                      src={user.image || "/default-profile.jpg"}
-                      width={40}
-                      height={40}
-                      alt={user.email}
-                      className="aspect-square object-cover"
+                  
+                  <li
+                    ref={dropdownRef}
+                    onClick={toggleProfileDropdown}
+                    className="flex items-center gap-2 cursor-pointer relative text-white text-lg mx-3 py-1 "
+                  >
+                    <ProfileDropdown
+                      user={user}
+                      profileDropdown={profileDropdown}
+                      logout={logout}
+                      setProfileDropdown={setProfileDropdown}
                     />
-                  </div>
-                  <p className="text-lg hover:text-lightblue duration-200">
-                    PROFILE
-                  </p>
-                </li>
+                    <div className="rounded-full overflow-hidden flex justify-center items-center">
+                      <Image
+                        src={user.image || "/default-profile.jpg"}
+                        width={40}
+                        height={40}
+                        alt={user.email}
+                        className="aspect-square object-cover"
+                      />
+                    </div>
+                    <p className="text-lg hover:text-lightblue duration-200">
+                      PROFILE
+                    </p>
+                  </li>
+                </>
+              ) : (
+                guestLinks.map((link) => (
+                  <li key={link.href + link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-white text-lg px-3 py-1 hover:border-pink hover:text-lightblue duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))
               )}
             </ul>
           </nav>

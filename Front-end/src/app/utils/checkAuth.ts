@@ -12,6 +12,7 @@ export async function checkAuth (): Promise<User | null>{
             const user = await res.json();
             return user;
         } else {
+            throw new Error(await res.json())
             return null;
         }
     } catch (error: any) {
