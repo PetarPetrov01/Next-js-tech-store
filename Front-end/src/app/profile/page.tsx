@@ -1,10 +1,10 @@
 import ProfileForm from "@/app/ui/profile-form";
-import { useAuthContext } from "@/contexts/AuthProvider";
 import { User } from "@/types/User";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Profile() {
+
   //Fetch profile
   const res = await fetch('http://localhost:3001/api/auth/profile',{
     method: 'GET',
@@ -12,7 +12,6 @@ export default async function Profile() {
     headers: {Cookie: cookies().toString()},
     cache: "no-store",
   })
-
   if(!res.ok){
     console.log('fail')
     redirect('/')

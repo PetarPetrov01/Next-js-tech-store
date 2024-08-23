@@ -1,6 +1,7 @@
 "use client";
 
 import { checkAuth } from "@/app/utils/checkAuth";
+import { customFetch, ResponseInterceptor } from "@/app/utils/customFetch";
 import { User } from "@/types/User";
 import {
   ReactNode,
@@ -46,7 +47,7 @@ const initialState: ReducerState = {
   },
 };
 
-const AuthContext = createContext<AuthInterface | null>(null);
+export const AuthContext = createContext<AuthInterface | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -60,8 +61,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handlers: AuthHandlersInterface = useMemo(() => {
     return {
       setAuth: (user: User) => {
-        console.log("setting auth");
-        console.log(state.user);
         dispatch({ type: ActionTypes.SETAUTH, payload: user });
       },
       clearAuth: () => dispatch({ type: ActionTypes.CLEARAUTH }),
@@ -81,6 +80,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initAuth();
   }, [state.user?.id, handlers]);
 
+  useEffect(() => {
+
+    (async()=>{
+
+      const interceptor: ResponseInterceptor<any> = async (response, data) => {
+        if (response.status == 401) {
+          dispatch({ type: ActionTypes.CLEARAUTH });
+        }
+        return response;
+      };
+      
+      customFetch.addResponseInterceptor(interceptor);
+      console.log('Interceptor registered')
+    })()
+    // return () => {
+    //   console.log('unattaching')
+    //   customFetch.removeResponseInterceptor(interceptor)};
+  }, []);
+
   const context = {
     ...data,
     ...handlers,
@@ -90,8 +108,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
   );
 };
-
-
 
 export const useAuthContext = (): AuthInterface => {
   const ctx = useContext(AuthContext);
@@ -104,12 +120,11 @@ export const useAuthContext = (): AuthInterface => {
 const authReducer = (state: ReducerState, action: Action): ReducerState => {
   switch (action.type) {
     case ActionTypes.SETAUTH:
-      console.log("dispatching...");
-      console.log(action.payload);
       return {
         user:
           action.payload?.email && action.payload.username
             ? {
+                id: action.payload.id,
                 firstName: action.payload.firstName,
                 lastName: action.payload.lastName,
                 email: action.payload.email,
