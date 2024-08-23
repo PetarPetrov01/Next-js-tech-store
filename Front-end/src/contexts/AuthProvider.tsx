@@ -38,6 +38,7 @@ interface AuthInterface extends AuthDataInterface, AuthHandlersInterface {}
 
 const initialState: ReducerState = {
   user: {
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -49,19 +50,6 @@ const AuthContext = createContext<AuthInterface | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
-  useEffect(() => {
-    const initAuth = async () => {
-      const user = await checkAuth();
-      if (user) {
-        dispatch({ type: ActionTypes.SETAUTH, payload: user });
-      } else {
-        dispatch({ type: ActionTypes.CLEARAUTH });
-      }
-    };
-
-    initAuth();
-  }, []);
 
   const data: AuthDataInterface = useMemo(() => {
     return {
@@ -78,7 +66,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       },
       clearAuth: () => dispatch({ type: ActionTypes.CLEARAUTH }),
     };
-  }, [state]);
+  }, []);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      const user = await checkAuth();
+      if (user) {
+        dispatch({ type: ActionTypes.SETAUTH, payload: user });
+      } else {
+        dispatch({ type: ActionTypes.CLEARAUTH });
+      }
+    };
+
+    initAuth();
+  }, [state.user?.id, handlers]);
 
   const context = {
     ...data,
@@ -89,6 +90,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
   );
 };
+
+
 
 export const useAuthContext = (): AuthInterface => {
   const ctx = useContext(AuthContext);

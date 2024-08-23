@@ -29,8 +29,8 @@ export default async function Page() {
             <article className="sm:w-[71%] lg:w-[75%] border-2 border-new-mint flex flex-col items-center justify-center">
               <h2 className="text-4xl">Browse our products</h2>
               <div className="flex flex-wrap justify-start items-stretch md:gap-[2%] px-2">
-                {new Array(8).fill(1).map((id) => (
-                  <ProductCard prod={mockProd} key={id + 1} />
+                {new Array(8).fill(1).map((id, index) => (
+                  <ProductCard prod={mockProd} key={id + index} />
                 ))}
               </div>
             </article>
