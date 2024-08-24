@@ -42,7 +42,6 @@ async function register(
   req: TypedRequestBody<RegisterSchemaType>,
   res: Response
 ) {
-  console.log("Request");
   try {
     const { email, firstName, lastName, username, password } = req.body;
     console.log(email);
@@ -74,7 +73,9 @@ async function validate(req: CustomRequest, res: Response) {
       throw new Error("Missing token");
     }
   } catch (error: any) {
+    res.cookie("authToken", "", expireCookie);
     res.status(401).json({ message: error.message });
+    console.log(error.message)
   }
 }
 
@@ -89,13 +90,13 @@ async function logout(req: CustomRequest, res: Response) {
 
 async function getProfile(req: CustomRequest, res: Response) {
   try {
+    console.log('Get prof req')
     if (!req.user?._id) {
       throw new Error("You must be logged in");
     }
     const data = await userService.getProfile(req?.user?._id);
     res.status(200).json(data);
   } catch (error: any) {
-    console.log(error);
     res.status(401).json({ message: error.message });
   }
 }

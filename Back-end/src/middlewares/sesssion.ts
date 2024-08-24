@@ -16,6 +16,8 @@ export default function session(
   next: NextFunction
 ) {
   const token = req.cookies[authCookieName];
+  console.log('|TOKEN|')
+  console.log(token)
   if (token) {
     try {
       const payload = verifyJWT(token);
