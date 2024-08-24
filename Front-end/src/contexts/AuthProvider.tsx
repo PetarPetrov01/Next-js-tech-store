@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const initAuth = async () => {
+      console.log('Context is fetching...')
       const user = await checkAuth();
       if (user) {
         dispatch({ type: ActionTypes.SETAUTH, payload: user });
@@ -78,25 +79,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     initAuth();
-  }, [state.user?.id, handlers]);
-
-  useEffect(() => {
-
-    (async()=>{
-
-      const interceptor: ResponseInterceptor<any> = async (response, data) => {
-        if (response.status == 401) {
-          dispatch({ type: ActionTypes.CLEARAUTH });
-        }
-        return response;
-      };
-      
-      customFetch.addResponseInterceptor(interceptor);
-      console.log('Interceptor registered')
-    })()
-    // return () => {
-    //   console.log('unattaching')
-    //   customFetch.removeResponseInterceptor(interceptor)};
   }, []);
 
   const context = {
