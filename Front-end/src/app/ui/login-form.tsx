@@ -5,10 +5,11 @@ import { useFormState } from "react-dom";
 import { login } from "../lib/actions";
 import { set, z } from "zod";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthContext } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
+import { checkAuth } from "../utils/checkAuth";
 
 const UserLoginSchema = z.object({
   email: z
@@ -25,11 +26,22 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const formRef = useRef<HTMLFormElement>(null);
-  const { setAuth } = useAuthContext();
+  const { setAuth, clearAuth, user } = useAuthContext();
   const router = useRouter();
 
-  // const initialState = { message: "", errors: {} };
-  // const [state, dispatch] = useFormState(login, initialState);
+  useLayoutEffect(() => {
+    if (user?.email) {
+      const initAuth = async () => {
+        console.log('Login form is fetching...')
+        const user = await checkAuth();
+        if (!user?.email) {
+          clearAuth();
+        }
+      };
+
+      initAuth();
+    }
+  }, []);
 
   const {
     register,
@@ -110,7 +122,10 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
       </div>
       <div className="w-[80%] relative ">
         {/* <p className="absolute -top-6 text-center w-[100%]">{state?.message}</p> */}
-        <button disabled={isLoading} className="relative w-[100%] py-1 rounded-md border-new-mint border-[1px] duration-150 bg-new-mint text-new-gray after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-sandstone disabled:cursor-default">
+        <button
+          disabled={isLoading}
+          className="relative w-[100%] py-1 rounded-md border-new-mint border-[1px] duration-150 bg-new-mint text-new-gray after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-sandstone disabled:cursor-default"
+        >
           {isLoading ? (
             <div className="flex flex-row justify-center gap-2 p-1.5">
               <div className="w-3 h-3 rounded-full bg-white animate-bounce"></div>
