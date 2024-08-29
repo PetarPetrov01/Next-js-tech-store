@@ -15,8 +15,17 @@ const cookieOptions: CookieOptions = {
   secure: true,
 };
 
+export const expiredCookie: CookieOptions = {
+  domain: "localhost",
+  path: "/",
+  expires: new Date(0),
+  sameSite: "none",
+  secure: true,
+};
+
 async function login(req: Request, res: Response) {
   try {
+    console.log("in contr");
     const { email, password } = req.body;
     const { authToken, user } = await authService.login(email, password);
 
@@ -64,15 +73,15 @@ async function validate(req: CustomRequest, res: Response) {
       throw new Error("Missing token");
     }
   } catch (error: any) {
-    res.cookie("authToken", "", cookieOptions);
+    res.cookie("authToken", "", expiredCookie);
     res.status(401).json({ message: error.message });
-    console.log(error.message)
+    console.log(error.message);
   }
 }
 
 async function logout(req: CustomRequest, res: Response) {
   try {
-    res.cookie("authToken", "", cookieOptions);
+    res.cookie("authToken", "", expiredCookie);
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     res.status(400).json({ message: "Logout failed" });
@@ -81,7 +90,7 @@ async function logout(req: CustomRequest, res: Response) {
 
 async function getProfile(req: CustomRequest, res: Response) {
   try {
-    console.log('Get prof req')
+    console.log("Get prof req");
     if (!req.user?._id) {
       throw new Error("You must be logged in");
     }

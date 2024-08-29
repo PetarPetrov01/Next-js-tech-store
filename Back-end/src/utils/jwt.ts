@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret, TokenExpiredError } from "jsonwebtoken";
 
 const secret = process.env.JWT_SECRET || "1qsc2wdv3efv";
 
@@ -7,14 +7,42 @@ export interface UserPayload extends JwtPayload {
   email: string;
 }
 
+interface CustomJWT {
+  payload: UserPayload | null;
+  expired?: boolean;
+}
+
 export async function signJWT(payload: UserPayload): Promise<string> {
   return new Promise((resolve, reject) => {
-    jwt.sign(payload, secret, { expiresIn: 10 }, (err, enc) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(enc as string);
+    jwt.sign(
+      payload,
+      secret,
+      { expiresIn: 60 * 15, algorithm: "HS256" },
+      (err, encoded) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(encoded as string);
+        }
       }
-    });
+    );
   });
 }
+
+function verifyToken(verifyKey: Secret) {
+  return (token: string): CustomJWT => {
+    try {
+      const verified = jwt.verify(token, verifyKey) as UserPayload;
+
+      return { payload: verified, expired: false };
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        return { payload: null, expired: true };
+      }
+
+      return { payload: null };
+    }
+  };
+}
+
+export const verifyJWT = verifyToken(secret);

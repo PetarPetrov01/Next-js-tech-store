@@ -22,6 +22,8 @@ async function login(email: string, password: string) {
     },
   });
 
+  console.log(existingUser)
+
   if (!existingUser || !existingUser.password) {
     throw new Error("Invalid email or password");
   }
@@ -43,7 +45,7 @@ async function login(email: string, password: string) {
       lastName: existingUser.lastName,
       username: existingUser.username,
     },
-    authToken: signJWT(userPayload)
+    authToken: await signJWT(userPayload)
   }
 }
 
@@ -82,7 +84,7 @@ async function register(
       lastName: newUser.lastName,
       username: newUser.username,
     },
-    authToken: signJWT(userPayload)
+    authToken: await signJWT(userPayload)
   }
 }
 
