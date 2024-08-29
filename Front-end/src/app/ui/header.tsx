@@ -51,7 +51,6 @@ export default function Header() {
 
       if (res.ok) {
         const result = await res.json();
-        console.log(result);
         clearAuth();
       } else {
         throw new Error(await res.json());
@@ -86,7 +85,7 @@ export default function Header() {
                       </Link>
                     </li>
                   ))}
-                  
+
                   <li
                     ref={dropdownRef}
                     onClick={toggleProfileDropdown}

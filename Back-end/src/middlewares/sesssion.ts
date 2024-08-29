@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
-import { verifyJWT } from "../services/authService";
+import { expiredCookie } from "../controllers/auth.controller";
+import { verifyJWT } from "../utils/jwt";
 const authCookieName = "authToken";
 
 export interface CustomRequest extends Request {
   user?: {
     _id: string;
     email: string;
-  }
+  };
 }
 
 export default function session(
@@ -16,14 +17,22 @@ export default function session(
   next: NextFunction
 ) {
   const token = req.cookies[authCookieName];
+  console.log("|TOKEN|");
+  console.log(token);
   if (token) {
     try {
-      const payload = verifyJWT(token);
-      req.user = payload;
+      const verifiedToken = verifyJWT(token);
+
+      if (!verifiedToken.payload) {
+        throw new Error("Expired access token!");
+      }
+
+      req.user = verifiedToken.payload;
 
       // req.token = token;
-    } catch (error) {
-      res.status(401).json({ message: "Invalid auth token" });
+    } catch (error: any) {
+      res.cookie("authToken", "", expiredCookie);
+      res.status(401).json({ message: error.message });
       return;
     }
   }

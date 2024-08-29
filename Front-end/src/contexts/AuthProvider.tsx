@@ -38,6 +38,7 @@ interface AuthInterface extends AuthDataInterface, AuthHandlersInterface {}
 
 const initialState: ReducerState = {
   user: {
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -45,23 +46,10 @@ const initialState: ReducerState = {
   },
 };
 
-const AuthContext = createContext<AuthInterface | null>(null);
+export const AuthContext = createContext<AuthInterface | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
-  useEffect(() => {
-    const initAuth = async () => {
-      const user = await checkAuth();
-      if (user) {
-        dispatch({ type: ActionTypes.SETAUTH, payload: user });
-      } else {
-        dispatch({ type: ActionTypes.CLEARAUTH });
-      }
-    };
-
-    initAuth();
-  }, []);
 
   const data: AuthDataInterface = useMemo(() => {
     return {
@@ -72,13 +60,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handlers: AuthHandlersInterface = useMemo(() => {
     return {
       setAuth: (user: User) => {
-        console.log("setting auth");
-        console.log(state.user);
         dispatch({ type: ActionTypes.SETAUTH, payload: user });
       },
       clearAuth: () => dispatch({ type: ActionTypes.CLEARAUTH }),
     };
-  }, [state]);
+  }, []);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      console.log('Context is fetching...')
+      const user = await checkAuth();
+      if (user) {
+        dispatch({ type: ActionTypes.SETAUTH, payload: user });
+      } else {
+        dispatch({ type: ActionTypes.CLEARAUTH });
+      }
+    };
+
+    initAuth();
+  }, []);
 
   const context = {
     ...data,
@@ -101,12 +101,11 @@ export const useAuthContext = (): AuthInterface => {
 const authReducer = (state: ReducerState, action: Action): ReducerState => {
   switch (action.type) {
     case ActionTypes.SETAUTH:
-      console.log("dispatching...");
-      console.log(action.payload);
       return {
         user:
           action.payload?.email && action.payload.username
             ? {
+                id: action.payload.id,
                 firstName: action.payload.firstName,
                 lastName: action.payload.lastName,
                 email: action.payload.email,

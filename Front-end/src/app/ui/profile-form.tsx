@@ -4,15 +4,22 @@ import { User } from "@/types/User";
 import { CameraIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { ChangeEvent, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import UploadImageForm from "./upload-form";
 
 const userSchema = z.object({
-  username: z.optional(z.string().trim()),
-  phone: z.optional(z.string().trim()),
+  username: z
+    .string()
+    .trim()
+    .min(6, "Username must be atleast 6 characters long")
+    .max(15, "Username must be no more than 15 characters long"),
+  phone: z
+    .string()
+    .trim()
+    .min(6, "Phone must be atleast 6 characters long")
+    .max(15, "Phone must be no more than 15 characters long"),
 });
 
 type Inputs = z.infer<typeof userSchema>;
@@ -22,7 +29,6 @@ export default function ProfileForm({ user }: { user: User }) {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEditing = () => {
-    console.log("sea");
     setIsEditing((state) => !state);
   };
 
@@ -31,14 +37,24 @@ export default function ProfileForm({ user }: { user: User }) {
     document.body.style.overflow = "hidden";
   };
 
-  const { handleSubmit, reset, register } = useForm<Inputs>({
+  const {
+    handleSubmit,
+    reset,
+    register,
+    formState: { errors },
+  } = useForm<Inputs>({
     resolver: zodResolver(userSchema),
-    defaultValues: {...user ,phone: '1234567890'}
+    defaultValues: { ...user, phone: "1234567890" },
   });
 
+  const onCancelClick = () => {
+    reset();
+    setIsEditing(false);
+  };
+
   const processSubmit = handleSubmit(async (data) => {
-    console.log('sumb')
-    toggleEditing()
+    console.log(data);
+    toggleEditing();
   });
 
   return (
@@ -67,24 +83,66 @@ export default function ProfileForm({ user }: { user: User }) {
                 <CameraIcon height={20} width={20} />
               </a>
             </div>
-            <input
-              type="text"
-              {...register("username")}
-              placeholder="Username"
-              disabled={!isEditing}
-              className="w-full pr-2 text-xl bg-white/15 rounded-md outline-none enabled:pl-2 enabled:mb-4 enabled: disabled:bg-transparent text-new-mint duration-150"
-            />
-            <input
-              type="text"
-              {...register("phone")}
-              placeholder="Phone"
-              disabled={!isEditing}
-              className="w-full pr-2 text-xl bg-white/15 rounded-md outline-none enabled:pl-2 enabled:mb-4 enabled: disabled:bg-transparent text-new-mint duration-150"
-            />
+            <div
+              className={`flex flex-col duration-150 gap-1 pb-1 ${
+                isEditing && "gap-7 pb-7"
+              }`}
+            >
+              <div className=" flex flex-col relative">
+                <input
+                  type="text"
+                  {...register("username")}
+                  placeholder="Username"
+                  disabled={!isEditing}
+                  className="w-full pr-2 py-0.5 text-xl bg-white/15 rounded-md outline-none enabled:pl-2 disabled:bg-transparent text-new-mint duration-150"
+                />
+                {isEditing && errors.username && (
+                  <>
+                    <span className="absolute top-full text-new-peach text-xs italic">
+                      {errors.username.message}
+                    </span>
+                  </>
+                )}
+              </div>
+              <div className="flex flex-col relative">
+                <input
+                  type="text"
+                  {...register("phone")}
+                  placeholder="Phone"
+                  disabled={!isEditing}
+                  className="w-full pr-2 py-0.5 text-xl bg-white/15 rounded-md outline-none enabled:pl-2 disabled:bg-transparent text-new-mint duration-150"
+                />
+                {isEditing && errors.phone && (
+                  <>
+                    <span className="absolute top-full text-new-peach text-xs italic">
+                      {errors.phone.message}
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
             {isEditing ? (
-              <button type="submit" className="py-1 px-3 rounded-sm block bg-new-peach text-new-gray hover:bg-new-sandstone duration-200">Save</button>
+              <>
+                <button
+                  type="submit"
+                  className="py-1 px-3 rounded-sm block bg-new-peach text-new-gray hover:bg-new-sandstone duration-200"
+                >
+                  Save
+                </button>
+                <a
+                  onClick={onCancelClick}
+                  className="cursor-pointer mt-2 py-1 px-3 rounded-sm bg-new-mint text-new-gray hover:bg-new-gray hover:text-new-mint duration-150"
+                >
+                  Cancel
+                </a>
+              </>
             ) : (
-              <a onClick={toggleEditing} className="self-end cursor-pointer">Edit</a>
+              <a
+                onClick={toggleEditing}
+                className=" px-3 py-1  self-center cursor-pointer rounded-sm bg-new-peach text-new-gray  hover:bg-new-sandstone duration-150"
+              >
+                Edit
+              </a>
             )}
           </form>
         </article>
