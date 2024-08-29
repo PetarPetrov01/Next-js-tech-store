@@ -1,16 +1,12 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import { prisma } from "../config/db-config";
 
 import { User } from "@prisma/client";
+import { signJWT, UserPayload } from "../utils/jwt";
 
 const secret = process.env.JWT_SECRET || "1qsc2wdv3efv";
-
-interface UserPayload extends JwtPayload {
-  _id: string;
-  email: string;
-}
 
 export interface SecuredUser {
   id: string;
@@ -26,19 +22,28 @@ async function login(email: string, password: string) {
     },
   });
 
-  if (!existingUser) {
+  if (!existingUser || !existingUser.password) {
     throw new Error("Invalid email or password");
   }
 
-  if (existingUser.password) {
-    const matchPass = await bcrypt.compare(password, existingUser.password);
-    if (!matchPass) {
-      throw new Error("Invalid email or password");
-    }
+  const matchPass = await bcrypt.compare(password, existingUser.password);
+  if (!matchPass) {
+    throw new Error("Invalid email or password");
+  }
 
-    return createToken(existingUser);
-  } else {
-    throw new Error("Password not provided");
+  const userPayload = {
+    _id: existingUser.id,
+    email: existingUser.email,
+  }
+
+  return {
+    user:{
+      ...userPayload,
+      firstName: existingUser.firstName,
+      lastName: existingUser.lastName,
+      username: existingUser.username,
+    },
+    authToken: signJWT(userPayload)
   }
 }
 
@@ -65,7 +70,20 @@ async function register(
     },
   });
 
-  return createToken(newUser);
+  const userPayload = {
+    _id: newUser.id,
+    email: newUser.email,
+  }
+
+  return {
+    user:{
+      ...userPayload,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      username: newUser.username,
+    },
+    authToken: signJWT(userPayload)
+  }
 }
 
 async function updateImage(imageUrl: string, id: string) {
@@ -73,24 +91,6 @@ async function updateImage(imageUrl: string, id: string) {
     where: { id: id },
     data: { image: imageUrl },
   });
-}
-
-function createToken(user: User) {
-  const payload: UserPayload = {
-    _id: user.id,
-    email: user.email,
-  };
-
-  return {
-    user: {
-      _id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.username,
-    },
-    authToken: jwt.sign(payload, secret),
-  };
 }
 
 export function verifyJWT(token: string): UserPayload {

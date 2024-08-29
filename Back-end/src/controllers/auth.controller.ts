@@ -10,18 +10,9 @@ import { RegisterSchemaType } from "../middlewares/validations/register-request"
 const cookieOptions: CookieOptions = {
   domain: "localhost",
   path: "/",
-  // maxAge: 7 * 24 * 60 * 60 * 1000,
-  maxAge: 10 * 1000,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
   sameSite: "none",
   secure: true,
-};
-
-const expireCookie: CookieOptions = {
-  domain: "localhost",
-  path: "/",
-  sameSite: "none",
-  secure: true,
-  expires: new Date(0),
 };
 
 async function login(req: Request, res: Response) {
@@ -73,7 +64,7 @@ async function validate(req: CustomRequest, res: Response) {
       throw new Error("Missing token");
     }
   } catch (error: any) {
-    res.cookie("authToken", "", expireCookie);
+    res.cookie("authToken", "", cookieOptions);
     res.status(401).json({ message: error.message });
     console.log(error.message)
   }
@@ -81,7 +72,7 @@ async function validate(req: CustomRequest, res: Response) {
 
 async function logout(req: CustomRequest, res: Response) {
   try {
-    res.cookie("authToken", "", expireCookie);
+    res.cookie("authToken", "", cookieOptions);
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     res.status(400).json({ message: "Logout failed" });
