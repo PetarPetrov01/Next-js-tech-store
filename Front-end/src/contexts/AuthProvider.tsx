@@ -1,7 +1,6 @@
 "use client";
 
 import { checkAuth } from "@/app/utils/checkAuth";
-import { customFetch, ResponseInterceptor } from "@/app/utils/customFetch";
 import { User } from "@/types/User";
 import {
   ReactNode,
