@@ -5,6 +5,16 @@ async function getProducts(params: any) {
 
   const prods = await prisma.product.findMany({
     where: {
+      OR: [
+        {
+          name: { contains: params.search || undefined, mode: "insensitive" },
+        },
+        {
+          brand: {
+            name: { contains: params.search || undefined, mode: "insensitive" },
+          },
+        },
+      ],
       category: params.category || undefined,
       brand: { name: params.brand || undefined },
       price: {
@@ -17,7 +27,7 @@ async function getProducts(params: any) {
       brand: { select: { name: true } },
       images: { select: { url: true } },
     },
-    orderBy: { [params.sort.key]: params.sort.order },
+    orderBy: { [params.sort?.key]: params.sort?.order || undefined },
   });
 
   return prods.map((p) => ({
