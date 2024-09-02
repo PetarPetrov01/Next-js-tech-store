@@ -5,6 +5,7 @@ import cors from "cors";
 import { ensureUploadDirectory } from "../middlewares/uploadDirectory";
 import { logger } from "../middlewares/logger";
 import session from "../middlewares/sesssion";
+import queryParams from "../middlewares/queryParams";
 
 export default function expressConfig(app: Application): void {
   app.use(logger);
@@ -16,6 +17,7 @@ export default function expressConfig(app: Application): void {
       credentials: true
     })
   );
+  app.use(queryParams)
   app.use(session);
   app.use(ensureUploadDirectory);
 }

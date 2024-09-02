@@ -1,18 +1,30 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { string } from "zod";
 import { PopulatedProduct, Product } from "../../types/Product";
 
+type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
-export const getProds = async (): Promise<Product[]> => {
-  const authCookie = cookies().get("auth-cookie");
+const baseUrl = "http://localhost:3001/api/products";
 
-  const headers = authCookie
-    ? { Cookie: `${authCookie.name}=${authCookie.value}` }
-    : undefined;
+export const getProds = async (
+  queryParams: QueryParams
+): Promise<Product[]> => {
+  const queryParamsArr: string[] = [];
 
-  const res = await fetch("http://localhost:3001/api/products", {
-    headers,
+  if (queryParams) {
+    Object.entries(queryParams).forEach(
+      ([key, val]: [string, QueryParams[keyof QueryParams]]) => {
+        if (val) {
+          queryParamsArr.push(`${key}=${encodeURIComponent(val.toString())}`);
+        }
+      }
+    );
+  }
+
+  console.log(queryParamsArr);
+
+  const res = await fetch(`${baseUrl}?${queryParamsArr.join('&')}`, {
     next: {
       revalidate: 10,
     },
