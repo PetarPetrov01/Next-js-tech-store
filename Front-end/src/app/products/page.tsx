@@ -3,14 +3,20 @@ import { getProds } from "../lib/data";
 
 import ProductCard from "../ui/product-card";
 import { Product } from "@/types/Product";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Products",
 };
 
+const validCategories = ['tv','phone','laptop']
+
 export default async function Page({searchParams}: {searchParams: any}) {
 
   const category = searchParams.category
+  if(category && !validCategories.includes(category)){
+    notFound()
+  }
 
   const prods = await getProds(searchParams);
 
