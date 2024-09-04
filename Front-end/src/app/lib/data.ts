@@ -1,6 +1,5 @@
 "use server";
 
-import { string } from "zod";
 import { PopulatedProduct, Product } from "../../types/Product";
 
 type QueryParams = Record<string, string | number | boolean | null | undefined>;

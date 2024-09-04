@@ -4,18 +4,19 @@ import { getProds } from "../lib/data";
 import ProductCard from "../ui/product-card";
 import { Product } from "@/types/Product";
 import { notFound } from "next/navigation";
+import ProductsList from "../components/ProductsList";
+import Filter from "../components/Filter";
 
 export const metadata: Metadata = {
   title: "Products",
 };
 
-const validCategories = ['tv','phone','laptop']
+const validCategories = ["TV", "Phone", "Laptop"];
 
-export default async function Page({searchParams}: {searchParams: any}) {
-
-  const category = searchParams.category
-  if(category && !validCategories.includes(category)){
-    notFound()
+export default async function Page({ searchParams }: { searchParams: any }) {
+  const category = searchParams.category;
+  if (category && !validCategories.includes(category)) {
+    notFound();
   }
 
   const prods = await getProds(searchParams);
@@ -42,15 +43,8 @@ export default async function Page({searchParams}: {searchParams: any}) {
       <section className="flex justify-center">
         <div className="container max-w-[1450px] flex justify-center py-5 px-4">
           <div className="flex w-full justify-between items-start">
-            <article className="sm:w-[28%] lg:w-[24%] flex flex-col border-2 border-new-peach min-h-60"></article>
-            <article className="sm:w-[71%] lg:w-[75%] flex flex-col items-center justify-center">
-              <h2 className="text-4xl">Browse our products</h2>
-              <div className="flex flex-wrap w-full justify-start items-stretch md:gap-[2%] px-2">
-              {prods.map((prod,i)=>(
-                  <ProductCard prod={prod} key={prod.id} />
-              ))}
-              </div>
-            </article>
+            <Filter />
+            <ProductsList category={category} searchParams={searchParams} />
           </div>
         </div>
       </section>
