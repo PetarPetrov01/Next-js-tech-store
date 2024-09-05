@@ -2,6 +2,7 @@ import e, { Request, Response } from "express";
 
 import productService from "../services/productService";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
+import categoryService from "../services/categoryService";
 
 async function getProducts(req: Request, res: Response) {
   try {
@@ -15,6 +16,15 @@ async function getProducts(req: Request, res: Response) {
       return;
     }
     res.status(400).json(error.message);
+  }
+}
+
+async function getCategories(req: Request, res: Response){
+  try {
+    const categories = await categoryService.getCategories()
+    res.json(categories)
+  } catch (error: any) {
+    res.status(400).json(error.message)
   }
 }
 

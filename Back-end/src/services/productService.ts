@@ -15,7 +15,7 @@ async function getProducts(params: any) {
           },
         },
       ],
-      category: {name: params.category || undefined},
+      category: { id: Number(params.category) || undefined },
       brand: { name: params.brand || undefined },
       price: {
         gte: params.price?.gte || undefined,
