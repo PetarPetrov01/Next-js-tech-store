@@ -13,6 +13,7 @@ const validCategories = [0,1,2,3]; //Consider reading from the API
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const category = searchParams.category;
+
   if (category && !validCategories.includes(Number(category))) {
     notFound();
   }
@@ -35,12 +36,12 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   };
 
   return (
-    <main className="min-h-[75vh]">
+    <main className="min-h-[75vh] bg-gradient-radial from-new-teal to-new-gray">
       <section className="flex justify-center">
         <div className="container max-w-[1450px] flex justify-center py-5 px-4">
           <div className="flex w-full justify-between items-start">
             <Filter />
-            <ProductsList category={category} searchParams={searchParams} />
+            <ProductsList searchParams={searchParams} />
           </div>
         </div>
       </section>

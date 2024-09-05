@@ -12,7 +12,7 @@ export default function LoginPage() {
             <p className="text-white">or</p>
             <Link
               href="/register"
-              className="block w-[80%] py-1 text-xl text-center rounded-md bg-new-peach border-[1px] duration-150 border-new-peach text-new-gray hover:border-white"
+              className="block w-[80%] py-1 text-xl text-center rounded-md bg-new-peach-100 border-[1px] duration-150 border-new-peach text-new-gray hover:border-white"
             >
               Register
             </Link>

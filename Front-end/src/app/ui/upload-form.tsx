@@ -131,7 +131,7 @@ export default function UploadImageForm({
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-new-peach w-20 h-10 enabled:hover:bg-new-sandstone duration-150"
+                className="bg-new-peach-100 w-20 h-10 enabled:hover:bg-new-sandstone duration-150"
               >
                 {isLoading ? (
                   <div className="flex flex-row justify-center gap-2">

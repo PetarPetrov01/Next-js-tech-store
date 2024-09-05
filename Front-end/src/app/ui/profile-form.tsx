@@ -59,7 +59,7 @@ export default function ProfileForm({ user }: { user: User }) {
 
   return (
     <>
-      <h2 className="mt-4 text-new-peach text-center">
+      <h2 className="mt-4 text-new-peach-100 text-center">
         {user.firstName} {user.lastName}
       </h2>
       <div className="flex flex-col items-center sm:items-start sm:flex-row justify-between sm:gap-5 w-full">
@@ -79,7 +79,7 @@ export default function ProfileForm({ user }: { user: User }) {
                 height={150}
                 className="rounded-full aspect-square object-cover"
               />
-              <a className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-new-gray text-new-peach p-[0.4rem] duration-150 hover:bg-new-teal">
+              <a className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-new-gray text-new-peach-100 p-[0.4rem] duration-150 hover:bg-new-teal">
                 <CameraIcon height={20} width={20} />
               </a>
             </div>
@@ -98,7 +98,7 @@ export default function ProfileForm({ user }: { user: User }) {
                 />
                 {isEditing && errors.username && (
                   <>
-                    <span className="absolute top-full text-new-peach text-xs italic">
+                    <span className="absolute top-full text-new-peach-100 text-xs italic">
                       {errors.username.message}
                     </span>
                   </>
@@ -114,7 +114,7 @@ export default function ProfileForm({ user }: { user: User }) {
                 />
                 {isEditing && errors.phone && (
                   <>
-                    <span className="absolute top-full text-new-peach text-xs italic">
+                    <span className="absolute top-full text-new-peach-100 text-xs italic">
                       {errors.phone.message}
                     </span>
                   </>
@@ -125,7 +125,7 @@ export default function ProfileForm({ user }: { user: User }) {
               <>
                 <button
                   type="submit"
-                  className="py-1 px-3 rounded-sm block bg-new-peach text-new-gray hover:bg-new-sandstone duration-200"
+                  className="py-1 px-3 rounded-sm block bg-new-peach-100 text-new-gray hover:bg-new-sandstone duration-200"
                 >
                   Save
                 </button>
@@ -139,7 +139,7 @@ export default function ProfileForm({ user }: { user: User }) {
             ) : (
               <a
                 onClick={toggleEditing}
-                className=" px-3 py-1  self-center cursor-pointer rounded-sm bg-new-peach text-new-gray  hover:bg-new-sandstone duration-150"
+                className=" px-3 py-1  self-center cursor-pointer rounded-sm bg-new-peach-100 text-new-gray  hover:bg-new-sandstone duration-150"
               >
                 Edit
               </a>

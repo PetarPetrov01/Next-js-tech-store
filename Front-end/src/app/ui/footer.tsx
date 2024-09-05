@@ -27,7 +27,7 @@ export default function Footer() {
             <div className="flex gap-1">
               <Link
                 href="contact"
-                className="flex gap-2 hover:text-new-peach text-xl  duration-150"
+                className="flex gap-2 hover:text-new-peach-100 text-xl  duration-150"
               >
                 <EnvelopeIcon className="w-6 h-auto" />
                 Contact us
@@ -36,13 +36,13 @@ export default function Footer() {
             <div className="flex gap-1">
               <Link
                 href="about"
-                className="flex gap-2 hover:text-new-peach text-xl  duration-150"
+                className="flex gap-2 hover:text-new-peach-100 text-xl  duration-150"
               >
                 <QuestionMarkCircleIcon className="w-6 h-auto" />
                 About
               </Link>
             </div>
-            {/* <Link href="get" className="hover:text-new-peach">
+            {/* <Link href="get" className="hover:text-new-peach-100">
               Get in touch
             </Link> */}
           </article>
@@ -53,7 +53,7 @@ export default function Footer() {
               placeholder="E-mail"
               className="rounded-sm text-lg p-1 outline-none bg-white/60 text-new-gray duration-200 placeholder:text-gray-500 focus:bg-new-mint focus:outline-1 focus:outline-new-mint"
             />
-            <button className="py-1.5 border-2 border-new-sandstone text-new-peach text-lg hover:bg-new-peach hover:text-new-gray duration-150">
+            <button className="py-1.5 border-2 border-new-sandstone text-new-peach-100 text-lg hover:bg-new-peach-100 hover:text-new-gray duration-150">
               Subscribe
             </button>
           </article>
