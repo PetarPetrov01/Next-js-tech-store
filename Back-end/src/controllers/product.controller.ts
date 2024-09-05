@@ -1,4 +1,4 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 
 import productService from "../services/productService";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
@@ -19,13 +19,13 @@ async function getProducts(req: Request, res: Response) {
   }
 }
 
-async function getCategories(req: Request, res: Response){
+async function getCategories(req: Request, res: Response) {
   try {
-    const categories = await categoryService.getCategories()
-    res.json(categories)
+    const categories = await categoryService.getCategories();
+    res.json(categories);
   } catch (error: any) {
-    res.status(400).json(error.message)
+    res.status(400).json(error.message);
   }
 }
 
-export default { getProducts };
+export default { getProducts, getCategories };
