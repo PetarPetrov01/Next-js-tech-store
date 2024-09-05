@@ -1,7 +1,5 @@
 import { Metadata } from "next";
-import { getProds } from "../lib/data";
 
-import ProductCard from "../ui/product-card";
 import { Product } from "@/types/Product";
 import { notFound } from "next/navigation";
 import ProductsList from "../components/ProductsList";
@@ -11,15 +9,13 @@ export const metadata: Metadata = {
   title: "Products",
 };
 
-const validCategories = ["TV", "Phone", "Laptop"];
+const validCategories = [0,1,2,3]; //Consider reading from the API
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const category = searchParams.category;
-  if (category && !validCategories.includes(category)) {
+  if (category && !validCategories.includes(Number(category))) {
     notFound();
   }
-
-  const prods = await getProds(searchParams);
 
   const mockProd: Product = {
     id: "sdaw",
