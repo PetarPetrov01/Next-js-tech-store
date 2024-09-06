@@ -21,8 +21,6 @@ export default function CategoryFilter({
     return searchParams.get("category") === cat;
   };
 
-  const slicedCats = categories.slice(0, 2);
-
   const toggleAllCats = () => {
     setShowAllCats((prev) => !prev);
   };
@@ -41,7 +39,11 @@ export default function CategoryFilter({
   };
 
   return (
-    <div className="flex flex-col gap-1 p-2 bg-[#ffd5ae] rounded-md font-semibold text-new-gray transition-all duration-200">
+    <div
+      className={`relative flex flex-col gap-1 p-2 bg-[#ffd5ae] overflow-hidden rounded-md font-semibold text-new-gray duration-200 ${
+        showAllCats ? "max-h-80" : "max-h-32"
+      }`}
+    >
       <h3>Categories</h3>
       <div className="flex flex-col items-start gap-1 pl-2 font-normal">
         <Link
@@ -51,33 +53,25 @@ export default function CategoryFilter({
           All
         </Link>
 
-        {showAllCats
-          ? categories.map((cat) => (
-              <Link
-                href={handleUpdateCat(cat.id)}
-                key={cat.id}
-                className={`flex gap-1.5 ${
-                  isActive(String(cat.id)) && "font-semibold"
-                }`}
-              >
-                <p>{cat.name}</p>
-                <span className="text-sm">({cat._count})</span>
-              </Link>
-            ))
-          : slicedCats.map((cat) => (
-              <Link
-                href={handleUpdateCat(cat.id)}
-                key={cat.id}
-                className={`flex gap-1.5 ${
-                  isActive(String(cat.id)) && "font-semibold"
-                }`}
-              >
-                <p>{cat.name}</p>
-                <span className="text-sm">({cat._count})</span>
-              </Link>
-            ))}
+        {categories.map((cat) => (
+          <Link
+            href={handleUpdateCat(cat.id)}
+            key={cat.id}
+            className={`flex gap-1.5 ${
+              isActive(String(cat.id)) && "font-semibold"
+            }`}
+          >
+            <p>{cat.name}</p>
+            <span className="text-sm">({cat._count})</span>
+          </Link>
+        ))}
 
-        <a onClick={toggleAllCats} className="text-sm cursor-pointer">{showAllCats ? "Hide" : "Show more"}</a>
+        <a
+          onClick={toggleAllCats}
+          className="absolute right-2 bottom-2 text-sm hover:text-new-teal-80 cursor-pointer"
+        >
+          {showAllCats ? "Show less" : "Show more"}
+        </a>
       </div>
     </div>
   );
