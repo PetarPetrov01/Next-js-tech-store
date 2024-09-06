@@ -29,4 +29,5 @@ export type PopulatedProduct = Omit<APIProduct, "_ownerId"> & {
 export type Categories = {
   id: number;
   name: string;
+  _count: number;
 }[];
