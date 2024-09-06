@@ -66,7 +66,7 @@ export default function ProfileForm({ user }: { user: User }) {
         <article className="w-[60%]  sm:w-[35%] relative flex flex-col items-center gap-4 py-10">
           <form
             onSubmit={processSubmit}
-            className="relative w-[95%] flex flex-col items-center bg-new-teal pt-28 p-16 rounded-2xl min-h-[20vh]"
+            className="relative w-[95%] flex flex-col items-center bg-new-teal-100 pt-28 p-16 rounded-2xl min-h-[20vh]"
           >
             <div
               onClick={handleImageClick}
@@ -79,7 +79,7 @@ export default function ProfileForm({ user }: { user: User }) {
                 height={150}
                 className="rounded-full aspect-square object-cover"
               />
-              <a className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-new-gray text-new-peach-100 p-[0.4rem] duration-150 hover:bg-new-teal">
+              <a className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-new-gray text-new-peach-100 p-[0.4rem] duration-150 hover:bg-new-teal-100">
                 <CameraIcon height={20} width={20} />
               </a>
             </div>
@@ -147,7 +147,7 @@ export default function ProfileForm({ user }: { user: User }) {
           </form>
         </article>
         <article className="w-[85%] sm:w-[60%] sm:py-10">
-          <div className="bg-new-teal rounded-2xl p-10">
+          <div className="bg-new-teal-100 rounded-2xl p-10">
             <h3>
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Necessitatibus repudiandae iusto corrupti labore culpa reiciendis

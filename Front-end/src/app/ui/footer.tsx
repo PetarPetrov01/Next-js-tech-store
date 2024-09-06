@@ -8,7 +8,7 @@ import {
 export default function Footer() {
   return (
     <>
-      <footer className="flex items-center justify-center bg-new-teal min-h-20">
+      <footer className="flex items-center justify-center bg-new-teal-100 min-h-20">
         <div className="container max-w-[1400px] px-20 py-5 flex justify-evenly items-start text-new-mint">
           <article>
             <Image
