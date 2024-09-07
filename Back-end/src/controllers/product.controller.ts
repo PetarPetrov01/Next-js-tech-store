@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import productService from "../services/productService";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import categoryService from "../services/categoryService";
+import brandService from "../services/brandService";
 
 async function getProducts(req: Request, res: Response) {
   try {
@@ -28,4 +29,18 @@ async function getCategories(req: Request, res: Response) {
   }
 }
 
-export default { getProducts, getCategories };
+async function getBrands(req: Request, res: Response) {
+  try {
+    const brands = await brandService.getBrands(req.query);
+    res.json(brands);
+  } catch (error: any) {
+    if (error instanceof PrismaClientValidationError) {
+      error as PrismaClientValidationError;
+      res.status(400).json({ message: "Invalid query" });
+      return;
+    }
+    res.status(400).json(error.message);
+  }
+}
+
+export default { getProducts, getCategories, getBrands };
