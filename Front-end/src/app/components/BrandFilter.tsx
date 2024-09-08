@@ -21,6 +21,18 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
     setShowAllBrands((prev) => !prev);
   };
 
+  const handleUpdateBrand = (value: number | null) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set("brand", String(value));
+    } else {
+      params.delete("brand");
+    }
+    const href = `${pathname}?${params.toString()}`;
+
+    return href;
+  };
 
   return (
     <div
@@ -31,10 +43,25 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
       <h3>Brands</h3>
       <div className="flex flex-col items-start gap-1 pl-2 font-normal">
         <Link
+          href={handleUpdateBrand(null)}
           className={`${!searchParams.get("brand") && "font-semibold"}`}
         >
           All
         </Link>
+
+        {brands.length > 0 &&
+          brands.map((brand) => (
+            <Link
+              href={handleUpdateBrand(brand.id)}
+              key={brand.id}
+              className={`flex gap-1.5 ${
+                isActive(String(brand.id)) && "font-semibold"
+              }`}
+            >
+              <p>{brand.name}</p>
+              <span className="text-sm">({brand._count})</span>
+            </Link>
+          ))}
 
         <a
           onClick={toggleAllBrands}
