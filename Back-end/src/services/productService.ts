@@ -4,8 +4,8 @@ async function getProducts(params: any) {
   console.log("params");
 
   const getOrderByCluase = (sortParam: any) => {
-    if(!sortParam){
-      return undefined
+    if (!sortParam) {
+      return undefined;
     }
 
     if (sortParam.key == "brand") {
@@ -21,8 +21,8 @@ async function getProducts(params: any) {
     }
   };
 
-  const orderBy = getOrderByCluase(params?.sort)
-  console.log(orderBy)
+  const orderBy = getOrderByCluase(params?.sort);
+  console.log(orderBy);
 
   const prods = await prisma.product.findMany({
     where: {
@@ -37,7 +37,7 @@ async function getProducts(params: any) {
         },
       ],
       category: { id: Number(params.category) || undefined },
-      brand: { name: params.brand || undefined },
+      brand: { id: Number(params.brand) || undefined },
       price: {
         gte: params.price?.gte || undefined,
         lte: params.price?.lte || undefined,
@@ -49,7 +49,6 @@ async function getProducts(params: any) {
       images: { select: { url: true } },
     },
     orderBy,
-    // orderBy: { [params.sort?.key]: params.sort?.order || undefined },
   });
 
   return prods.map((p) => ({

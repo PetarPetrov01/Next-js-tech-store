@@ -36,6 +36,7 @@ async function getBrands(req: Request, res: Response) {
   } catch (error: any) {
     if (error instanceof PrismaClientValidationError) {
       error as PrismaClientValidationError;
+      console.log(error.message)
       res.status(400).json({ message: "Invalid query" });
       return;
     }
