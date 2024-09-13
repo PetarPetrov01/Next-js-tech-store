@@ -7,7 +7,7 @@ export default function Home() {
         <section className="left flex items-center justify-around gap-4 max-w-[100%] pt-20">
           <article className="flex flex-col max-w-[60%] w-[65ch]">
             {/* <h1 className="text-5xl text-new-sandstone [text-shadow:_0_0_25px_rgb(0_180_216_/0.5)]"> */}
-            <h1 className="text-5xl text-new-peach">
+            <h1 className="text-5xl text-new-peach-100">
               Welcome to Tech Store
             </h1>
             <p className="text-white text-2xl">
@@ -19,7 +19,7 @@ export default function Home() {
               {/* <a href="" className="px-10 py-2 bg-pink rounded-3xl text-white text-lg shadow-lg shadow-rose-500/40">Contact us</a> */}
               <a
                 href=""
-                className="px-10 py-2 bg-new-peach rounded-3xl text-white text-lg shadow-[0_4px_12px_2px_rgba(255,203,154,0.4)] hover:shadow-[0_2px_12px_3px_rgba(255,203,154,0.7)] duration-200"
+                className="px-10 py-2 bg-new-peach-100 rounded-3xl text-white text-lg shadow-[0_4px_12px_2px_rgba(255,203,154,0.4)] hover:shadow-[0_2px_12px_3px_rgba(255,203,154,0.7)] duration-200"
               >
                 Services
               </a>

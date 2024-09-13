@@ -1,24 +1,23 @@
 import { Metadata } from "next";
-import { getProds } from "../lib/data";
 
-import ProductCard from "../ui/product-card";
 import { Product } from "@/types/Product";
 import { notFound } from "next/navigation";
+import ProductsList from "../components/ProductsList";
+import Filter from "../components/Filter";
+import BrandFilterWrapper from "../components/BrandFilterWrapper";
 
 export const metadata: Metadata = {
   title: "Products",
 };
 
-const validCategories = ['tv','phone','laptop']
+const validCategories = [0, 1, 2, 3]; //Consider reading from the API
 
-export default async function Page({searchParams}: {searchParams: any}) {
+export default async function Page({ searchParams }: { searchParams: any }) {
+  const category = searchParams.category;
 
-  const category = searchParams.category
-  if(category && !validCategories.includes(category)){
-    notFound()
+  if (category && !validCategories.includes(Number(category))) {
+    notFound();
   }
-
-  const prods = await getProds(searchParams);
 
   const mockProd: Product = {
     id: "sdaw",
@@ -38,19 +37,15 @@ export default async function Page({searchParams}: {searchParams: any}) {
   };
 
   return (
-    <main className="min-h-[75vh]">
+    <main className="min-h-[75vh] bg-gradient-radial from-new-teal to-new-gray">
       <section className="flex justify-center">
         <div className="container max-w-[1450px] flex justify-center py-5 px-4">
           <div className="flex w-full justify-between items-start">
-            <article className="sm:w-[28%] lg:w-[24%] flex flex-col border-2 border-new-peach min-h-60"></article>
-            <article className="sm:w-[71%] lg:w-[75%] border-2 border-new-mint flex flex-col items-center justify-center">
-              <h2 className="text-4xl">Browse our products</h2>
-              <div className="flex flex-wrap justify-start items-stretch md:gap-[2%] px-2">
-                {new Array(8).fill(1).map((id, index) => (
-                  <ProductCard prod={mockProd} key={id + index} />
-                ))}
-              </div>
+            <article className="sm:w-[28%] lg:w-[24%] flex flex-col gap-4 min-h-60">
+              <Filter />
+              <BrandFilterWrapper catId={category}/>
             </article>
+            <ProductsList searchParams={searchParams} />
           </div>
         </div>
       </section>

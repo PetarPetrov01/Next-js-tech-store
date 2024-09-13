@@ -25,3 +25,11 @@ export type APIProduct = Product & {
 export type PopulatedProduct = Omit<APIProduct, "_ownerId"> & {
   _ownerId: User;
 };
+
+export type Categories = {
+  id: number;
+  name: string;
+  _count: number;
+}[];
+
+export type Brands = Categories;

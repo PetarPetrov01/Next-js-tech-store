@@ -102,7 +102,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
       className="register flex flex-col items-center justify-start gap-8  w-[80%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
-        <h1 className="text-3xl text-new-peach">Register your account</h1>
+        <h1 className="text-3xl text-new-peach-100">Register your account</h1>
       </div>
       <div className="relative flex flex-col input-group w-[80%]">
         <input
@@ -189,7 +189,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
       </div>
       <button
         disabled={isLoading}
-        className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-new-peach border-[1px] duration-150 bg-new-peach text-new-gray after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-mint disabled:cursor-default"
+        className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-new-peach border-[1px] duration-150 bg-new-peach-100 text-new-gray after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-mint disabled:cursor-default"
       >
         {isLoading ? (
           <div className="flex flex-row justify-center gap-2 p-1.5">

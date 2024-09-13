@@ -80,7 +80,7 @@ export default function UploadImageForm({
 
   return (
     <div className="fixed  left-0 top-0 z-50 flex h-[100vh] w-[100vw] items-center justify-center bg-gray-200/40">
-      <div className="text-new-teal rounded-lg bg-new-mint p-8">
+      <div className="text-new-teal-100 rounded-lg bg-new-mint p-8">
         <div className="mb-4 flex justify-between gap-14">
           <div></div>
           <h2>Change profile image</h2>
@@ -98,7 +98,7 @@ export default function UploadImageForm({
         >
           <a
             onClick={handleUploadImage}
-            className="cursor-pointer border-2 border-dashed border-new-teal hover:bg-new-teal hover:text-new-mint duration-150 p-2"
+            className="cursor-pointer border-2 border-dashed border-new-teal hover:bg-new-teal-100 hover:text-new-mint duration-150 p-2"
           >
             {selectedImage ? `Choose another image` : "Upload image"}
           </a>
@@ -131,7 +131,7 @@ export default function UploadImageForm({
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-new-peach w-20 h-10 enabled:hover:bg-new-sandstone duration-150"
+                className="bg-new-peach-100 w-20 h-10 enabled:hover:bg-new-sandstone duration-150"
               >
                 {isLoading ? (
                   <div className="flex flex-row justify-center gap-2">

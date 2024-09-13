@@ -4,6 +4,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "cdn.tmobile.com" },
+      { protocol: "https", hostname: "laptop.bg" },
     ],
   },
 };

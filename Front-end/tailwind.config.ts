@@ -21,9 +21,17 @@ const config: Config = {
         green: "#88d42b",
         new: {
           gray: "#2c3531",
-          teal: "#116466",
+          teal: {
+            80: "#116466b5",
+            90: "#116466e5",
+            100: "#116466",
+          },
           sandstone: "#d9b08c",
-          peach: "#fcc188",
+          peach: {
+            80: "#fcc188b5",
+            90: "#fcc188e5",
+            100: "#fcc188",
+          },
           mint: "#d1e8e2",
         },
       },
