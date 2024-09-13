@@ -31,5 +31,3 @@ export type Categories = {
   name: string;
   _count: number;
 }[];
-
-export type Brands = Categories;

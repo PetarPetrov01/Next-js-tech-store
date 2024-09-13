@@ -1,11 +1,6 @@
 "use server";
 
-import {
-  Brands,
-  Categories,
-  PopulatedProduct,
-  Product,
-} from "../../types/Product";
+import { Categories, PopulatedProduct, Product } from "../../types/Product";
 
 type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
@@ -40,21 +35,6 @@ export const getCategories = async (): Promise<Categories> => {
   const res = await fetch("http://localhost:3001/api/products/categories", {
     next: { revalidate: 60 },
   });
-
-  const data = await res.json();
-
-  return data;
-};
-
-export const getBrands = async (catId: number | null): Promise<Brands> => {
-  console.log("from data  -  " + catId);
-
-  const res = await fetch(
-    `${baseUrl}${catId ? `/brands?category=${catId}` : "/brands"}`,
-    {
-      cache: "no-cache",
-    }
-  );
 
   const data = await res.json();
 
