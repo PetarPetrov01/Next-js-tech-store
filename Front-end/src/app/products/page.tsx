@@ -4,12 +4,13 @@ import { Product } from "@/types/Product";
 import { notFound } from "next/navigation";
 import ProductsList from "../components/ProductsList";
 import Filter from "../components/Filter";
+import BrandFilterWrapper from "../components/BrandFilterWrapper";
 
 export const metadata: Metadata = {
   title: "Products",
 };
 
-const validCategories = [0,1,2,3]; //Consider reading from the API
+const validCategories = [0, 1, 2, 3]; //Consider reading from the API
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const category = searchParams.category;
@@ -40,7 +41,10 @@ export default async function Page({ searchParams }: { searchParams: any }) {
       <section className="flex justify-center">
         <div className="container max-w-[1450px] flex justify-center py-5 px-4">
           <div className="flex w-full justify-between items-start">
-            <Filter />
+            <article className="sm:w-[28%] lg:w-[24%] flex flex-col gap-4 min-h-60">
+              <Filter />
+              <BrandFilterWrapper catId={category}/>
+            </article>
             <ProductsList searchParams={searchParams} />
           </div>
         </div>
