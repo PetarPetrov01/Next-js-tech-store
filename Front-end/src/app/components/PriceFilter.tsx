@@ -33,11 +33,43 @@ export default function PriceFilter() {
     const href = `${pathname}?${params.toString()}`;
     replace(href);
   };
+
   const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
   ) => {
+    const value = Number(e.target.value);
+    const newRange = [...priceRange];
+    newRange[index] = value;
+
+    setPriceRange(newRange);
   };
+
   const handleInputChangeComplete = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
   ) => {
+    let value: string | number = e.target.value;
+    const params = new URLSearchParams(searchParams);
+
+    const curentVal = params.get("price")?.split(":");
+
+    if (value && priceRange[0] > priceRange[1]) {
+      setPriceRange(([gte, lte]) =>
+        index === 0
+          ? [Number(curentVal?.[0] ?? MIN_PRICE), lte]
+          : [gte, Number(curentVal?.[1] ?? MAX_PRICE)]
+      );
+
+      return;
+    }
+
+    index == 0
+      ? params.set("price", String([value, priceRange[1]].join(":")))
+      : params.set("price", String([priceRange[0], value].join(":")));
+
+    const href = `${pathname}?${params.toString()}`;
+    replace(href);
   };
 
   return (
