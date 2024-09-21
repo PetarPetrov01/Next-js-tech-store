@@ -24,6 +24,8 @@ async function getProducts(params: any) {
   const orderBy = getOrderByCluase(params?.sort);
   console.log(orderBy);
 
+  console.log(params.price)
+
   const prods = await prisma.product.findMany({
     where: {
       OR: [
@@ -39,8 +41,8 @@ async function getProducts(params: any) {
       category: { id: Number(params.category) || undefined },
       brand: { id: Number(params.brand) || undefined },
       price: {
-        gte: params.price?.gte || undefined,
-        lte: params.price?.lte || undefined,
+        gte: Number(params.price?.gte) || undefined,
+        lte: Number(params.price?.lte) || undefined,
       },
     },
     include: {

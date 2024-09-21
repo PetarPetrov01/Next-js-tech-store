@@ -15,8 +15,8 @@ export default function queryParams(
     }
 
     if (req.query.price) {
-      const [lte, gte] = (req.query.price as string).split(":");
-      req.query.price = { lte, gte };
+      const [gte, lte] = (req.query.price as string).split(":");
+      req.query.price = { gte, lte };
     }
   }
 
