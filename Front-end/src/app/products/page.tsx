@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import ProductsList from "../components/ProductsList";
 import Filter from "../components/Filter";
 import BrandFilterWrapper from "../components/BrandFilterWrapper";
+import SearchBar from "../components/SearchBar";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -43,9 +44,15 @@ export default async function Page({ searchParams }: { searchParams: any }) {
           <div className="flex w-full justify-between items-start">
             <article className="sm:w-[28%] lg:w-[24%] flex flex-col gap-4 min-h-60">
               <Filter />
-              <BrandFilterWrapper catId={category}/>
+              <BrandFilterWrapper catId={category} />
             </article>
-            <ProductsList searchParams={searchParams} />
+            <article className="sm:w-[71%] lg:w-[75%] flex flex-col items-center justify-center">
+              <h2 className="text-4xl text-new-peach-100">
+                Browse our products
+              </h2>
+              <SearchBar />
+              <ProductsList searchParams={searchParams} />
+            </article>
           </div>
         </div>
       </section>
