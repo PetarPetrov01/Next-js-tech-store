@@ -1,12 +1,43 @@
 "use client";
 
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const SearchSchema = z.object({
+  search: z.string().trim().max(15),
+});
+
+type Inputs = z.infer<typeof SearchSchema>;
+
 export default function SearchBar() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+
   const {
+    formState: { errors },
     register,
+    handleSubmit,
   } = useForm<Inputs>({
+    defaultValues: { search: searchParams.get("search") || "" },
+    resolver: zodResolver(SearchSchema),
   });
+
   const handleSearchSubmit = handleSubmit(async ({ search }) => {
+    const params = new URLSearchParams(searchParams);
+    console.log(errors.search);
+    if (search) {
+      params.set("search", search);
+    } else {
+      params.delete("search");
+    }
+
+    replace(`${pathname}?${params}`);
   });
+
   return (
     <div className="py-4 w-3/5">
       <form onSubmit={handleSearchSubmit}>
