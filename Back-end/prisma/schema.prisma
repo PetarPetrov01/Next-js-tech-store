@@ -33,6 +33,7 @@ model Product{
   category Category @relation(fields: [categoryId],references: [id])
   brandId Int
   brand Brand @relation(fields: [brandId], references: [id])
+  model String @default("")
   images ProductImage[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -7,8 +7,6 @@ async function getBrands(query: any) {
     categoryId = Number(query.category);
   }
 
-  console.log('catId from serv  -  ' + categoryId);
-
   const brands = await prisma.brand.findMany({
     where: {
       products: {
@@ -16,9 +14,10 @@ async function getBrands(query: any) {
       },
     },
     include: { _count: true },
+    orderBy: { name: "asc" },
   });
 
-  return brands.map((brand) => ({ ...brand, _count: brand._count.products }));;
+  return brands.map((brand) => ({ ...brand, _count: brand._count.products }));
 }
 
 export default { getBrands };
