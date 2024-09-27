@@ -1,11 +1,10 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../config/db-config";
 
 async function getProducts(params: any) {
-  console.log("params");
-
-  const getOrderByCluase = (sortParam: any) => {
+  const getOrderByClause = (sortParam: any) => {
     if (!sortParam) {
-      return undefined;
+      return  {name: "asc"} as Prisma.ProductOrderByWithRelationInput;
     }
 
     if (sortParam.key == "brand") {
@@ -21,10 +20,7 @@ async function getProducts(params: any) {
     }
   };
 
-  const orderBy = getOrderByCluase(params?.sort);
-  console.log(orderBy);
-
-  console.log(params.price)
+  const orderBy = getOrderByClause(params?.sort);
 
   const prods = await prisma.product.findMany({
     where: {
@@ -36,6 +32,9 @@ async function getProducts(params: any) {
           brand: {
             name: { contains: params.search || undefined, mode: "insensitive" },
           },
+        },
+        {
+          model: { contains: params.search || undefined, mode: "insensitive" },
         },
       ],
       category: { id: Number(params.category) || undefined },
