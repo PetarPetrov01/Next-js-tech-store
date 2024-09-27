@@ -27,8 +27,9 @@ export default async function Page({ searchParams }: { searchParams: any }) {
     category: "Phone",
     description: "asd",
     stock: 4,
-    name: "XI",
+    name: "Iphone XI",
     brand: "Iphone",
+    model: "XI",
     images: [
       "https://cdn.tmobile.com/content/dam/t-mobile/en-p/cell-phones/apple/Apple-iPhone-15-Pro/Blue-Titanium/Apple-iPhone-15-Pro-Blue-Titanium-thumbnail.png",
     ],
