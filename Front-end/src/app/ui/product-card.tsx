@@ -17,11 +17,10 @@ const router = useRouter();
         <Image src={prod.images[0]} alt={prod.name} width={100}  height={100} className="w-[90%]"/>
       </div>
       <div>
-        <h2 className="text-2xl text-new-gray">{prod.brand} {prod.name}</h2>
+        <h2 className="text-2xl text-new-gray">{prod.name}</h2>
         <h2 className="text-2xl text-new-gray">${prod.price}</h2>
       </div>
-      <h2>{prod.brand}</h2>
-      <p>{prod.description} </p>
+      <p className="text-new-gray">In stock: {prod.stock} </p>
     </div>
   );
 }
