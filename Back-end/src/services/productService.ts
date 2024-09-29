@@ -1,10 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../config/db-config";
+import categoryService from "./categoryService";
 
 async function getProducts(params: any) {
   const getOrderByClause = (sortParam: any) => {
     if (!sortParam) {
-      return  {name: "asc"} as Prisma.ProductOrderByWithRelationInput;
+      return { name: "asc" } as Prisma.ProductOrderByWithRelationInput;
     }
 
     if (sortParam.key == "brand") {
@@ -60,4 +61,22 @@ async function getProducts(params: any) {
   }));
 }
 
-export default { getProducts };
+async function getProductById(productId: string) {
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    include: {
+      category: { select: { name: true } },
+      brand: { select: { name: true } },
+      images: { select: { url: true } },
+    },
+  });
+
+  return {
+    ...product,
+    category: product?.category,
+    brand: product?.brand,
+    images: product?.images,
+  };
+}
+
+export default { getProducts, getProductById };
