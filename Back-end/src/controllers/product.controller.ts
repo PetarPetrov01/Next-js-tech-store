@@ -20,6 +20,21 @@ async function getProducts(req: Request, res: Response) {
   }
 }
 
+async function getProductById(req: Request, res: Response) {
+  try {
+    const productId = req.params.id;
+    const product = await productService.getProductById(productId);
+
+    if(!product.id){
+      throw new Error('Invalid productID')
+    }
+    
+    res.json(product);
+  } catch (error: any) {
+    res.status(400).json(error.message);
+  }
+}
+
 async function getCategories(req: Request, res: Response) {
   try {
     const categories = await categoryService.getCategories();
@@ -36,7 +51,7 @@ async function getBrands(req: Request, res: Response) {
   } catch (error: any) {
     if (error instanceof PrismaClientValidationError) {
       error as PrismaClientValidationError;
-      console.log(error.message)
+      console.log(error.message);
       res.status(400).json({ message: "Invalid query" });
       return;
     }
@@ -44,4 +59,4 @@ async function getBrands(req: Request, res: Response) {
   }
 }
 
-export default { getProducts, getCategories, getBrands };
+export default { getProducts, getProductById, getCategories, getBrands };
