@@ -38,7 +38,7 @@ export const getProds = async (
 
 export const getCategories = async (): Promise<Categories> => {
   const res = await fetch("http://localhost:3001/api/products/categories", {
-    next: { revalidate: 60 },
+    next: { revalidate: 10 },
   });
 
   const data = await res.json();
@@ -62,6 +62,8 @@ export const getBrands = async (catId: number | null): Promise<Brands> => {
 };
 
 export const getProduct = async (prodId: string): Promise<PopulatedProduct> => {
-  const res = await fetch(`http://localhost:3001/api/products/${prodId}`);
+  const res = await fetch(`http://localhost:3001/api/products/${prodId}`, {
+    cache: "no-cache",
+  });
   return res.json();
 };
