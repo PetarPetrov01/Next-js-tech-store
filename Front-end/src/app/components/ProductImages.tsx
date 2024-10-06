@@ -2,7 +2,7 @@
 
 import { PopulatedProduct } from "@/types/Product";
 import Image from "next/image";
-import { MouseEventHandler, useState } from "react";
+import { useState } from "react";
 
 export default function ProductImages({
   images,
@@ -33,10 +33,8 @@ export default function ProductImages({
           <div
             key={i}
             onClick={() => changeImageIndex(i)}
-            className={`w-[25%] p-2 border-[1px] rounded-md flex justify-center items-center ${
-              i == displayImageIndex
-                ? "border-new-mint"
-                : "border-transparent"
+            className={`w-[25%] p-2 border-[1px] rounded-md cursor-pointer flex justify-center items-center hover:bg-gray-50/20 duration-75 ${
+              i == displayImageIndex ? "border-new-mint" : "border-transparent"
             }`}
           >
             <Image
