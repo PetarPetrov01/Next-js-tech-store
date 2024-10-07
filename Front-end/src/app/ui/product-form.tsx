@@ -15,6 +15,7 @@ export default function ProductForm({ stock }: { stock: number }) {
 
   const [quantity, setQuantity] = useState(1);
   const [stockWarning, setStockWarning] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(false);
 
   const changeQty = (action: "increase" | "decrease") => {
     setQuantity((qty) => {
@@ -62,12 +63,24 @@ export default function ProductForm({ stock }: { stock: number }) {
             <button className="flex-[1_1_55%] rounded-lg bg-new-mint text-new-gray py-2 hover:bg-new-peach-90 duration-200">
               Add to cart
             </button>
-            <button className="flex-[1_1_5%] flex justify-center rounded-lg items-center bg-new-mint text-new-gray hover:bg-lime-300/85 duration-200">
-              {/* <HeartIconSolid width={30} height={30} /> */}
-              <HeartIcon width={30} height={30} />
+            <button
+              onClick={() => setIsFavourite((prev) => !prev)}
+              className={`flex-[1_1_5%] flex justify-center rounded-lg items-center bg-new-mint ${
+                isFavourite
+                  ? "text-red-400 hover:text-red-300"
+                  : "text-new-gray hover:text-red-400"
+              } duration-200`}
+            >
+              {isFavourite ? (
+                <HeartIconSolid width={30} height={30} />
+              ) : (
+                <HeartIcon width={30} height={30} />
+              )}
             </button>
           </div>
-          <span className={`text-sm duration-200 ${stockWarning && "text-red-400"}`}>
+          <span
+            className={`text-sm duration-200 ${stockWarning && "text-red-400"}`}
+          >
             In stock: {stock}
           </span>
         </div>
