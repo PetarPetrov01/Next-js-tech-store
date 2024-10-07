@@ -23,8 +23,9 @@ export type APIProduct = Product & {
   createdAt: string;
 };
 
-export type PopulatedProduct = Omit<APIProduct, "_ownerId"> & {
+export type PopulatedProduct = Omit<APIProduct, "_ownerId" | "images"> & {
   _ownerId: User;
+  images: { url: string }[];
 };
 
 export type Categories = {
