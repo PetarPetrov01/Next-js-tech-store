@@ -21,6 +21,7 @@ model User {
   username String
   password String?
   image String?
+  wishlist Wishlist?
 }
 
 model Product{
@@ -35,6 +36,7 @@ model Product{
   brand Brand @relation(fields: [brandId], references: [id])
   model String @default("")
   images ProductImage[] 
+  wishlist Wishlist[] 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -56,4 +58,11 @@ model ProductImage {
   url String
   productId String
   product Product @relation(fields: [productId],references: [id])
+}
+
+model Wishlist {
+  id Int @id @default(autoincrement())
+  userId String @unique
+  user User? @relation(fields: [userId],references: [id])
+  products Product[] 
 }
