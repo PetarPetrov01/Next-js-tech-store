@@ -9,6 +9,15 @@ async function addToWishList(userId: string, productId: string) {
 
   return wishlist;
 }
+
 async function removeFromWishList(userId: string, productId: string) {
+  const updatedWishList = await prisma.wishlist.update({
+    where: { userId },
+    data: { products: { disconnect: { id: productId } } },
+    include: { products: true },
+  });
+
+  return updatedWishList;
 }
+
 export default { addToWishList, removeFromWishList };

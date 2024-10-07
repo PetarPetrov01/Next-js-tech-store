@@ -23,3 +23,26 @@ async function addToWishList(req: CustomRequest, res: Response) {
   }
 }
 
+async function removeFromWishList(req: CustomRequest, res: Response) {
+  try {
+    const { productId } = req.body;
+
+    if (!req.user?._id) {
+      return res.status(403).send({ message: "You are not logged in" });
+    }
+
+    const wishlist = await wishListService.removeFromWishList(
+      req.user._id,
+      productId
+    );
+
+    res.json(wishlist);
+  } catch (error: any) {
+    res.status(400).send({
+      message: "File upload failed.",
+      error: error.message,
+    });
+  }
+}
+
+export default { addToWishList, removeFromWishList };
