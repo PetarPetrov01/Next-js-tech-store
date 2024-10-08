@@ -1,3 +1,4 @@
+import CartProducts from "../components/ui/cart-products";
 
 export default function CartPage() {
   return (
@@ -6,6 +7,7 @@ export default function CartPage() {
         <section className="flex flex-col gap-10 mt-6 w-full">
           <h1 className="w-full">Shopping cart</h1>
           <div className="flex w-full justify-between gap-8 items-start">
+            <CartProducts />
             <article className="flex-[1_1_25%] bg-new-teal-100 min-h-10"></article>
           </div>
         </section>
