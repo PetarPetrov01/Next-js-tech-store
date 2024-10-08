@@ -4,6 +4,7 @@ import useCartStore from "@/app/store/cart";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useState } from "react";
+import EraseProductDiaolog from "./cart-erase-product-diaolog";
 
 export default function CartProducts() {
   const { cart, clearCart, increaseQuantity, decreaseQuantity } =
@@ -94,6 +95,11 @@ export default function CartProducts() {
           </div>
         </div>
       ))}
+      <EraseProductDiaolog
+        open={eraseProduct ? true : false}
+        setEraseProduct={setEraseProduct}
+        eraseProduct={eraseProduct}
+      />
     </article>
   );
 }

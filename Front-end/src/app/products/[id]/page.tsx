@@ -23,7 +23,7 @@ export default async function ProductDetails({
               <h1 className="text-3xl">{product.name}</h1>
               <h3 className="text-xl">${product.price}</h3>
               <div className="flex flex-col gap-8">
-                <ProductForm stock={product.stock} productId={params.id} />
+                <ProductForm product={product} />
                 <div className="flex flex-col mt-4">
                   <h3>Product info:</h3>
                   <p>{product.description}</p>
