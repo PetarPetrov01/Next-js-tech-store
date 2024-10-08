@@ -43,7 +43,9 @@ export default function EraseProductDiaolog({
       aria-describedby="alert-dialog-description"
       className="text-new-gray"
     >
-      <DialogTitle id="alert-dialog-title" className="bg-new-mint">Remove product?</DialogTitle>
+      <DialogTitle id="alert-dialog-title" className="bg-new-mint">
+        Remove product?
+      </DialogTitle>
       <DialogContent className="bg-new-mint">
         <DialogContentText id="alert-dialog-description">
           <p>
@@ -52,12 +54,18 @@ export default function EraseProductDiaolog({
             from your cart?
           </p>
         </DialogContentText>
-        <DialogActions>
-          <button onClick={handleConfirm} className="text-new-mint p-2 bg-gray-500">Remove</button>
-          <button onClick={handleCancel} className="text-new-mint p-2 bg-gray-500" autoFocus>
+        <div className="flex justify-center gap-4 pt-2 text-new-gray">
+          <button onClick={handleConfirm} className="px-4 py-2 bg-red-400/70 hover:bg-red-400 duration-200">
+            Remove
+          </button>
+          <button
+            onClick={handleCancel}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 duration-150"
+            autoFocus
+          >
             Cancel
           </button>
-        </DialogActions>
+        </div>
       </DialogContent>
     </Dialog>
   );
