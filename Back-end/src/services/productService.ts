@@ -73,9 +73,9 @@ async function getProductById(productId: string) {
 
   return {
     ...product,
-    category: product?.category,
-    brand: product?.brand,
-    images: product?.images,
+    category: product?.category.name,
+    brand: product?.brand.name,
+    images: product?.images.map((img) => img.url),
   };
 }
 

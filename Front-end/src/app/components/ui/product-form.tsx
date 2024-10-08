@@ -10,13 +10,12 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import useCartStore from "../../store/cart";
+import { PopulatedProduct } from "@/types/Product";
 
 export default function ProductForm({
-  stock,
-  productId,
+  product,
 }: {
-  stock: number;
-  productId: string;
+  product: PopulatedProduct;
 }) {
   const { user } = useAuthContext();
 
@@ -29,7 +28,7 @@ export default function ProductForm({
   const changeQty = (action: "increase" | "decrease") => {
     setQuantity((qty) => {
       if (action == "increase") {
-        if (qty < stock) {
+        if (qty < product.stock) {
           return qty + 1;
         } else {
           handleStockExceed();
@@ -49,7 +48,7 @@ export default function ProductForm({
   };
 
   const handleAddToCart = () => {
-    addToCart({ productId, quantity });
+    addToCart({ ...product, quantity });
   };
 
   return (
@@ -97,7 +96,7 @@ export default function ProductForm({
           <span
             className={`text-sm duration-200 ${stockWarning && "text-red-400"}`}
           >
-            In stock: {stock}
+            In stock: {product.stock}
           </span>
         </div>
       ) : (

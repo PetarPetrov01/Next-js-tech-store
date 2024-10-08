@@ -1,12 +1,12 @@
 import ProfileForm from "@/app/components/ui/profile-form";
 import { User } from "@/types/User";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Profile() {
   //Fetch profile
-  console.log('Profile page is fetching...')
-  console.log(cookies().toString())
+  console.log("Profile page is fetching...");
+  console.log(cookies().toString());
   const res = await fetch("http://localhost:3001/api/auth/profile", {
     method: "GET",
     // credentials: "include",
@@ -17,7 +17,7 @@ export default async function Profile() {
   console.log("res ok - " + res.ok);
 
   if (!res.ok) {
-    console.log('fail')
+    console.log("fail");
     redirect("/login");
   }
 
