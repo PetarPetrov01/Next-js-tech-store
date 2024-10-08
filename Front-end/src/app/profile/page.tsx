@@ -1,4 +1,4 @@
-import ProfileForm from "@/app/ui/profile-form";
+import ProfileForm from "@/app/components/ui/profile-form";
 import { User } from "@/types/User";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";

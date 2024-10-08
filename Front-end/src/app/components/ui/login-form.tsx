@@ -2,14 +2,14 @@
 
 import { NextFont } from "next/dist/compiled/@next/font";
 import { useFormState } from "react-dom";
-import { login } from "../lib/actions";
+import { login } from "../../lib/actions";
 import { set, z } from "zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthContext } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
-import { checkAuth } from "../utils/checkAuth";
+import { checkAuth } from "../../utils/checkAuth";
 
 const UserLoginSchema = z.object({
   email: z

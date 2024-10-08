@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProfileDropdown from "./profile-dropdown";
+import useCartStore from "../../store/cart";
 
 const guestLinks = [
   { href: "/products", label: "PRODUCTS" },
@@ -18,6 +19,8 @@ const userLinks = [
 
 export default function Header() {
   const { user, clearAuth } = useAuthContext();
+  const { cart } = useCartStore();
+
   const [profileDropdown, setProfileDropdown] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
@@ -75,6 +78,9 @@ export default function Header() {
             <ul className="flex justify-center gap-4 items-center">
               {user?.email ? (
                 <>
+                  <li>
+                    <p>{cart.length}</p>
+                  </li>
                   {userLinks.map((link) => (
                     <li key={link.href + link.label}>
                       <Link

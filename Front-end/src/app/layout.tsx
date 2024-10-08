@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./ui/header";
+import Header from "./components/ui/header";
 import { PT_Sans, PT_Serif } from "next/font/google";
-import Footer from "./ui/footer";
+import Footer from "./components/ui/footer";
 import { AuthProvider } from "@/contexts/AuthProvider";
 
 const ptSans = PT_Sans({ weight: ["400"], subsets: ["latin"] });
