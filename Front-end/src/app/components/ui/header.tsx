@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ProfileDropdown from "./profile-dropdown";
 import useCartStore from "../../store/cart";
+import Cart from "./cart";
 
 const guestLinks = [
   { href: "/products", label: "PRODUCTS" },
@@ -78,9 +79,6 @@ export default function Header() {
             <ul className="flex justify-center gap-4 items-center">
               {user?.email ? (
                 <>
-                  <li>
-                    <p>{cart.length}</p>
-                  </li>
                   {userLinks.map((link) => (
                     <li key={link.href + link.label}>
                       <Link
@@ -115,6 +113,10 @@ export default function Header() {
                     <p className="text-lg hover:text-lightblue duration-200">
                       PROFILE
                     </p>
+                  </li>
+                  <li className="flex items-center cursor-pointer text-white text-lg mx-3 py-1">
+                    <Cart />
+                    <Link href={'/cart'} className="text-white text-lg py-1 hover:border-pink hover:text-lightblue duration-200" >CART</Link>
                   </li>
                 </>
               ) : (
