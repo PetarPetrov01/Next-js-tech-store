@@ -52,6 +52,10 @@ export default async function Page({ searchParams }: { searchParams: any }) {
                 Browse our products
               </h2>
               <SearchBar />
+              <div className="flex justify-evenly items-center w-full border-2 border-new-peach-100">
+                <SearchBar />
+                <Sort />
+              </div>
               <ProductsList searchParams={searchParams} />
             </article>
           </div>

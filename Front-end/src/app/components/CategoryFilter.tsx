@@ -40,7 +40,7 @@ export default function CategoryFilter({
 
   return (
     <div
-      className={`relative flex flex-col gap-1 p-2 bg-[#ffd5ae] overflow-hidden rounded-md font-semibold text-new-gray duration-200 ${
+      className={`relative flex flex-col gap-1 p-2 bg-new-mint overflow-hidden rounded-md font-semibold text-new-gray duration-200 ${
         showAllCats ? "max-h-80" : "max-h-32"
       }`}
     >

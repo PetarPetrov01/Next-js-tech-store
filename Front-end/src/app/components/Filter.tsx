@@ -10,7 +10,6 @@ export default async function Filter({}:{}) {
   return (
     <div className="flex flex-col gap-4">
       <CategoryFilter categories={categories} />
-      <Sort />
       <PriceFilter />
     </div>
   );

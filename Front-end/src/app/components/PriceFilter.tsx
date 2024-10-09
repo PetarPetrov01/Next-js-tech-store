@@ -74,7 +74,7 @@ export default function PriceFilter() {
 
   return (
     <div
-      className={`relative flex flex-col gap-1 p-2 bg-[#ffd5ae] overflow-hidden rounded-md font-semibold text-new-gray duration-200`}
+      className={`relative flex flex-col gap-1 p-2 bg-new-mint overflow-hidden rounded-md font-semibold text-new-gray duration-200`}
     >
       <h3>Price</h3>
       <div className="flex flex-col justify-between py-4 px-2">
