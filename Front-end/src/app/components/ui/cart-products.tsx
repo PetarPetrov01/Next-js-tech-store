@@ -58,7 +58,7 @@ export default function CartProducts() {
 
   return (
     <article className="flex-[1_1_70%] flex flex-col">
-      <header
+      <div
         className={` ${
           cart.length <= 0 && "hidden"
         } relative flex justify-between items-stretch bg-new-teal-100 p-4 pb-3 rounded-t-md after:absolute after:w-[96%] after:bottom-0 after:right-[2%] after:bg-gray-200/50 after:h-[1px]`}
@@ -74,7 +74,7 @@ export default function CartProducts() {
           <p>Clear cart</p>
           <XCircleIcon width={25} height={25} />
         </button>
-      </header>
+      </div>
       {cart.length > 0 ? (
         <div className="flex flex-col gap-6">
           {cart.map((prod) => (
