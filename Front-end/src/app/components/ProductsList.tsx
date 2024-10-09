@@ -9,7 +9,7 @@ export default async function ProductsList({
   const prods = await getProds(searchParams);
 
   return (
-    <div className="flex flex-wrap w-full justify-start items-stretch md:gap-[2%] px-2">
+    <div className="flex flex-wrap w-full justify-start items-stretch md:gap-[2%]">
       {prods?.length > 0 ? (
         prods.map((prod, i) => <ProductCard prod={prod} key={prod.id} />)
       ) : (

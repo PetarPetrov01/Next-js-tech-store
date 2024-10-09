@@ -74,23 +74,23 @@ export default function PriceFilter() {
 
   return (
     <div
-      className={`relative flex flex-col gap-1 p-2 bg-new-mint overflow-hidden rounded-md font-semibold text-new-gray duration-200`}
+      className={`relative flex flex-col gap-1 p-2 overflow-hidden border-b-2 border-new-peach-100 font-semibold text-new-mint duration-200`}
     >
       <h3>Price</h3>
       <div className="flex flex-col justify-between py-4 px-2">
         <Slider
           onAfterChange={handleSliderChangeComplete}
           onChange={handleSliderChange}
-          className="h-1 w-full bg-new-teal-80"
+          className="h-1 w-full bg-new-mint"
           value={priceRange}
           min={MIN_PRICE}
           max={MAX_PRICE}
-          thumbClassName="translate-y-[-33%] top-0 bg-new-gray h-4 w-4 rounded-full"
+          thumbClassName="translate-y-[-33%] top-0 bg-new-peach-100 h-4 w-4 rounded-full"
         />
       </div>
       <div className="flex gap-2 justify-around">
         <input
-          className={`w-[40%] text-center bg-new-gray text-new-mint ${hideInputArrowClass}`}
+          className={`w-[40%] text-center bg-gray-600/80 text-new-mint ${hideInputArrowClass}`}
           value={priceRange[0]}
           type="number"
           onChange={(e) => handleInputChange(e, 0)}
@@ -98,7 +98,7 @@ export default function PriceFilter() {
         />
         -
         <input
-          className={`w-[40%] text-center bg-new-gray text-new-mint ${hideInputArrowClass}`}
+          className={`w-[40%] text-center bg-gray-600/80 text-new-mint ${hideInputArrowClass}`}
           value={priceRange[1]}
           type="number"
           onChange={(e) => handleInputChange(e, 1)}
