@@ -17,15 +17,11 @@ export type Product = {
 };
 
 export type APIProduct = Product & {
-  _id: string;
-  _ownerId: string;
-  __v: string;
-  createdAt: string;
+  _ownerId: string; // Not yet returned from BE
 };
 
-export type PopulatedProduct = Omit<APIProduct, "_ownerId" | "images"> & {
+export type PopulatedProduct = Omit<APIProduct, "_ownerId"> & {
   _ownerId: User;
-  images: { url: string }[];
 };
 
 export type Categories = {

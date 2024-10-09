@@ -1,6 +1,6 @@
 import ProductImages from "@/app/components/ProductImages";
 import { getProduct } from "@/app/lib/data";
-import ProductForm from "@/app/ui/product-form";
+import ProductForm from "@/app/components/ui/product-form";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 
@@ -23,10 +23,10 @@ export default async function ProductDetails({
               <h1 className="text-3xl">{product.name}</h1>
               <h3 className="text-xl">${product.price}</h3>
               <div className="flex flex-col gap-8">
-                <ProductForm stock={product.stock} />
+                <ProductForm product={product} />
                 <div className="flex flex-col mt-4">
                   <h3>Product info:</h3>
-                  <p>{product.description}</p> 
+                  <p>{product.description}</p>
                 </div>
               </div>
             </div>

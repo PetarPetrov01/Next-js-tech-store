@@ -1,13 +1,12 @@
 "use client";
 
-import { PopulatedProduct } from "@/types/Product";
 import Image from "next/image";
 import { useState } from "react";
 
 export default function ProductImages({
   images,
 }: {
-  images: { url: string }[];
+  images: string[];
 }) {
   const [displayImageIndex, setDisplayImageIndex] = useState(0);
 
@@ -21,7 +20,7 @@ export default function ProductImages({
     <div className="w-full flex flex-col gap-6 overflow-hidden">
       <div className="flex justify-center ">
         <Image
-          src={images[displayImageIndex].url}
+          src={images[displayImageIndex]}
           alt={`image-${displayImageIndex.toString()}`}
           className="w-[90%] object-cover"
           width={600}
@@ -38,7 +37,7 @@ export default function ProductImages({
             }`}
           >
             <Image
-              src={image.url}
+              src={image}
               width={100}
               height={100}
               alt={`image-${i.toString()}`}

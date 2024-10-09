@@ -9,9 +9,17 @@ import {
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useState } from "react";
+import useCartStore from "../../store/cart";
+import { PopulatedProduct } from "@/types/Product";
 
-export default function ProductForm({ stock }: { stock: number }) {
+export default function ProductForm({
+  product,
+}: {
+  product: PopulatedProduct;
+}) {
   const { user } = useAuthContext();
+
+  const { cart, addToCart } = useCartStore();
 
   const [quantity, setQuantity] = useState(1);
   const [stockWarning, setStockWarning] = useState(false);
@@ -20,7 +28,7 @@ export default function ProductForm({ stock }: { stock: number }) {
   const changeQty = (action: "increase" | "decrease") => {
     setQuantity((qty) => {
       if (action == "increase") {
-        if (qty < stock) {
+        if (qty < product.stock) {
           return qty + 1;
         } else {
           handleStockExceed();
@@ -37,6 +45,10 @@ export default function ProductForm({ stock }: { stock: number }) {
     setTimeout(() => {
       setStockWarning(false);
     }, 500);
+  };
+
+  const handleAddToCart = () => {
+    addToCart({ ...product, quantity });
   };
 
   return (
@@ -60,7 +72,10 @@ export default function ProductForm({ stock }: { stock: number }) {
                 <PlusIcon width={18} height={18} />
               </button>
             </div>
-            <button className="flex-[1_1_55%] rounded-lg bg-new-mint text-new-gray py-2 hover:bg-new-peach-90 duration-200">
+            <button
+              onClick={handleAddToCart}
+              className="flex-[1_1_55%] rounded-lg bg-new-mint text-new-gray py-2 hover:bg-new-peach-90 duration-200"
+            >
               Add to cart
             </button>
             <button
@@ -81,7 +96,7 @@ export default function ProductForm({ stock }: { stock: number }) {
           <span
             className={`text-sm duration-200 ${stockWarning && "text-red-400"}`}
           >
-            In stock: {stock}
+            In stock: {product.stock}
           </span>
         </div>
       ) : (
