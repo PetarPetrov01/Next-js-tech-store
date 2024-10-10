@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function RegisterPage() {
   return (
-    <main className="bg-gradient-radial from-new-teal to-new-gray">
+    <main className="bg-gradient-radial from-new-midnight to-new-darkblue">
       <div className="container max-w-[1400px] flex justify-center py-5">
         <section className="register flex flex-col items-center mb-8 justify-start min-h-[500px] px-5 py-4 rounded-3xl bg-gradient-to-tr from-[#ffcB9a22] via-[#ffcB9a11] to-[#ffcB9a22] w-[40%] border-new-peach border shadow-[0_0_15px_2px_rgba(255,203,154,0.3)]">
           <RegisterForm ptSerif={ptSerif} />
@@ -13,7 +13,7 @@ export default function RegisterPage() {
             <p className="text-white">or</p>
             <Link
               href="/login"
-              className="block w-[80%] py-1 text-xl text-center rounded-md bg-new-mint text-new-gray border-[1px] duration-150 border-new-mint hover:border-new-peach"
+              className="block w-[80%] py-1 text-xl text-center rounded-md bg-new-mint text-new-darkblue border-[1px] duration-150 border-new-mint hover:border-new-peach"
             >
               Login
             </Link>

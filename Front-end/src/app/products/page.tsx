@@ -23,26 +23,8 @@ export default async function Page({ searchParams }: { searchParams: any }) {
     notFound();
   }
 
-  const mockProd: Product = {
-    id: "sdaw",
-    brandId: 1,
-    categoryId: 1,
-    category: "Phone",
-    description: "asd",
-    stock: 4,
-    name: "Iphone XI",
-    brand: "Iphone",
-    model: "XI",
-    images: [
-      "https://cdn.tmobile.com/content/dam/t-mobile/en-p/cell-phones/apple/Apple-iPhone-15-Pro/Blue-Titanium/Apple-iPhone-15-Pro-Blue-Titanium-thumbnail.png",
-    ],
-    price: 1200,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
   return (
-    <main className="min-h-[75vh] bg-gradient-radial from-new-teal to-new-gray">
+    <main className="min-h-[75vh] bg-gradient-radial from-new-midnight to-new-darkblue">
       <section className="flex flex-col items-center">
         <div className="relative w-full h-80 overflow-hidden p-8">
           <div className="flex items-center p-6">

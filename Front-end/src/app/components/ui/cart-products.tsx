@@ -61,7 +61,7 @@ export default function CartProducts() {
       <div
         className={` ${
           cart.length <= 0 && "hidden"
-        } relative flex justify-between items-stretch bg-new-teal-100 p-4 pb-3 rounded-t-md after:absolute after:w-[96%] after:bottom-0 after:right-[2%] after:bg-gray-200/50 after:h-[1px]`}
+        } relative flex justify-between items-stretch bg-new-midnight-100 p-4 pb-3 rounded-t-md after:absolute after:w-[96%] after:bottom-0 after:right-[2%] after:bg-gray-200/50 after:h-[1px]`}
       >
         <div className="flex justify-between gap-7 items-end">
           <h1 className="text-3xl">Cart</h1>
@@ -80,7 +80,7 @@ export default function CartProducts() {
           {cart.map((prod) => (
             <div
               key={prod.id}
-              className="min-h-8 flex justify-between bg-new-teal-100 rounded-md first:rounded-t-none"
+              className="min-h-8 flex justify-between bg-new-midnight-100 rounded-md first:rounded-t-none"
             >
               <div className="flex-[1_1_17%] flex justify-center items-center p-2 aspect-square">
                 <Image
@@ -134,7 +134,7 @@ export default function CartProducts() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col w-3/4 m-auto rounded-md items-center gap-6 justify-center p-8 bg-new-teal-90">
+        <div className="flex flex-col w-3/4 m-auto rounded-md items-center gap-6 justify-center p-8 bg-new-midnight-90">
           <h2>No items in the cart!</h2>
           <p className="w-3/5 text-center">
             Your cart is empty at the moment. Explore our wide range of
@@ -142,7 +142,7 @@ export default function CartProducts() {
             categories or browse by brand to discover the perfect products for
             you.
           </p>
-          <Link href={"/products"} className="px-5 py-4 text-[1.15rem] bg-new-gray hover:bg-new-mint hover:text-new-gray duration-150  ">Browse products</Link>
+          <Link href={"/products"} className="px-5 py-4 text-[1.15rem] bg-new-darkblue hover:bg-new-mint hover:text-new-darkblue duration-150  ">Browse products</Link>
         </div>
       )}
 

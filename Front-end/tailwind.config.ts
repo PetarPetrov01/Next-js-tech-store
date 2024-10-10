@@ -20,11 +20,11 @@ const config: Config = {
         pink: "#ff0198",
         green: "#88d42b",
         new: {
-          gray: "#2c3531",
-          teal: {
-            80: "#116466b5",
-            90: "#116466e5",
-            100: "#116466",
+          darkblue: "#050421",
+          midnight: {
+            80: "#091349b5",
+            90: "#091349e5",
+            100: "#091349",
           },
           sandstone: "#d9b08c",
           peach: {

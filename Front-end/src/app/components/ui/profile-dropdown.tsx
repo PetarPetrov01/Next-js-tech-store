@@ -22,7 +22,7 @@ export function ProfileDropdown({
           : "opacity-0 h-0 p-0 overflow-hidden duration-75 pointer-events-none"
       }`}
     >
-      <h3 className="relative text-new-teal-100 font-bold after:absolute after:left-[-1rem] after:top-[calc(100%+0.2rem)] after:h-[1px] after:bg-new-teal-100 after:w-[calc(100%+2rem)]">
+      <h3 className="relative text-new-midnight-100 font-bold after:absolute after:left-[-1rem] after:top-[calc(100%+0.2rem)] after:h-[1px] after:bg-new-midnight-100 after:w-[calc(100%+2rem)]">
         {user.username}
       </h3>
       <ul className="flex flex-col justify-start pt-2">
@@ -30,7 +30,7 @@ export function ProfileDropdown({
           <Link
             href={"/profile"}
             onClick={(e) => setProfileDropdown(false)}
-            className="text-new-teal-100 text-xl hover:border-pink hover:text-new-gray duration-200 cursor-pointer"
+            className="text-new-midnight-100 text-xl hover:border-pink hover:text-new-darkblue duration-200 cursor-pointer"
           >
             Profile
           </Link>
@@ -38,7 +38,7 @@ export function ProfileDropdown({
         <li className="">
           <a
             onClick={logout}
-            className="text-new-teal-100 text-xl hover:border-pink hover:text-new-gray duration-200 cursor-pointer"
+            className="text-new-midnight-100 text-xl hover:border-pink hover:text-new-darkblue duration-200 cursor-pointer"
           >
             Logout
           </a>

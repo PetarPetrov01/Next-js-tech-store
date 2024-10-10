@@ -20,7 +20,7 @@ export default function Sort() {
       <select
         name="sort"
         id=""
-        className="p-[0.6rem] bg-new-peach-100 rounded-sm text-new-gray font-bold"
+        className="p-[0.6rem] bg-new-peach-100 rounded-sm text-new-darkblue font-bold"
         defaultValue={searchParams.get("sort") || undefined}
         onChange={handleSortChange}
       >

@@ -8,7 +8,7 @@ import {
 export default function Footer() {
   return (
     <>
-      <footer className="flex items-center justify-center bg-new-teal-100 min-h-20">
+      <footer className="flex items-center justify-center bg-new-midnight-100 min-h-20">
         <div className="container max-w-[1400px] px-20 py-5 flex justify-evenly items-start text-new-mint">
           <article>
             <Image
@@ -51,9 +51,9 @@ export default function Footer() {
             <input
               type="email"
               placeholder="E-mail"
-              className="rounded-sm text-lg p-1 outline-none bg-white/60 text-new-gray duration-200 placeholder:text-gray-500 focus:bg-new-mint focus:outline-1 focus:outline-new-mint"
+              className="rounded-sm text-lg p-1 outline-none bg-white/60 text-new-darkblue duration-200 placeholder:text-gray-500 focus:bg-new-mint focus:outline-1 focus:outline-new-mint"
             />
-            <button className="py-1.5 border-2 border-new-sandstone text-new-peach-100 text-lg hover:bg-new-peach-100 hover:text-new-gray duration-150">
+            <button className="py-1.5 border-2 border-new-sandstone text-new-peach-100 text-lg hover:bg-new-peach-100 hover:text-new-darkblue duration-150">
               Subscribe
             </button>
           </article>

@@ -33,7 +33,7 @@ export default function LayoutToggle() {
         onClick={() => toggleLayout("grid")}
         className={`flex-1 p-[0.35rem] ${
           productsLayout == "grid"
-            ? "bg-new-peach-100 text-new-gray"
+            ? "bg-new-peach-100 text-new-darkblue"
             : "bg-transparent text-new-mint"
         }`}
       >
@@ -43,7 +43,7 @@ export default function LayoutToggle() {
         onClick={() => toggleLayout("list")}
         className={`flex-1 p-1 ${
           productsLayout == "list"
-            ? "bg-new-peach-100 text-new-gray"
+            ? "bg-new-peach-100 text-new-darkblue"
             : "bg-transparent text-new-mint"
         }`}
       >

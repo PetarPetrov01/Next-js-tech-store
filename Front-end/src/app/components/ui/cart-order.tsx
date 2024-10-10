@@ -14,7 +14,7 @@ export default function CartOrder() {
   return (
     <>
       {cart.length > 0 && (
-        <article className="flex-[1_1_25%] flex flex-col gap-4 bg-new-teal-100 min-h-10 rounded-md p-4">
+        <article className="flex-[1_1_25%] flex flex-col gap-4 bg-new-midnight-100 min-h-10 rounded-md p-4">
           <h2>Order info</h2>
           <div className="flex flex-col items-stretch">
             <div className="flex justify-between">
@@ -27,7 +27,7 @@ export default function CartOrder() {
             </div>
           </div>
           <h3>Total: ${totalPrice() + deliveryPrice}</h3>
-          <button className="self-center p-3 text-new-mint bg-new-gray rounded-md hover:text-new-gray hover:bg-new-peach-100 duration-200">
+          <button className="self-center p-3 text-new-mint bg-new-darkblue rounded-md hover:text-new-darkblue hover:bg-new-peach-100 duration-200">
             Complete order
           </button>
         </article>
