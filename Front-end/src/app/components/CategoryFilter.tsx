@@ -1,6 +1,7 @@
 "use client";
 
 import { Categories } from "@/types/Product";
+import { parseVersionInfo } from "next/dist/server/dev/parse-version-info";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEventHandler, useState } from "react";
@@ -39,16 +40,26 @@ export default function CategoryFilter({
   };
 
   const showClear = () => {
-    return searchParams.size > 1 || (searchParams.size === 1 && !searchParams.get("sort"));
+    const pars = Array.from(searchParams.keys());
+
+    for (let par of pars) {
+      console.log(par);
+      if (par != "view" && par != "sort") {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   const clearFilters = () => {
     const params = new URLSearchParams();
     const sortParam = searchParams.get("sort");
+    const viewParam = searchParams.get("view");
 
-    if (sortParam) {
-      params.set("sort", sortParam);
-    }
+    if (sortParam) params.set("sort", sortParam);
+
+    if (viewParam) params.set("view", viewParam);
 
     const href = `${pathname}?${params.toString()}`;
 
@@ -98,7 +109,7 @@ export default function CategoryFilter({
 
           <a
             onClick={toggleAllCats}
-            className="absolute right-2 bottom-2 text-sm hover:text-new-teal-80 cursor-pointer"
+            className="absolute right-2 bottom-2 text-sm hover:text-new-midnight-80 cursor-pointer"
           >
             {showAllCats ? "Show less" : "Show more"}
           </a>
