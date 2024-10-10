@@ -9,7 +9,7 @@ export default function ProductCard({ prod }: { prod: Product }) {
   const router = useRouter();
   return (
     <div key={prod.id} className="sm:w-[49%] md:w-[32%] flex flex-col gap-5">
-      <div className="relative flex flex-col items-center justify-start gap-2 mt-6 p-3 py-8 shadow-s duration-100 z-10 before:absolute before:top-0 before:left-0 before:right-0 before:w-full before:h-2/3 before:bg-gray-600/70 hover:before:h-full hover:before:bg-gray-400/50 before:duration-500 before:z-[-1]">
+      <div className="relative flex flex-col items-center justify-start gap-2 mt-6 p-3 py-8 shadow-s duration-100 z-10 before:absolute before:top-0 before:left-0 before:right-0 before:w-full before:h-2/3 before:bg-gray-600/25 hover:before:h-full hover:before:bg-gray-500/40 before:duration-500 before:z-[-1]">
         <div className="flex w-full justify-center items-center overflow-hidden self-center">
           <Image
             src={prod.images[0]}

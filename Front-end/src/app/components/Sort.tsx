@@ -11,7 +11,7 @@ export default function Sort() {
     const { name, value } = e.target;
     const params = new URLSearchParams(searchParams);
     params.set(name, value);
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (

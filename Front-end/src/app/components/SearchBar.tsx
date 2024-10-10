@@ -38,14 +38,18 @@ export default function SearchBar() {
       params.delete("search");
     }
 
-    replace(`${pathname}?${params}`);
+    replace(`${pathname}?${params}`, { scroll: false });
   });
 
   return (
     <div className="py-4 w-3/5">
       <form onSubmit={handleSearchSubmit}>
         <div
-          className={`relative flex border-b-2 border-transparent duration-500  after:absolute after:h-[2px] after:bottom-[-1px] after:left-0 after:duration-700  after:bg-new-peach-100 ${isFocused ? 'after:w-full after:opacity-95 bg-gray-700/80' : 'after:w-[2%] after:opacity-0 bg-gray-700/60'} `}
+          className={`relative flex border-b-2 border-transparent duration-500  after:absolute after:h-[2px] after:bottom-[-1px] after:left-0 after:duration-700  after:bg-new-peach-100 ${
+            isFocused
+              ? "after:w-full after:opacity-95 bg-gray-700/80"
+              : "after:w-[2%] after:opacity-0 bg-gray-700/60"
+          } `}
         >
           <input
             type="text"

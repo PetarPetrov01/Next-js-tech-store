@@ -44,6 +44,7 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
       <div className="flex flex-col items-start gap-1 pl-2 font-normal">
         <Link
           href={handleUpdateBrand(null)}
+          scroll={false}
           className={`${!searchParams.get("brand") && "font-semibold"}`}
         >
           All
@@ -54,6 +55,7 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
             <Link
               href={handleUpdateBrand(brand.id)}
               key={brand.id}
+              scroll={false}
               className={`flex gap-1.5 ${
                 isActive(String(brand.id)) && "font-semibold"
               }`}

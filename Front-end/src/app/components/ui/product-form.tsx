@@ -105,13 +105,13 @@ export default function ProductForm({
           <div className="flex justify-between gap-8">
             <Link
               href={"/login"}
-              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-gray"
+              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-gray hover:bg-new-gray hover:text-new-mint duration-150"
             >
               Login
             </Link>
             <Link
               href={"/register"}
-              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-gray"
+              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-gray hover:bg-new-gray hover:text-new-mint duration-150"
             >
               Register
             </Link>
