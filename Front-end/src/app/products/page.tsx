@@ -57,7 +57,6 @@ export default async function Page({ searchParams }: { searchParams: any }) {
         <div className="container max-w-[1450px] flex flex-col items-center py-20 px-4">
           <div className="flex w-full justify-between items-start">
             <article className="sm:w-[28%] lg:w-[24%] flex flex-col gap-4 min-h-60 mt-2 p-2">
-              <h2 className="border-b-2 border-new-peach-100 py-3">Filter</h2>
               <Filter />
               <BrandFilterWrapper catId={category} />
             </article>
