@@ -8,6 +8,7 @@ import BrandFilterWrapper from "../components/BrandFilterWrapper";
 import SearchBar from "../components/SearchBar";
 import Image from "next/image";
 import Sort from "../components/Sort";
+import LayoutToggle from "../components/ui/product-layout-toggle";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -61,7 +62,8 @@ export default async function Page({ searchParams }: { searchParams: any }) {
               <BrandFilterWrapper catId={category} />
             </article>
             <article className="sm:w-[71%] lg:w-[75%] flex flex-col items-center justify-center p-2">
-              <div className="flex justify-evenly items-center w-full border-2 border-new-peach-100">
+              <div className="flex justify-between px-3 items-center w-full border-2 border-new-peach-100">
+                <LayoutToggle />
                 <SearchBar />
                 <Sort />
               </div>
