@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 import Slider from "react-slider";
@@ -16,7 +16,22 @@ export default function PriceFilter() {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
 
-  const [priceRange, setPriceRange] = useState([MIN_PRICE, MAX_PRICE]);
+  const priceParams = searchParams.get("price");
+
+  
+  const [initialMin,initialMax] = priceParams ? priceParams.split(":") : [] 
+
+  const [priceRange, setPriceRange] = useState([
+    Number(initialMin) || MIN_PRICE,
+    Number(initialMax) || MAX_PRICE,
+  ]);
+
+  useEffect(() => {
+    //To sync the state when all filters are cleared
+    if (!initialMin && !initialMax) {
+      setPriceRange([MIN_PRICE, MAX_PRICE]);
+    }
+  }, [initialMin, initialMax]);
 
   const handleSliderChange = (values: number[]) => {
     setPriceRange(values);
@@ -31,7 +46,7 @@ export default function PriceFilter() {
       params.delete("price");
     }
     const href = `${pathname}?${params.toString()}`;
-    replace(href);
+    replace(href, { scroll: false });
   };
 
   const handleInputChange = (
@@ -69,12 +84,12 @@ export default function PriceFilter() {
       : params.set("price", String([priceRange[0], value].join(":")));
 
     const href = `${pathname}?${params.toString()}`;
-    replace(href);
+    replace(href, { scroll: false });
   };
 
   return (
     <div
-      className={`relative flex flex-col gap-1 p-2 overflow-hidden border-b-2 border-new-peach-100 font-semibold text-new-mint duration-200`}
+      className={`relative flex flex-col gap-1 p-2 pb-4 overflow-hidden border-b-2 border-new-peach-100 font-semibold text-new-mint duration-200`}
     >
       <h3>Price</h3>
       <div className="flex flex-col justify-between py-4 px-2">
