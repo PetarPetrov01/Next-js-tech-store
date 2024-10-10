@@ -36,7 +36,7 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
 
   return (
     <div
-      className={`relative flex flex-col gap-1 p-2 bg-[#ffd5ae] overflow-hidden rounded-md font-semibold text-new-gray duration-200 ${
+      className={`relative flex flex-col gap-1 p-2 border-b-2 border-new-peach-100 overflow-hidden font-semibold text-new-mint duration-200 ${
         showAllBrands ? "max-h-80" : "max-h-32"
       }`}
     >
@@ -44,6 +44,7 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
       <div className="flex flex-col items-start gap-1 pl-2 font-normal">
         <Link
           href={handleUpdateBrand(null)}
+          scroll={false}
           className={`${!searchParams.get("brand") && "font-semibold"}`}
         >
           All
@@ -54,6 +55,7 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
             <Link
               href={handleUpdateBrand(brand.id)}
               key={brand.id}
+              scroll={false}
               className={`flex gap-1.5 ${
                 isActive(String(brand.id)) && "font-semibold"
               }`}
@@ -65,7 +67,7 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
 
         <a
           onClick={toggleAllBrands}
-          className="absolute right-2 bottom-2 text-sm hover:text-new-teal-80 cursor-pointer"
+          className="absolute right-2 bottom-2 text-sm hover:text-new-midnight-80 cursor-pointer"
         >
           {showAllBrands ? "Show less" : "Show more"}
         </a>

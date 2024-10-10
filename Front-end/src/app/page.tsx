@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="bg-gradient-radial from-new-teal to-new-gray min-h-[90vh] flex justify-center">
+    <main className="bg-gradient-radial from-new-midnight to-new-darkblue min-h-[90vh] flex justify-center">
       <div className="container max-w-[1400px] px-40">
         <section className="left flex items-center justify-around gap-4 max-w-[100%] pt-20">
           <article className="flex flex-col max-w-[60%] w-[65ch]">
@@ -25,7 +25,7 @@ export default function Home() {
               </a>
               <a
                 href=""
-                className="px-10 py-2 text-new-gray bg-new-mint rounded-3xl text-lg shadow-[0_4px_12px_2px_rgba(209,232,226,0.4)] hover:shadow-[0_2px_12px_3px_rgba(209,232,226,0.7)] duration-200"
+                className="px-10 py-2 text-new-darkblue bg-new-mint rounded-3xl text-lg shadow-[0_4px_12px_2px_rgba(209,232,226,0.4)] hover:shadow-[0_2px_12px_3px_rgba(209,232,226,0.7)] duration-200"
               >
                 Contact us
               </a>

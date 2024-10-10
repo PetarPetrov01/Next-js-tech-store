@@ -74,7 +74,7 @@ export default function ProductForm({
             </div>
             <button
               onClick={handleAddToCart}
-              className="flex-[1_1_55%] rounded-lg bg-new-mint text-new-gray py-2 hover:bg-new-peach-90 duration-200"
+              className="flex-[1_1_55%] rounded-lg bg-new-mint text-new-darkblue py-2 hover:bg-new-peach-90 duration-200"
             >
               Add to cart
             </button>
@@ -83,7 +83,7 @@ export default function ProductForm({
               className={`flex-[1_1_5%] flex justify-center rounded-lg items-center bg-new-mint ${
                 isFavourite
                   ? "text-red-400 hover:text-red-300"
-                  : "text-new-gray hover:text-red-400"
+                  : "text-new-darkblue hover:text-red-400"
               } duration-200`}
             >
               {isFavourite ? (
@@ -105,13 +105,13 @@ export default function ProductForm({
           <div className="flex justify-between gap-8">
             <Link
               href={"/login"}
-              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-gray"
+              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
             >
               Login
             </Link>
             <Link
               href={"/register"}
-              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-gray"
+              className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
             >
               Register
             </Link>

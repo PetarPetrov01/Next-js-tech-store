@@ -32,7 +32,7 @@ export default function ClearCartDialog({
       onClose={() => setShowClearDialog(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      className="text-new-gray"
+      className="text-new-darkblue"
     >
       <DialogTitle id="alert-dialog-title" className="bg-new-mint">
         Remove product?
@@ -41,7 +41,7 @@ export default function ClearCartDialog({
         <DialogContentText id="alert-dialog-description">
           <p>Are you sure you want to clear the whole cart?</p>
         </DialogContentText>
-        <div className="flex justify-center gap-4 pt-2 text-new-gray">
+        <div className="flex justify-center gap-4 pt-2 text-new-darkblue">
           <button onClick={handleConfirm} className=" px-4 py-2 bg-red-400/70 hover:bg-red-400 duration-200">
             Clear
           </button>

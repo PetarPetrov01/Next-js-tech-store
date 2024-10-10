@@ -6,9 +6,7 @@ export default async function BrandFilterWrapper({
 }: {
   catId: number | null;
 }) {
-  console.log("from BFW  -  ", catId);
   const brands = await getBrands(catId);
-  console.log(brands);
 
   return <BrandFilter brands={brands} />;
 }

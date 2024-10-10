@@ -3,6 +3,7 @@
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -16,6 +17,8 @@ export default function SearchBar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
+
+  const [isFocused, setIsFocused] = useState(false);
 
   const {
     formState: { errors },
@@ -35,17 +38,25 @@ export default function SearchBar() {
       params.delete("search");
     }
 
-    replace(`${pathname}?${params}`);
+    replace(`${pathname}?${params}`, { scroll: false });
   });
 
   return (
     <div className="py-4 w-3/5">
       <form onSubmit={handleSearchSubmit}>
-        <div className="relative flex rounded-3xl border-2 border-new-mint">
+        <div
+          className={`relative flex border-b-2 border-transparent duration-500  after:absolute after:h-[2px] after:bottom-[-1px] after:left-0 after:duration-700  after:bg-new-peach-100 ${
+            isFocused
+              ? "after:w-full after:opacity-95 bg-gray-700/80"
+              : "after:w-[2%] after:opacity-0 bg-gray-700/60"
+          } `}
+        >
           <input
             type="text"
             {...register("search")}
-            className="text-new-peach-90 w-[90%] p-1 pl-2 outline-none bg-transparent"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            className="text-new-peach-90 text-[1.1rem] w-[90%] p-1 pl-2 outline-none bg-transparent"
           />
           <button
             type="submit"
