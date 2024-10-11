@@ -63,7 +63,7 @@ export default function CartProducts() {
       <div
         className={` ${
           cart.length <= 0 && "hidden"
-        } relative flex justify-between items-stretch bg-new-midnight-100 p-4 pb-3 rounded-t-md after:absolute after:w-[96%] after:bottom-0 after:right-[2%] after:bg-gray-200/50 after:h-[1px]`}
+        } relative flex justify-between items-stretch p-4 pb-3 after:absolute after:w-[96%] after:bottom-0 after:right-[2%] after:bg-gray-200/50 after:h-[1px]`}
       >
         <div className="flex justify-between gap-7 items-end">
           <h1 className="text-3xl">Cart</h1>
@@ -82,7 +82,7 @@ export default function CartProducts() {
           {cart.map((prod) => (
             <div
               key={prod.id}
-              className="min-h-8 flex justify-between bg-new-midnight-100 rounded-md first:rounded-t-none"
+              className="min-h-8 flex justify-between rounded-md"
             >
               <div className="flex-[1_1_17%] flex justify-center items-center p-2 aspect-square">
                 <Image
