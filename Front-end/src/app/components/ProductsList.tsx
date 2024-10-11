@@ -11,7 +11,7 @@ export default async function ProductsList({
   const viewType = searchParams.view || 'grid'
 
   return (
-    <div className={`flex flex-wrap w-full mt-6  ${viewType == 'grid' ? 'justify-start items-stretch md:gap-[2%]' : 'flex-col gap-4'}`}>
+    <div className={`flex flex-wrap w-full mt-6  ${viewType == 'grid' ? 'justify-start items-stretch md:gap-[2%]' : 'flex-col gap-6'}`}>
       {prods?.length > 0 ? (
         prods.map((prod, i) => <ProductCard prod={prod} key={prod.id} />)
       ) : (

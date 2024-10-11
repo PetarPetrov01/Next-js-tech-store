@@ -32,7 +32,7 @@ const config: Config = {
             90: "#fcc188e5",
             100: "#fcc188",
           },
-          mint: "#d1e8e2",
+          mint: "#e4e8f7",
         },
       },
       animation: {

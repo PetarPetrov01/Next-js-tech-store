@@ -67,7 +67,7 @@ export default function BrandFilter({ brands }: { brands: Brands }) {
 
         <a
           onClick={toggleAllBrands}
-          className="absolute right-2 bottom-2 text-sm hover:text-new-midnight-80 cursor-pointer"
+          className="absolute right-2 bottom-2 text-sm hover:text-new-peach-90 duration-150 cursor-pointer"
         >
           {showAllBrands ? "Show less" : "Show more"}
         </a>

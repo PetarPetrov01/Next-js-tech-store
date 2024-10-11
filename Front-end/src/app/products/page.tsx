@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 
-import { Product } from "@/types/Product";
 import { notFound } from "next/navigation";
 import ProductsList from "../components/ProductsList";
 import Filter from "../components/Filter";
@@ -38,6 +37,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
           />
         </div>
         <div className="container max-w-[1450px] flex flex-col items-center py-20 px-4">
+          <h2 className="text-[3rem] pb-10">Products</h2>
           <div className="flex w-full justify-between items-start">
             <article className="sm:w-[28%] lg:w-[24%] flex flex-col gap-4 min-h-60 mt-2 p-2">
               <Filter />
