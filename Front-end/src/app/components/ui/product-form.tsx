@@ -1,15 +1,15 @@
 "use client";
 
-import { useAuthContext } from "@/contexts/AuthProvider";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import {
-  HeartIcon as HeartIconSolid,
-  MinusIcon,
-  PlusIcon,
-} from "@heroicons/react/24/solid";
 import Link from "next/link";
+
 import { useState } from "react";
+
+import { useAuthContext } from "@/contexts/AuthProvider";
 import useCartStore from "../../store/cart";
+
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaMinus, FaPlus } from "react-icons/fa6";
+
 import { PopulatedProduct } from "@/types/Product";
 
 export default function ProductForm({
@@ -62,14 +62,14 @@ export default function ProductForm({
                 onClick={() => changeQty("decrease")}
                 className="hover:text-new-peach-90 duration-200"
               >
-                <MinusIcon width={18} height={18} />
+                <FaPlus  />
               </button>
               <span>{quantity}</span>
               <button
                 onClick={() => changeQty("increase")}
                 className="hover:text-new-peach-90 duration-200"
               >
-                <PlusIcon width={18} height={18} />
+                <FaMinus  />
               </button>
             </div>
             <button
@@ -87,9 +87,9 @@ export default function ProductForm({
               } duration-200`}
             >
               {isFavourite ? (
-                <HeartIconSolid width={30} height={30} />
+                <FaHeart size={'1.3em'} />
               ) : (
-                <HeartIcon width={30} height={30} />
+                <FaRegHeart size={'1.3em'} />
               )}
             </button>
           </div>

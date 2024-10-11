@@ -1,18 +1,20 @@
 "use client";
 
-import useCartStore from "@/app/store/cart";
-import {
-  MinusIcon,
-  PlusIcon,
-  TrashIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { useState } from "react";
-import EraseProductDiaolog from "./cart-erase-product-dialog";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import ClearCartDialog from "./clear-cart-dialog";
 import Link from "next/link";
+
+import { useState } from "react";
+
+import useCartStore from "@/app/store/cart";
+
+import { BsTrash3Fill } from "react-icons/bs";
+import { FaMinus, FaPlus } from "react-icons/fa6";
+import { BsFillXCircleFill } from "react-icons/bs";
+import {FaRegHeart} from 'react-icons/fa'
+
+import EraseProductDiaolog from "./cart-erase-product-dialog";
+import ClearCartDialog from "./clear-cart-dialog";
+
 
 export default function CartProducts() {
   const { cart, increaseQuantity, decreaseQuantity } = useCartStore();
@@ -72,7 +74,7 @@ export default function CartProducts() {
           className="flex gap-1 items-center mr-2 text-red-400 hover:text-red-500/90 duration-200"
         >
           <p>Clear cart</p>
-          <XCircleIcon width={25} height={25} />
+          <BsFillXCircleFill size={'1.1em'} />
         </button>
       </div>
       {cart.length > 0 ? (
@@ -105,7 +107,7 @@ export default function CartProducts() {
                       }
                       className="hover:text-new-peach-90 duration-200"
                     >
-                      <MinusIcon width={18} height={18} />
+                      <FaMinus size={'0.85em'} />
                     </button>
                     <span>{prod.quantity}</span>
                     <button
@@ -114,19 +116,19 @@ export default function CartProducts() {
                       }
                       className="hover:text-new-peach-90 duration-200"
                     >
-                      <PlusIcon width={18} height={18} />
+                      <FaPlus size={'0.85em'} />
                     </button>
                   </div>
                   <div className="flex gap-1 items-center cursor-pointer">
                     <span>Add to wish list</span>
-                    <HeartIcon height={22} width={22} />
+                    <FaRegHeart size={'1.1em'} />
                   </div>
                   <div
                     onClick={() => handleEraseClick(prod.id, prod.name)}
-                    className="flex gap-1 text-red-400 hover:text-red-500/90 cursor-pointer duration-100"
+                    className="flex items-center gap-1 text-red-400 hover:text-red-500/90 cursor-pointer duration-100"
                   >
                     <span>Remove</span>
-                    <TrashIcon height={20} width={20} />
+                    <BsTrash3Fill size={"1em"} />
                   </div>
                 </div>
               </div>
@@ -142,7 +144,12 @@ export default function CartProducts() {
             categories or browse by brand to discover the perfect products for
             you.
           </p>
-          <Link href={"/products"} className="px-5 py-4 text-[1.15rem] bg-new-darkblue hover:bg-new-mint hover:text-new-darkblue duration-150  ">Browse products</Link>
+          <Link
+            href={"/products"}
+            className="px-5 py-4 text-[1.15rem] bg-new-darkblue hover:bg-new-mint hover:text-new-darkblue duration-150  "
+          >
+            Browse products
+          </Link>
         </div>
       )}
 
