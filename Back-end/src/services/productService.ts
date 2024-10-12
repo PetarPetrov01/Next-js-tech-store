@@ -81,8 +81,8 @@ async function getProductById(productId: string) {
 
 async function uploadProduct(data: {
   description: string;
-  price: number;
-  stock: number;
+  price: string;
+  stock: string;
   model: string;
   brand: string;
   category: string;
@@ -99,15 +99,15 @@ async function uploadProduct(data: {
     let brand = await tx.brand.findUnique({ where: { name: data.brand } });
 
     if (!brand) {
-      brand = await tx.brand.create({ data: { name: data.category } });
+      brand = await tx.brand.create({ data: { name: data.brand } });
     }
 
     return tx.product.create({
       data: {
         name: `${data.brand} ${data.model}`,
         description: data.description,
-        price: data.price,
-        stock: data.stock,
+        price: Number(data.price),
+        stock: Number(data.stock),
         categoryId: category.id,
         brandId: brand.id,
         model: data.model,

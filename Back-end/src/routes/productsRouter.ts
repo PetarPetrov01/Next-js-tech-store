@@ -7,4 +7,6 @@ productsRouter.get("/categories", productController.getCategories);
 productsRouter.get("/brands", productController.getBrands);
 productsRouter.get("/:id", productController.getProductById);
 
+productsRouter.post("/upload", productController.uploadProduct);
+
 export default productsRouter;

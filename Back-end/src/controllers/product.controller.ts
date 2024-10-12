@@ -25,10 +25,10 @@ async function getProductById(req: Request, res: Response) {
     const productId = req.params.id;
     const product = await productService.getProductById(productId);
 
-    if(!product.id){
-      throw new Error('Invalid productID')
+    if (!product.id) {
+      throw new Error("Invalid productID");
     }
-    
+
     res.json(product);
   } catch (error: any) {
     res.status(400).json(error.message);
@@ -59,4 +59,20 @@ async function getBrands(req: Request, res: Response) {
   }
 }
 
-export default { getProducts, getProductById, getCategories, getBrands };
+async function uploadProduct(req: Request, res: Response) {
+  try {
+    const data = req.body;
+    const createdProd = await productService.uploadProduct(data);
+    res.status(200).json(createdProd);
+  } catch (error: any) {
+    res.status(400).json({ mesage: error.mesage });
+  }
+}
+
+export default {
+  getProducts,
+  getProductById,
+  getCategories,
+  getBrands,
+  uploadProduct,
+};
