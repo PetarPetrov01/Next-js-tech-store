@@ -43,13 +43,13 @@ model Product{
 
 model Brand{
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   products Product[]
 }
 
 model Category{
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   products Product[]
 }
 

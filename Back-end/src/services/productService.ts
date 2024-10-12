@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { prisma } from "../config/db-config";
 import categoryService from "./categoryService";
 
@@ -79,4 +79,43 @@ async function getProductById(productId: string) {
   };
 }
 
-export default { getProducts, getProductById };
+async function uploadProduct(data: {
+  description: string;
+  price: number;
+  stock: number;
+  model: string;
+  brand: string;
+  category: string;
+}) {
+  const createdProd = await prisma.$transaction(async (tx) => {
+    let category = await tx.category.findUnique({
+      where: { name: data.category },
+    });
+
+    if (!category) {
+      category = await tx.category.create({ data: { name: data.category } });
+    }
+
+    let brand = await tx.brand.findUnique({ where: { name: data.brand } });
+
+    if (!brand) {
+      brand = await tx.brand.create({ data: { name: data.category } });
+    }
+
+    return tx.product.create({
+      data: {
+        name: `${data.brand} ${data.model}`,
+        description: data.description,
+        price: data.price,
+        stock: data.stock,
+        categoryId: category.id,
+        brandId: brand.id,
+        model: data.model,
+      },
+    });
+  });
+
+  return createdProd;
+}
+
+export default { getProducts, getProductById, uploadProduct };
