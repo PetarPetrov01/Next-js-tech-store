@@ -1,8 +1,5 @@
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
-import { fileURLToPath } from "url";
-import { CustomRequest } from "../middlewares/sesssion";
-import { NextFunction, Response } from "express";
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
