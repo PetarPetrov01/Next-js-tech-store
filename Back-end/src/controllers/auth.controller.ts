@@ -25,7 +25,6 @@ export const expiredCookie: CookieOptions = {
 
 async function login(req: Request, res: Response) {
   try {
-    console.log("in contr");
     const { email, password } = req.body;
     const { authToken, user } = await authService.login(email, password);
 
@@ -44,7 +43,6 @@ async function register(
 ) {
   try {
     const { email, firstName, lastName, username, password } = req.body;
-    console.log(email);
     const { authToken, user } = await authService.register(
       email,
       firstName,
@@ -53,7 +51,6 @@ async function register(
       password
     );
 
-    console.log(user);
 
     res.cookie("authToken", authToken, cookieOptions);
 

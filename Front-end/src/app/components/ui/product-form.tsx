@@ -74,7 +74,7 @@ export default function ProductForm({
             </div>
             <button
               onClick={handleAddToCart}
-              className="flex-[1_1_55%] rounded-lg bg-new-mint text-new-darkblue py-2 hover:bg-new-peach-90 duration-200"
+              className="flex-[1_1_55%] uppercase rounded-lg bg-new-mint text-new-darkblue py-2 hover:bg-new-peach-90 duration-200"
             >
               Add to cart
             </button>

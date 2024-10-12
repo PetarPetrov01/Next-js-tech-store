@@ -1,19 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { Product } from "../../../types/Product";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { FaRegHeart, FaRegEye } from "react-icons/fa";
 
-export default function ProductCard({ prod }: { prod: Product }) {
+import useCartStore from "@/app/store/cart";
+import { PopulatedProduct } from "../../../types/Product";
+
+export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const { addToCart } = useCartStore();
 
   const [isHovered, setIsHovered] = useState(false);
 
   const viewType = searchParams.get("view") || "grid";
+
+  const handleAddToCart = () => {
+    addToCart({ ...prod, quantity: 1 });
+  };
 
   return (
     <div
@@ -67,7 +75,7 @@ export default function ProductCard({ prod }: { prod: Product }) {
             className="relative h-12 w-12 cursor-pointer text-new-mint bg-new-darkblue p-2 after:absolute after:z-0 after:bottom-0 after:right-0 after:left-0 after:w-full after:h-[3px] after:bg-new-peach-90 hover:after:h-full after:duration-500"
           >
             <FaRegEye
-            size={'1.4em'}
+              size={"1.4em"}
               className="z-[10] absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
             />
           </button>
@@ -81,7 +89,10 @@ export default function ProductCard({ prod }: { prod: Product }) {
         <h2 className="text-2xl">{prod.name}</h2>
         <h2 className="text-2xl text-neutral-300">${prod.price}</h2>
         <p className="">In stock: {prod.stock} </p>
-        <button className=" relative bg-neutral-700 py-2 px-5 z-10 text-lg hover:text-white duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:w-full after:h-[3px] after:bg-new-peach-90 hover:after:h-full after:duration-500">
+        <button
+          onClick={handleAddToCart}
+          className="relative bg-neutral-700 py-2 px-5 z-10 text-lg hover:text-white duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:w-full after:h-[3px] after:bg-new-peach-90 hover:after:h-full after:duration-500"
+        >
           Add to cart
         </button>
       </div>
