@@ -13,7 +13,7 @@ const baseUrl = "http://localhost:3001/api/products";
 
 export const getProds = async (
   queryParams: QueryParams
-): Promise<Product[]> => {
+): Promise<PopulatedProduct[]> => {
   const queryParamsArr: string[] = [];
 
   if (queryParams) {
