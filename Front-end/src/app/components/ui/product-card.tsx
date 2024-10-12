@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-
 import { useState } from "react";
 
 import { FaRegHeart, FaRegEye } from "react-icons/fa";
@@ -34,9 +33,13 @@ export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
       }`}
     >
       <div
-        className={`relative flex flex-col items-center justify-start gap-2  p-3 py-8 shadow-s duration-100 z-10 before:absolute before:top-0 before:left-0 before:right-0 before:w-full before:h-2/3 before:bg-gray-600/25 before:duration-500 before:z-[-1] ${
+        className={`relative flex flex-col items-center justify-start gap-2  p-3 py-8 shadow-s duration-100 z-10 before:absolute before:top-0 before:left-0 before:right-0 before:w-full  before:duration-500 before:z-[-1] ${
           viewType == "grid" ? "" : "w-1/3"
-        } ${isHovered ? "before:h-full before:bg-gray-500/40" : ""}`}
+        } ${
+          isHovered
+            ? "before:h-full before:bg-neutral-500/55"
+            : "before:h-2/3 before:bg-neutral-600/35"
+        }`}
       >
         <div
           className={`flex  justify-center items-center overflow-hidden  ${
@@ -83,12 +86,12 @@ export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
           viewType == "grid" ? "items-center" : "justify-center items-start"
         }`}
       >
-        <h2 className="text-2xl ">{prod.name}</h2>
-        <h2 className="text-2xl ">${prod.price}</h2>
+        <h2 className="text-2xl">{prod.name}</h2>
+        <h2 className="text-2xl text-neutral-300">${prod.price}</h2>
         <p className="">In stock: {prod.stock} </p>
         <button
           onClick={handleAddToCart}
-          className=" relative bg-gray-600/80 py-2 px-5 z-10 text-lg hover:text-white duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:w-full after:h-[3px] after:bg-new-peach-90 hover:after:h-full after:duration-500"
+          className="relative bg-neutral-700 py-2 px-5 z-10 text-lg hover:text-white duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:w-full after:h-[3px] after:bg-new-peach-90 hover:after:h-full after:duration-500"
         >
           Add to cart
         </button>

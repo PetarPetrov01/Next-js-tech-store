@@ -71,7 +71,7 @@ export default function CategoryFilter({
       <div className="flex justify-between items-center border-b-2 border-new-peach-100">
         <h2 className="py-3">Filter</h2>
         {showClear() && (
-          <Link href={clearFilters()} scroll={false}>
+          <Link href={clearFilters()} scroll={false} className="hover:text-new-peach-90 duration-150">
             Clear filters
           </Link>
         )}
@@ -109,7 +109,7 @@ export default function CategoryFilter({
 
           <a
             onClick={toggleAllCats}
-            className="absolute right-2 bottom-2 text-sm hover:text-new-midnight-80 cursor-pointer"
+            className="absolute right-2 bottom-2 text-sm hover:text-new-peach-90 duration-150 cursor-pointer"
           >
             {showAllCats ? "Show less" : "Show more"}
           </a>

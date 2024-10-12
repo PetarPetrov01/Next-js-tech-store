@@ -1,6 +1,6 @@
 "use client";
 
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -47,8 +47,8 @@ export default function SearchBar() {
         <div
           className={`relative flex border-b-2 border-transparent duration-500  after:absolute after:h-[2px] after:bottom-[-1px] after:left-0 after:duration-700  after:bg-new-peach-100 ${
             isFocused
-              ? "after:w-full after:opacity-95 bg-gray-700/80"
-              : "after:w-[2%] after:opacity-0 bg-gray-700/60"
+              ? "after:w-full after:opacity-95 bg-neutral-700/70"
+              : "after:w-[2%] after:opacity-0 bg-neutral-700/50"
           } `}
         >
           <input
@@ -62,10 +62,9 @@ export default function SearchBar() {
             type="submit"
             className="absolute top-[50%] translate-y-[-50%] right-0 bg-transparent px-2"
           >
-            <MagnifyingGlassIcon
-              width={22}
-              height={22}
+            <FaMagnifyingGlass
               className="text-new-mint"
+              size={'1.2em'}
             />
           </button>
         </div>

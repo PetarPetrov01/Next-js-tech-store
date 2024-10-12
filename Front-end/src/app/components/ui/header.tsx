@@ -83,7 +83,7 @@ export default function Header() {
                     <li key={link.href + link.label}>
                       <Link
                         href={link.href}
-                        className="text-white text-lg px-3 py-1 hover:border-pink hover:text-lightblue duration-200"
+                        className="text-white text-lg px-3 py-1 hover:text-new-peach-90 duration-200"
                       >
                         {link.label}
                       </Link>
@@ -110,13 +110,13 @@ export default function Header() {
                         className="aspect-square object-cover"
                       />
                     </div>
-                    <p className="text-lg hover:text-lightblue duration-200">
+                    <p className="text-lg hover:text-new-peach-90 duration-200">
                       PROFILE
                     </p>
                   </li>
                   <li className="flex items-center cursor-pointer text-white text-lg mx-3 py-1">
                     <Cart />
-                    <Link href={'/cart'} className="text-white text-lg py-1 hover:border-pink hover:text-lightblue duration-200" >CART</Link>
+                    <Link href={'/cart'} className="text-white text-lg py-1 hover:text-new-peach-90 duration-200" >CART</Link>
                   </li>
                 </>
               ) : (
@@ -124,7 +124,7 @@ export default function Header() {
                   <li key={link.href + link.label}>
                     <Link
                       href={link.href}
-                      className="text-white text-lg px-3 py-1 hover:border-pink hover:text-lightblue duration-200"
+                      className="text-white text-lg px-3 py-1 hover:text-new-peach-90 duration-200"
                     >
                       {link.label}
                     </Link>

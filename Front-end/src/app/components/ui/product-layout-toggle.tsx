@@ -34,7 +34,7 @@ export default function LayoutToggle() {
         className={`flex-1 p-[0.35rem] ${
           productsLayout == "grid"
             ? "bg-new-peach-100 text-new-darkblue"
-            : "bg-transparent text-new-mint"
+            : "bg-transparent text-new-mint duration-150 hover:bg-neutral-700/70"
         }`}
       >
         <BsGrid3X3GapFill className="w-full h-full" />
@@ -44,7 +44,7 @@ export default function LayoutToggle() {
         className={`flex-1 p-1 ${
           productsLayout == "list"
             ? "bg-new-peach-100 text-new-darkblue"
-            : "bg-transparent text-new-mint"
+            : "bg-transparent text-new-mint duration-150 hover:bg-neutral-700/70"
         }`}
       >
         <MdViewList className="w-full h-full" />

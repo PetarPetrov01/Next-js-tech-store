@@ -14,7 +14,7 @@ export default function CartOrder() {
   return (
     <>
       {cart.length > 0 && (
-        <article className="flex-[1_1_25%] flex flex-col gap-4 bg-new-midnight-100 min-h-10 rounded-md p-4">
+        <article className="flex-[1_1_25%] flex flex-col gap-4 bg-new-midnight-100 min-h-10 p-4">
           <h2>Order info</h2>
           <div className="flex flex-col items-stretch">
             <div className="flex justify-between">
