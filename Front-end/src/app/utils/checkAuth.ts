@@ -1,24 +1,34 @@
 import { User } from "@/types/User";
-import { customFetch } from "./customFetch";
 
-export async function checkAuth(): Promise<User | null> {
+export async function checkAuth(
+  cookie: string | null = null
+): Promise<User | null> {
   try {
-    const res = await fetch("http://localhost:3001/api/auth/validate", {
+    const options: RequestInit = {
       method: "GET",
-      credentials: "include",
       cache: "no-cache",
-    });
+    };
+
+    if (cookie) {
+      // server component
+      options.headers = { Cookie: cookie };
+    } else {
+      // client component
+      options.credentials = "include"
+    }
+
+    const res = await fetch("http://localhost:3001/api/auth/validate", options);
 
     if (!res.ok) {
-      const err = await res.json()
-      throw new Error(err)
+      const err = await res.json();
+      throw new Error(err);
     }
 
     const user = await res.json();
 
     return user;
   } catch (error: any) {
-    console.log(error.message);
+    console.log(error);
     return null;
   }
 }

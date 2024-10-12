@@ -1,15 +1,17 @@
 "use client";
 
-import { useAuthContext } from "@/contexts/AuthProvider";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { useState } from "react";
+
 import {
   HeartIcon as HeartIconSolid,
   MinusIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
-import Link from "next/link";
-import { useState } from "react";
+import { HeartIcon } from "@heroicons/react/24/outline";
+
 import useCartStore from "../../store/cart";
+import { useAuthContext } from "@/contexts/AuthProvider";
 import { PopulatedProduct } from "@/types/Product";
 
 export default function ProductForm({
@@ -74,7 +76,7 @@ export default function ProductForm({
             </div>
             <button
               onClick={handleAddToCart}
-              className="flex-[1_1_55%] rounded-lg bg-new-mint text-new-darkblue py-2 hover:bg-new-peach-90 duration-200"
+              className="flex-[1_1_55%] uppercase rounded-lg bg-new-mint text-new-darkblue py-2 hover:bg-new-peach-90 duration-200"
             >
               Add to cart
             </button>
