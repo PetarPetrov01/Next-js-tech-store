@@ -10,6 +10,7 @@ import authService from "../services/authService";
 import userService from "../services/userService";
 
 import { CustomRequest } from "../middlewares/sesssion";
+import productService from "../services/productService";
 
 async function uploadProfileImage(req: CustomRequest, res: Response) {
   if (!req.file) {
@@ -73,11 +74,14 @@ async function uploadProductImages(req: CustomRequest, res: Response) {
     );
     const imageUrls = uploadResult.map((f) => f.secure_url);
 
-    console.log(imageUrls);
+    const uploadedImages = await productService.updateProductImages(
+      res.locals.product.id,
+      imageUrls
+    );
 
-    res.status(200).json(imageUrls);
+    res.status(200).json(uploadedImages);
   } catch (error: any) {
-    res.status(400).json({ message: "fail" });
+    res.status(400).json({ message: "Upload failed" });
   } finally {
     filePaths.forEach((path) => {
       fs.unlink(path, (err) => {
@@ -89,6 +93,16 @@ async function uploadProductImages(req: CustomRequest, res: Response) {
       });
     });
   }
+}
+
+async function deleteProductImage(imageUrl: string) {
+  try {
+    const imageId = imageUrl.substring(
+      imageUrl.indexOf("Images/"),
+      imageUrl.lastIndexOf(".")
+    );
+    const deleted = await deleteFromCloudinary(imageId);
+  } catch (error) {}
 }
 
 const uploadController = { uploadProfileImage, uploadProductImages };

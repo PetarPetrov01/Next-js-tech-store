@@ -118,6 +118,18 @@ async function uploadProduct(data: {
   return createdProd;
 }
 
+async function updateProductImages(productId: string, imageUrls: string[]) {
+  const result = await prisma.product.update({
+    where: { id: productId },
+    data: {
+      images: { createMany: { data: imageUrls.map((url) => ({ url })) } },
+    },
+    select: { images: true },
+  });
+
+  return result;
+}
+
 async function checkProductExist(productId: string) {
   const product = await prisma.product.findUnique({
     where: { id: productId },
@@ -131,5 +143,6 @@ export default {
   getProducts,
   getProductById,
   uploadProduct,
+  updateProductImages,
   checkProductExist,
 };
