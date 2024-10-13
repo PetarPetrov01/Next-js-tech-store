@@ -118,4 +118,18 @@ async function uploadProduct(data: {
   return createdProd;
 }
 
-export default { getProducts, getProductById, uploadProduct };
+async function checkProductExist(productId: string) {
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    select: { id: true, brand: { select: { name: true } } },
+  });
+
+  return product ? { id: product.id, brand: product.brand.name } : null;
+}
+
+export default {
+  getProducts,
+  getProductById,
+  uploadProduct,
+  checkProductExist,
+};
