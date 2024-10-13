@@ -10,7 +10,6 @@ import authService from "../services/authService";
 import userService from "../services/userService";
 
 import { CustomRequest } from "../middlewares/sesssion";
-import { MulterError } from "multer";
 
 async function uploadProfileImage(req: CustomRequest, res: Response) {
   if (!req.file) {
@@ -60,11 +59,9 @@ async function uploadProfileImage(req: CustomRequest, res: Response) {
 }
 
 async function uploadProductImages(req: CustomRequest, res: Response) {
-  
   if (!req.files?.length) {
-    return res.status(400).json({ message: "No files uploaded." });
+    return res.status(400).json({ message: "No files provided" });
   }
-
 
   const files = req.files as Express.Multer.File[];
   const filePaths = files.map((f) => f.path);
@@ -72,7 +69,7 @@ async function uploadProductImages(req: CustomRequest, res: Response) {
   try {
     const uploadResult = await uploadMultipleToCloudinary(
       filePaths,
-      "Test/Lenovo"
+      `Images/${res.locals.product.brand || "Other"}`
     );
     const imageUrls = uploadResult.map((f) => f.secure_url);
 
