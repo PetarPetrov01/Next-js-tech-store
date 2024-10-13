@@ -73,8 +73,6 @@ async function uploadProductImages(req: CustomRequest, res: Response) {
     );
     const imageUrls = uploadResult.map((f) => f.secure_url);
 
-    console.log(imageUrls);
-
     res.status(200).json(imageUrls);
   } catch (error: any) {
     res.status(400).json({ message: "fail" });
@@ -89,6 +87,16 @@ async function uploadProductImages(req: CustomRequest, res: Response) {
       });
     });
   }
+}
+
+async function deleteProductImage(imageUrl: string) {
+  try {
+    const imageId = imageUrl.substring(
+      imageUrl.indexOf("Images/"),
+      imageUrl.lastIndexOf(".")
+    );
+    const deleted = await deleteFromCloudinary(imageId);
+  } catch (error) {}
 }
 
 const uploadController = { uploadProfileImage, uploadProductImages };
