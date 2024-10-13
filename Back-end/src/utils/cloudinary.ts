@@ -1,7 +1,10 @@
 import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import cloudinary from "../config/cloudinary-config";
 
-export function uploadToCloudinary(file: string, folder: string): Promise<UploadApiResponse | UploadApiErrorResponse> {
+export function uploadToCloudinary(
+  file: string,
+  folder: string
+): Promise<UploadApiResponse | UploadApiErrorResponse> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       file,
@@ -20,16 +23,24 @@ export function uploadToCloudinary(file: string, folder: string): Promise<Upload
   });
 }
 
-export function deleteFromCloudinary(publicId: string): Promise<{result: string}> {
+export function uploadMultipleToCloudinary(
+  files: string[],
+  folder: string
+): Promise<(UploadApiResponse | UploadApiErrorResponse)[]> {
+  return Promise.all(files.map((file) => uploadToCloudinary(file, folder)));
+}
+
+export function deleteFromCloudinary(
+  publicId: string
+): Promise<{ result: string }> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.destroy(publicId, {}, (error, result) => {
       if (error) {
         // reject(error); Should not reject as that would stop the update of the next image!
-        resolve(error)
+        resolve(error);
       } else {
         resolve(result);
       }
     });
   });
 }
-

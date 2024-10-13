@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { prisma } from "../config/db-config";
 import categoryService from "./categoryService";
 
@@ -79,4 +79,70 @@ async function getProductById(productId: string) {
   };
 }
 
-export default { getProducts, getProductById };
+async function uploadProduct(data: {
+  description: string;
+  price: string;
+  stock: string;
+  model: string;
+  brand: string;
+  category: string;
+}) {
+  const createdProd = await prisma.$transaction(async (tx) => {
+    let category = await tx.category.findUnique({
+      where: { name: data.category },
+    });
+
+    if (!category) {
+      category = await tx.category.create({ data: { name: data.category } });
+    }
+
+    let brand = await tx.brand.findUnique({ where: { name: data.brand } });
+
+    if (!brand) {
+      brand = await tx.brand.create({ data: { name: data.brand } });
+    }
+
+    return tx.product.create({
+      data: {
+        name: `${data.brand} ${data.model}`,
+        description: data.description,
+        price: Number(data.price),
+        stock: Number(data.stock),
+        categoryId: category.id,
+        brandId: brand.id,
+        model: data.model,
+      },
+    });
+  });
+
+  return createdProd;
+}
+
+async function updateProductImages(productId: string, imageUrls: string[]) {
+  const result = await prisma.product.update({
+    where: { id: productId },
+    data: {
+      images: { createMany: { data: imageUrls.map((url) => ({ url })) } },
+    },
+    select: { images: true },
+  });
+
+  return result;
+}
+
+async function checkProductExist(productId: string) {
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    select: { id: true, brand: { select: { name: true } } },
+  });
+
+  return product ? { id: product.id, brand: product.brand.name } : null;
+}
+
+export default {
+  getProducts,
+  getProductById,
+  uploadProduct,
+  updateProductImages,
+  checkProductExist,
+};

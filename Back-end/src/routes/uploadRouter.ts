@@ -1,14 +1,14 @@
 import express, { Router } from "express";
 
-import upload from "../utils/multer";
 import uploadController from "../controllers/upload.controller";
+import multerUpload from "../middlewares/multerUpload";
 
 const uploadRouter: Router = express.Router();
 
 uploadRouter.post(
   "/image",
-  upload.single("image"),
-  uploadController.uploadImage
+  multerUpload.profileImage,
+  uploadController.uploadProfileImage
 );
 
 export default uploadRouter;

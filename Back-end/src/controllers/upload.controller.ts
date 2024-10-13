@@ -1,13 +1,18 @@
 import { Response } from "express";
 import fs from "fs";
 
-import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary";
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+  uploadMultipleToCloudinary,
+} from "../utils/cloudinary";
 import authService from "../services/authService";
 import userService from "../services/userService";
 
 import { CustomRequest } from "../middlewares/sesssion";
+import productService from "../services/productService";
 
-async function uploadImage(req: CustomRequest, res: Response) {
+async function uploadProfileImage(req: CustomRequest, res: Response) {
   if (!req.file) {
     return res.status(400).send({ message: "No file uploaded." });
   }
@@ -29,7 +34,7 @@ async function uploadImage(req: CustomRequest, res: Response) {
       );
       console.log("Deleting old image: " + oldImageId);
       const deleted = await deleteFromCloudinary(oldImageId);
-      console.log(`Result: ${deleted.result}`)
+      console.log(`Result: ${deleted.result}`);
     }
     await authService.updateImage(imageUrl, req.user?._id);
 
@@ -54,5 +59,51 @@ async function uploadImage(req: CustomRequest, res: Response) {
   }
 }
 
-const uploadController = { uploadImage };
+async function uploadProductImages(req: CustomRequest, res: Response) {
+  if (!req.files?.length) {
+    return res.status(400).json({ message: "No files provided" });
+  }
+
+  const files = req.files as Express.Multer.File[];
+  const filePaths = files.map((f) => f.path);
+
+  try {
+    const uploadResult = await uploadMultipleToCloudinary(
+      filePaths,
+      `Images/${res.locals.product.brand || "Other"}`
+    );
+    const imageUrls = uploadResult.map((f) => f.secure_url);
+
+    const uploadedImages = await productService.updateProductImages(
+      res.locals.product.id,
+      imageUrls
+    );
+
+    res.status(200).json(uploadedImages);
+  } catch (error: any) {
+    res.status(400).json({ message: "Upload failed" });
+  } finally {
+    filePaths.forEach((path) => {
+      fs.unlink(path, (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log("Sucessfully deleted from file system");
+        }
+      });
+    });
+  }
+}
+
+async function deleteProductImage(imageUrl: string) {
+  try {
+    const imageId = imageUrl.substring(
+      imageUrl.indexOf("Images/"),
+      imageUrl.lastIndexOf(".")
+    );
+    const deleted = await deleteFromCloudinary(imageId);
+  } catch (error) {}
+}
+
+const uploadController = { uploadProfileImage, uploadProductImages };
 export default uploadController;
