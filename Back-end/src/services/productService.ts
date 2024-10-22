@@ -79,14 +79,17 @@ async function getProductById(productId: string) {
   };
 }
 
-async function uploadProduct(data: {
-  description: string;
-  price: string;
-  stock: string;
-  model: string;
-  brand: string;
-  category: string;
-}) {
+async function uploadProduct(
+  data: {
+    description: string;
+    price: string;
+    stock: string;
+    model: string;
+    brand: string;
+    category: string;
+  },
+  userId: string
+) {
   const createdProd = await prisma.$transaction(async (tx) => {
     let category = await tx.category.findUnique({
       where: { name: data.category },
@@ -111,6 +114,7 @@ async function uploadProduct(data: {
         categoryId: category.id,
         brandId: brand.id,
         model: data.model,
+        ownerId: userId,
       },
     });
   });
@@ -130,13 +134,13 @@ async function updateProductImages(productId: string, imageUrls: string[]) {
   return result;
 }
 
-async function checkProductExist(productId: string) {
+async function checkProductExistence(productId: string) {
   const product = await prisma.product.findUnique({
     where: { id: productId },
-    select: { id: true, brand: { select: { name: true } } },
+    select: { id: true, brand: { select: { name: true } }, ownerId: true },
   });
 
-  return product ? { id: product.id, brand: product.brand.name } : null;
+  return product ? { ...product, brand: product.brand.name } : null;
 }
 
 export default {
@@ -144,5 +148,5 @@ export default {
   getProductById,
   uploadProduct,
   updateProductImages,
-  checkProductExist,
+  checkProductExistence,
 };
