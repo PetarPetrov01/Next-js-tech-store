@@ -4,6 +4,7 @@ import productService from "../services/productService";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import categoryService from "../services/categoryService";
 import brandService from "../services/brandService";
+import { CustomRequest } from "../middlewares/sesssion";
 
 async function getProducts(req: Request, res: Response) {
   try {
@@ -59,10 +60,11 @@ async function getBrands(req: Request, res: Response) {
   }
 }
 
-async function uploadProduct(req: Request, res: Response) {
+async function uploadProduct(req: CustomRequest, res: Response) {
   try {
     const data = req.body;
-    const createdProd = await productService.uploadProduct(data);
+    const userId = req.user?._id!
+    const createdProd = await productService.uploadProduct(data, userId);
     res.status(200).json(createdProd);
   } catch (error: any) {
     res.status(400).json({ mesage: error.mesage });

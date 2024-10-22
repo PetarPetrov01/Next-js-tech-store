@@ -17,8 +17,7 @@ export default function session(
   next: NextFunction
 ) {
   const token = req.cookies[authCookieName];
-  console.log("|TOKEN|");
-  console.log(token);
+  console.log(`Token - ${token}`);
   if (token) {
     try {
       const verifiedToken = verifyJWT(token);
@@ -29,7 +28,6 @@ export default function session(
 
       req.user = verifiedToken.payload;
 
-      // req.token = token;
     } catch (error: any) {
       res.cookie("authToken", "", expiredCookie);
       res.status(401).json({ message: error.message });
