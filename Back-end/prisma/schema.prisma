@@ -22,6 +22,7 @@ model User {
   password String?
   image String?
   wishlist Wishlist?
+  uploadedProducts Product[]
 }
 
 model Product{
@@ -35,6 +36,8 @@ model Product{
   brandId Int
   brand Brand @relation(fields: [brandId], references: [id])
   model String @default("")
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id])
   images ProductImage[] 
   wishlist Wishlist[] 
   createdAt DateTime @default(now())
