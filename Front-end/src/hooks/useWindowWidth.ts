@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 
 function getCurrentWidth(): number {
-  return window.innerWidth;
+  if (window) {
+    return window.innerWidth;
+  }
+  return 0;
 }
 
 export default function useWindowWidth() {
@@ -12,7 +15,7 @@ export default function useWindowWidth() {
   };
 
   useEffect(() => {
-    window.addEventListener("resize", handleResize);
+    window?.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
