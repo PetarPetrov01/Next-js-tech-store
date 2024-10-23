@@ -15,7 +15,7 @@ const guestLinks = [
 
 const userLinks = [
   { href: "/products", label: "PRODUCTS" },
-  { href: "/create", label: "POST PRODUCT" },
+  { href: "/products/post", label: "POST PRODUCT" },
 ];
 
 export default function Header() {
