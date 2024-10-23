@@ -14,12 +14,12 @@ export default async function ProductDetails({
   return (
     <main className="pt-4">
       <section className="flex justify-center min-h-screen">
-        <div className="container max-w-[1300px] p-4 flex justify-center gap-8 items-start">
-          <article className="w-1/2">
+        <div className="container max-w-[1300px] p-4 flex flex-col md:flex-row justify-between gap-2 md:gap-4 xl:gap-8 items-center md:items-start">
+          <article className="md:flex-shrink-0 w-[90%] sm:w-[80%] md:w-[380px] lg:w-[540px] xl:w-[610px]">
             <ProductImages images={product.images} />
           </article>
-          <article className="w-1/2 rounded-md border-lightblue p-2">
-            <div className="pl-6 flex flex-col gap-4 w-[90%]">
+          <article className="rounded-md border-lightblue p-2 md:max-w-[510px] lg:max-w-[620px]">
+            <div className="pl-2 lg:pl-6 flex flex-col gap-4 w-[90%]">
               <h1 className="text-3xl">{product.name}</h1>
               <h3 className="text-xl">${product.price}</h3>
               <div className="flex flex-col gap-8">
