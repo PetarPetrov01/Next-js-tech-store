@@ -62,14 +62,14 @@ export default function ProductForm({
                 onClick={() => changeQty("decrease")}
                 className="hover:text-new-peach-90 duration-200"
               >
-                <FaPlus  />
+                <FaMinus />
               </button>
               <span>{quantity}</span>
               <button
                 onClick={() => changeQty("increase")}
                 className="hover:text-new-peach-90 duration-200"
               >
-                <FaMinus  />
+                <FaPlus />
               </button>
             </div>
             <button
@@ -87,9 +87,9 @@ export default function ProductForm({
               } duration-200`}
             >
               {isFavourite ? (
-                <FaHeart size={'1.3em'} />
+                <FaHeart size={"1.3em"} />
               ) : (
-                <FaRegHeart size={'1.3em'} />
+                <FaRegHeart size={"1.3em"} />
               )}
             </button>
           </div>
