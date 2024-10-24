@@ -38,11 +38,18 @@ const config: Config = {
       },
       animation: {
         "fast-bounce": "bounceFast 0.7s infinite",
+        "fill-right": "fillRight ease-in 0.7s forwards",
       },
       keyframes: {
         bounceFast: {
           "0%, 100%": { transform: "translateY(-35%)" },
           "50%": { transform: "none" },
+        },
+        fillRight: {
+          "0%": { width: "0", height: "100%" },
+          "40%": { width: "30%", height: "100%" },
+          "60%": { width: "80%", height: "100%" },
+          "100%": { width: "100%", height: "100%" },
         },
       },
     },

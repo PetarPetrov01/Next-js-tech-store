@@ -62,157 +62,160 @@ export default function PostProductForm({
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="w-1/2 flex flex-col gap-6"
+      className="w-1/2 flex items-center flex-col gap-6"
     >
-      <div className="w-full flex justify-between gap-10">
-        <h2 className="basis-[30%]">Category:</h2>
-        <div className="flex justify-between gap-4 basis-[65%]">
-          <select
-            {...register("categoryId")}
-            className={`bg-transparent border-[1px] basis-[50%] px-4 ${
-              watchedCatId != 0 ? "border-new-peach-100" : "border-new-mint"
-            }`}
-            defaultValue={0}
-          >
-            <option value={0} disabled className="text-new-darkblue text-xl">
-              Choose category
+      <div className="w-[90%] flex justify-between gap-4 text-xl">
+        <select
+          {...register("categoryId")}
+          className={`bg-transparent border-[2px] basis-[60%] px-2 py-1 ${
+            watchedCatId != 0 ? "border-new-peach-100" : "border-new-mint"
+          }`}
+          defaultValue={0}
+        >
+          <option value={0} disabled className="text-new-darkblue text-xl">
+            Choose category
+          </option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id} className="text-new-darkblue">
+              {cat.name}
             </option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id} className="text-new-darkblue">
-                {cat.name}
-              </option>
-            ))}
-          </select>
-          <button className="border-[1px] border-new-mint px-4">
+          ))}
+        </select>
+        <div className="group relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
+          <button className="relative bg-new-darkblue px-2 py-1 z-20 ">
             Add new category
           </button>
         </div>
       </div>
-      <div className="w-full flex justify-between gap-10">
-        <h2 className="basis-[30%]">Brand:</h2>
-        <div className="flex justify-between gap-4 basis-[65%]">
-          <select
-            {...register("brandId")}
-            className={`bg-transparent border-[1px] basis-[50%] px-4 ${
-              wathedBrandId != 0 ? "border-new-peach-100" : "border-new-mint"
-            }`}
-            defaultValue={0}
-          >
-            <option value={0} disabled className="text-new-darkblue text-xl">
-              Choose brand
-            </option>
-            {brands.length &&
-              brands.map((brand) => (
-                <option
-                  key={brand.id}
-                  value={brand.id}
-                  className="text-new-darkblue"
-                >
-                  {brand.name}
-                </option>
-              ))}
-          </select>
-          <button className="border-[1px] border-new-mint px-4">
+      <div className="w-[90%] flex justify-between gap-4 text-xl">
+        <select
+          {...register("brandId")}
+          className={`bg-transparent border-[2px] basis-[60%] px-2 py-1 ${
+            wathedBrandId != 0 ? "border-new-peach-100" : "border-new-mint"
+          }`}
+          defaultValue={0}
+        >
+          <option value={0} disabled className="text-new-darkblue text-xl">
+            Choose brand
+          </option>
+          {brands.length &&
+            brands.map((brand) => (
+              <option
+                key={brand.id}
+                value={brand.id}
+                className="text-new-darkblue"
+              >
+                {brand.name}
+              </option>
+            ))}
+        </select>
+        <div className="group relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
+          <button className="relative bg-new-darkblue px-2 py-1 z-20 ">
             Add new brand
           </button>
         </div>
       </div>
-      <div className="w-full flex justify-between gap-10">
-        <h2 className="basis-[30%]">Model: </h2>
-        <div
-          className={`relative basis-[65%] bg-new-mint p-[1px] after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
-            dirtyFields.model && "after:w-full"
-          } `}
-        >
-          <input
-            type="text"
-            {...register("model")}
-            placeholder="Model"
-            className="relative w-full h-full bg-new-darkblue outline-none px-4 z-20"
-          />
-          {errors.model && (
-            <>
-              <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
-                {errors.model.message}
-              </span>
-              <IoWarning
-                size={"1.4em"}
-                className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
-              />
-            </>
-          )}
-        </div>
+      <div
+        className={`w-[90%] relative bg-new-mint p-0.5 after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
+          dirtyFields.model && "after:w-full"
+        } `}
+      >
+        <input
+          type="text"
+          {...register("model")}
+          placeholder="Model"
+          className="text-xl relative w-full h-full bg-new-darkblue outline-none px-2 py-1 z-20"
+        />
+        {errors.model && (
+          <>
+            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+              {errors.model.message}
+            </span>
+            <IoWarning
+              size={"1.4em"}
+              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
+            />
+          </>
+        )}
       </div>
-      <div className="w-full flex justify-between gap-10">
-        <h2 className="basis-[30%]">Price: </h2>
-        <div className="relative basis-[65%] bg-new-mint p-[1px] after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full">
-          <input
-            {...register("price", {
-              valueAsNumber: true,
-            })}
-            type="number"
-            placeholder="Price"
-            className="relative w-full h-full bg-new-darkblue outline-none px-4 z-20"
-          />
-          {errors.price && (
-            <>
-              <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
-                {errors.price.message}
-              </span>
-              <IoWarning
-                size={"1.4em"}
-                className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
-              />
-            </>
-          )}
-        </div>
+      <div
+        className={`w-[90%] relative bg-new-mint p-0.5 after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
+          dirtyFields.price && "after:w-full"
+        } `}
+      >
+        <input
+          {...register("price", {
+            valueAsNumber: true,
+          })}
+          type="number"
+          placeholder="Price"
+          className=" text-xl relative w-full h-full bg-new-darkblue outline-none px-2 py-1 z-20"
+        />
+        {errors.price && (
+          <>
+            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+              {errors.price.message}
+            </span>
+            <IoWarning
+              size={"1.4em"}
+              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
+            />
+          </>
+        )}
       </div>
-      <div className="w-full flex justify-between gap-10">
-        <h2 className="basis-[30%]">Stock: </h2>
-        <div className="relative basis-[65%] bg-new-mint p-[1px] after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full">
-          <input
-            type="number"
-            {...register("stock", {
-              valueAsNumber: true,
-            })}
-            placeholder="Stock"
-            className="relative w-full h-full bg-new-darkblue outline-none px-4 z-20"
-          />
-          {errors.stock && (
-            <>
-              <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
-                {errors.stock.message}
-              </span>
-              <IoWarning
-                size={"1.4em"}
-                className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
-              />
-            </>
-          )}
-        </div>
+      <div
+        className={`w-[90%] relative bg-new-mint p-0.5 after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
+          dirtyFields.price && "after:w-full"
+        }`}
+      >
+        <input
+          type="number"
+          {...register("stock", {
+            valueAsNumber: true,
+          })}
+          placeholder="Stock"
+          className=" text-xl relative w-full h-full bg-new-darkblue outline-none px-2 py-1 z-20"
+        />
+        {errors.stock && (
+          <>
+            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+              {errors.stock.message}
+            </span>
+            <IoWarning
+              size={"1.4em"}
+              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
+            />
+          </>
+        )}
       </div>
-      <div className="w-full flex items-stretch justify-between gap-10">
-        <h2 className="basis-[30%]">Description: </h2>
-        <div className="relative basis-[65%] bg-new-mint p-[1px] after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full">
-          <textarea
-            {...register("description")}
-            placeholder="Description"
-            className="relative w-full bg-new-darkblue min-h-20 max-h-[200px] outline-none px-4 z-20"
-          />
-          {errors.description && (
-            <>
-              <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
-                {errors.description.message}
-              </span>
-              <IoWarning
-                size={"1.4em"}
-                className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
-              />
-            </>
-          )}
-        </div>
+      <div
+        className={`w-[90%] relative bg-new-mint p-[2px_2px_1px_2px] after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
+          dirtyFields.price && "after:w-full"
+        }`}
+      >
+        <textarea
+          {...register("description")}
+          placeholder="Description"
+          className="relative text-xl w-full bg-new-darkblue min-h-20 max-h-[180px] outline-none px-2 py-1 z-20"
+        />
+        {errors.description && (
+          <>
+            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+              {errors.description.message}
+            </span>
+            <IoWarning
+              size={"1.4em"}
+              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
+            />
+          </>
+        )}
       </div>
-      <button type="submit">POST</button>
+      <button
+        type="submit"
+        className="relative bg-neutral-700 py-2 px-5 z-10 text-lg duration-150 hover:text-white after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:w-full after:h-0.5 after:bg-new-peach-90 hover:after:h-full after:duration-500"
+      >
+        POST
+      </button>
     </form>
   );
 }
