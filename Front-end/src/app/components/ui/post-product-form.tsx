@@ -1,12 +1,13 @@
 "use client";
 
 import { getBrands } from "@/app/lib/data";
-import createProductSchema from "@/zodSchemas/postProductSchema";
+import {
+  postProductSchema,
+  postProductSchemaType,
+} from "@/zodSchemas/postProductSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Select } from "@mui/material";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { IoWarning } from "react-icons/io5";
 
@@ -18,18 +19,12 @@ export default function PostProductForm({
   const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const postProductSchema = useMemo(() => {
-    return createProductSchema(categories);
-  }, [categories]);
-
-  type Inputs = z.infer<typeof postProductSchema>;
-
   const {
     formState: { dirtyFields, errors, isValid },
     register,
     watch,
     handleSubmit,
-  } = useForm<Inputs>({
+  } = useForm<postProductSchemaType>({
     resolver: zodResolver(postProductSchema),
     // defaultValues: {
     //   brandId: 0,
@@ -43,6 +38,7 @@ export default function PostProductForm({
 
   const watchedCatId = watch("categoryId");
   const wathedBrandId = watch("brandId");
+  console.log(errors.brandId);
 
   useEffect(() => {
     const fetchBrands = async () => {
@@ -64,10 +60,10 @@ export default function PostProductForm({
       ref={formRef}
       className="w-1/2 flex items-center flex-col gap-6"
     >
-      <div className="w-[90%] flex justify-between gap-4 text-xl">
+      <div className="relative w-[90%] flex justify-between gap-4">
         <select
-          {...register("categoryId")}
-          className={`bg-transparent border-[2px] basis-[60%] px-2 py-1 ${
+          {...register("categoryId", { valueAsNumber: true })}
+          className={`bg-transparent text-xl border-[2px] basis-[60%] px-2 py-1 ${
             watchedCatId != 0 ? "border-new-peach-100" : "border-new-mint"
           }`}
           defaultValue={0}
@@ -81,16 +77,27 @@ export default function PostProductForm({
             </option>
           ))}
         </select>
-        <div className="group relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
+        {errors.categoryId && (
+          <>
+            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+              {errors.categoryId.message}
+            </span>
+            {/* <IoWarning
+              size={"1.4em"}
+              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
+            /> */}
+          </>
+        )}
+        <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
           <button className="relative bg-new-darkblue px-2 py-1 z-20 ">
             Add new category
           </button>
         </div>
       </div>
-      <div className="w-[90%] flex justify-between gap-4 text-xl">
+      <div className="relative w-[90%] flex justify-between gap-4">
         <select
-          {...register("brandId")}
-          className={`bg-transparent border-[2px] basis-[60%] px-2 py-1 ${
+          {...register("brandId", { valueAsNumber: true })}
+          className={`bg-transparent text-xl border-[2px] basis-[60%] px-2 py-1 ${
             wathedBrandId != 0 ? "border-new-peach-100" : "border-new-mint"
           }`}
           defaultValue={0}
@@ -109,7 +116,18 @@ export default function PostProductForm({
               </option>
             ))}
         </select>
-        <div className="group relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
+        {errors.brandId && (
+          <>
+            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+              {errors.brandId.message}
+            </span>
+            {/* <IoWarning
+              size={"1.4em"}
+              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
+            /> */}
+          </>
+        )}
+        <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
           <button className="relative bg-new-darkblue px-2 py-1 z-20 ">
             Add new brand
           </button>
