@@ -9,4 +9,12 @@ async function getCategories() {
   return categories.map((cat) => ({ ...cat, _count: cat._count.products }));
 }
 
-export default { getCategories };
+async function createCategory(name: string) {
+  const category = await prisma.category.create({
+    data: { name },
+  });
+
+  return category;
+}
+
+export default { getCategories, createCategory };

@@ -21,5 +21,6 @@ productsRouter.post(
   multerUpload.productImages,
   uploadController.uploadProductImages
 );
+productsRouter.post("/category", categoryController.createCategory);
 
 export default productsRouter;
