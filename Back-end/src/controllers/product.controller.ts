@@ -60,10 +60,20 @@ async function getBrands(req: Request, res: Response) {
   }
 }
 
+async function getSortedBrands(req: Request, res: Response) {
+  try {
+    const brands = await brandService.getSortedBrands(req.query);
+    res.json(brands);
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(400).json(error.message);
+  }
+}
+
 async function uploadProduct(req: CustomRequest, res: Response) {
   try {
     const data = req.body;
-    const userId = req.user?._id!
+    const userId = req.user?._id!;
     const createdProd = await productService.uploadProduct(data, userId);
     res.status(200).json(createdProd);
   } catch (error: any) {
@@ -76,5 +86,6 @@ export default {
   getProductById,
   getCategories,
   getBrands,
+  getSortedBrands,
   uploadProduct,
 };
