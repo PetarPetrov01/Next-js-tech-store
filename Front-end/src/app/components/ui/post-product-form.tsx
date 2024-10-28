@@ -10,6 +10,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { IoWarning } from "react-icons/io5";
+import AddNewCategoryDiaolog from "./add-new-category-diaolog";
+import { Categories } from "@/types/Product";
 
 export default function PostProductForm({
   categories,
@@ -18,8 +20,15 @@ export default function PostProductForm({
 }) {
   const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
+  const [cats, setCats] = useState(categories);
+  const [pendingNewCategoryId, setPendingNewCategoryId] = useState<
+    number | null
+  >(null);
+
+  const [showAddCategory, setShowAddCategory] = useState(false);
 
   const {
+    setValue,
     formState: { dirtyFields, errors, isValid },
     register,
     watch,
@@ -38,7 +47,11 @@ export default function PostProductForm({
 
   const watchedCatId = watch("categoryId");
   const wathedBrandId = watch("brandId");
-  console.log(errors.brandId);
+
+  const onAddNewCategory = (category: Categories[number]) => {
+    setCats((prev) => [...prev, { id: category.id, name: category.name }]);
+    setPendingNewCategoryId(category.id);
+  };
 
   useEffect(() => {
     const fetchBrands = async () => {
@@ -47,6 +60,13 @@ export default function PostProductForm({
     };
     fetchBrands();
   }, [watchedCatId]);
+
+  useEffect(() => {
+    if (pendingNewCategoryId) {
+      setValue("categoryId", pendingNewCategoryId);
+      setPendingNewCategoryId(null);
+    }
+  }, [setValue, pendingNewCategoryId]);
 
   const processSubmit = handleSubmit(async (data) => {
     console.log(data);
@@ -60,6 +80,11 @@ export default function PostProductForm({
       ref={formRef}
       className="w-1/2 flex items-center flex-col gap-6"
     >
+      <AddNewCategoryDiaolog
+        open={showAddCategory}
+        setShowAddCategory={setShowAddCategory}
+        onAddNewCategory={onAddNewCategory}
+      />
       <div className="relative w-[90%] flex justify-between gap-4">
         <select
           {...register("categoryId", { valueAsNumber: true })}
@@ -68,10 +93,10 @@ export default function PostProductForm({
           }`}
           defaultValue={0}
         >
-          <option value={0} disabled className="text-new-darkblue text-xl">
+          <option key={0} value={0} disabled className="text-new-darkblue text-xl">
             Choose category
           </option>
-          {categories.map((cat) => (
+          {cats.map((cat) => (
             <option key={cat.id} value={cat.id} className="text-new-darkblue">
               {cat.name}
             </option>
@@ -89,7 +114,11 @@ export default function PostProductForm({
           </>
         )}
         <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
-          <button className="relative bg-new-darkblue px-2 py-1 z-20 ">
+          <button
+            type="button"
+            onClick={() => setShowAddCategory(true)}
+            className="relative bg-new-darkblue px-2 py-1 z-20 "
+          >
             Add new category
           </button>
         </div>
@@ -102,7 +131,7 @@ export default function PostProductForm({
           }`}
           defaultValue={0}
         >
-          <option value={0} disabled className="text-new-darkblue text-xl">
+          <option key={0} value={0} disabled className="text-new-darkblue text-xl">
             Choose brand
           </option>
           {brands.length &&
