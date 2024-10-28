@@ -1,4 +1,4 @@
-import { getBrands } from "../lib/data";
+import { getBrandsByCategory } from "../lib/data";
 import BrandFilter from "./BrandFilter";
 
 export default async function BrandFilterWrapper({
@@ -6,7 +6,7 @@ export default async function BrandFilterWrapper({
 }: {
   catId: number | null;
 }) {
-  const brands = await getBrands(catId);
+  const brands = await getBrandsByCategory(catId);
 
   return <BrandFilter brands={brands} />;
 }

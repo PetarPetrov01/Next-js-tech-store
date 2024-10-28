@@ -1,5 +1,5 @@
 import PostProductForm from "@/app/components/ui/post-product-form";
-import { getBrands, getCategories } from "@/app/lib/data";
+import { getBrandsByCategory, getCategories } from "@/app/lib/data";
 
 export default async function PostPage() {
   const categories = await getCategories();

@@ -1,6 +1,6 @@
 "use client";
 
-import { getBrands } from "@/app/lib/data";
+import { getSortedBrands } from "@/app/lib/data";
 import {
   postProductSchema,
   postProductSchemaType,
@@ -42,7 +42,7 @@ export default function PostProductForm({
 
   useEffect(() => {
     const fetchBrands = async () => {
-      const brands = await getBrands(watchedCatId);
+      const brands = await getSortedBrands(watchedCatId);
       setBrands(brands);
     };
     fetchBrands();
