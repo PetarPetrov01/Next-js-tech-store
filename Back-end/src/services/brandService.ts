@@ -53,14 +53,14 @@ async function getSortedBrands(query: any) {
     });
 
     return sortedBrands.map((brand) => ({
-      _id: brand.id,
+      id: brand.id,
       name: brand.name,
       _count: brand._count.products,
     }));
   }
 
   return allBrands.map((brand) => ({
-    _id: brand.id,
+    id: brand.id,
     name: brand.name,
     _count: brand._count.products,
   }));

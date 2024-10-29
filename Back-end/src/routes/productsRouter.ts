@@ -6,6 +6,7 @@ import categoryController from "../controllers/category.controller";
 import multerUpload from "../middlewares/multerUpload";
 import { checkProductId } from "../middlewares/validations/validate-and-load-product";
 import { isUser } from "../middlewares/guards";
+import validatePostProduct from "../middlewares/validations/post-product";
 
 const productsRouter = Router();
 
@@ -13,7 +14,12 @@ productsRouter.get("/", productController.getProducts);
 productsRouter.get("/categories", categoryController.getCategories);
 productsRouter.get("/:id", productController.getProductById);
 
-productsRouter.post("/upload", isUser(), productController.uploadProduct);
+productsRouter.post(
+  "/upload",
+  isUser(),
+  validatePostProduct,
+  productController.uploadProduct
+);
 productsRouter.post(
   "/:id/images",
   isUser(),
