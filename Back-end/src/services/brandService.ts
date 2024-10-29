@@ -66,4 +66,10 @@ async function getSortedBrands(query: any) {
   }));
 }
 
-export default { getBrands, getSortedBrands };
+async function createBrand(name: string) {
+  const brand = await prisma.brand.create({ data: { name } });
+
+  return brand;
+}
+
+export default { getBrands, getSortedBrands, createBrand };

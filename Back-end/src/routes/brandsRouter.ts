@@ -6,4 +6,6 @@ const brandsRouter = Router();
 brandsRouter.get("/", brandController.getBrands);
 brandsRouter.get("/sorted", brandController.getSortedBrands);
 
+brandsRouter.post("/", brandController.createBrand);
+
 export default brandsRouter;
