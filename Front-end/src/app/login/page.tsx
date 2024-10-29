@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ptSerif } from "../layout";
-import LoginForm from "../components/ui/login-form";
+import LoginForm from "../components/ui/auth/login-form";
 
 export default function LoginPage() {
   return (

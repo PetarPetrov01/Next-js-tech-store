@@ -7,7 +7,7 @@ import { useState } from "react";
 import { FaRegHeart, FaRegEye } from "react-icons/fa";
 
 import useCartStore from "@/app/store/cart";
-import { PopulatedProduct } from "../../../types/Product";
+import { PopulatedProduct } from "../../../../types/Product";
 
 export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
   const router = useRouter();

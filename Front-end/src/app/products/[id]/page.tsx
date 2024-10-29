@@ -1,6 +1,6 @@
 import ProductImages from "@/app/components/ProductImages";
 import { getProduct } from "@/app/lib/data";
-import ProductForm from "@/app/components/ui/product-form";
+import ProductForm from "@/app/components/ui/product/product-form";
 
 export default async function ProductDetails({
   params,

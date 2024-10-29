@@ -10,8 +10,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { IoWarning } from "react-icons/io5";
-import AddNewCategoryDiaolog from "./add-new-category-diaolog";
+import AddNewCategoryDialog from "../add-new-category-dialog";
 import { Categories } from "@/types/Product";
+import AddNewBrandDialog from "../add-new-brand-dialog";
 
 export default function PostProductForm({
   categories,
@@ -21,11 +22,17 @@ export default function PostProductForm({
   const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const [cats, setCats] = useState(categories);
+
   const [pendingNewCategoryId, setPendingNewCategoryId] = useState<
     number | null
   >(null);
 
+  const [pendingNewBrandId, setPendingNewBrandId] = useState<number | null>(
+    null
+  );
+
   const [showAddCategory, setShowAddCategory] = useState(false);
+  const [showAddBrand, setShowAddBrand] = useState(false);
 
   const {
     setValue,
@@ -35,14 +42,6 @@ export default function PostProductForm({
     handleSubmit,
   } = useForm<postProductSchemaType>({
     resolver: zodResolver(postProductSchema),
-    // defaultValues: {
-    //   brandId: 0,
-    //   categoryId: 0,
-    //   model: "",
-    //   price: 0,
-    //   stock: 0,
-    //   description: "",
-    // },
   });
 
   const watchedCatId = watch("categoryId");
@@ -53,13 +52,17 @@ export default function PostProductForm({
     setPendingNewCategoryId(category.id);
   };
 
+  const onAddNewBrand = (brandId: number) => {
+    setPendingNewBrandId(brandId);
+  };
+
   useEffect(() => {
     const fetchBrands = async () => {
       const brands = await getSortedBrands(watchedCatId);
       setBrands(brands);
     };
     fetchBrands();
-  }, [watchedCatId]);
+  }, [watchedCatId, pendingNewBrandId]);
 
   useEffect(() => {
     if (pendingNewCategoryId) {
@@ -80,7 +83,7 @@ export default function PostProductForm({
       ref={formRef}
       className="w-1/2 flex items-center flex-col gap-6"
     >
-      <AddNewCategoryDiaolog
+      <AddNewCategoryDialog
         open={showAddCategory}
         setShowAddCategory={setShowAddCategory}
         onAddNewCategory={onAddNewCategory}
@@ -93,7 +96,12 @@ export default function PostProductForm({
           }`}
           defaultValue={0}
         >
-          <option key={0} value={0} disabled className="text-new-darkblue text-xl">
+          <option
+            key={0}
+            value={0}
+            disabled
+            className="text-new-darkblue text-xl"
+          >
             Choose category
           </option>
           {cats.map((cat) => (
@@ -123,6 +131,11 @@ export default function PostProductForm({
           </button>
         </div>
       </div>
+      <AddNewBrandDialog
+        open={showAddBrand}
+        setShowAddBrand={setShowAddBrand}
+        onAddNewBrand={onAddNewBrand}
+      />
       <div className="relative w-[90%] flex justify-between gap-4">
         <select
           {...register("brandId", { valueAsNumber: true })}
@@ -131,7 +144,12 @@ export default function PostProductForm({
           }`}
           defaultValue={0}
         >
-          <option key={0} value={0} disabled className="text-new-darkblue text-xl">
+          <option
+            key={0}
+            value={0}
+            disabled
+            className="text-new-darkblue text-xl"
+          >
             Choose brand
           </option>
           {brands.length &&
@@ -157,7 +175,11 @@ export default function PostProductForm({
           </>
         )}
         <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
-          <button className="relative bg-new-darkblue px-2 py-1 z-20 ">
+          <button
+            onClick={(e) => setShowAddBrand(true)}
+            type="button"
+            className="relative bg-new-darkblue px-2 py-1 z-20 "
+          >
             Add new brand
           </button>
         </div>
@@ -259,9 +281,9 @@ export default function PostProductForm({
       </div>
       <button
         type="submit"
-        className="relative bg-neutral-700 py-2 px-5 z-10 text-lg duration-150 hover:text-white after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:w-full after:h-0.5 after:bg-new-peach-90 hover:after:h-full after:duration-500"
+        className="relative bg-neutral-700 capitalize py-2 px-5 z-10 text-lg border-b-2 border-new-peach-90 duration-150 hover:text-white after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 hover:after:w-full after:duration-500"
       >
-        POST
+        Next
       </button>
     </form>
   );

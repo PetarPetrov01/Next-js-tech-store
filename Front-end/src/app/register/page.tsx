@@ -1,4 +1,4 @@
-import RegisterForm from "../components/ui/register-form";
+import RegisterForm from "../components/ui/auth/register-form";
 
 import { ptSerif } from "../layout";
 import Link from "next/link";

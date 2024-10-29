@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { useAuthContext } from "@/contexts/AuthProvider";
-import useCartStore from "../../store/cart";
+import useCartStore from "../../../store/cart";
 
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { FaMinus, FaPlus } from "react-icons/fa6";
