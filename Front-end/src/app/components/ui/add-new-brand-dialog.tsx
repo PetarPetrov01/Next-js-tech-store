@@ -1,4 +1,4 @@
-import { Categories } from "@/types/Product";
+import { Brands, Categories } from "@/types/Product";
 import {
   Dialog,
   DialogActions,
@@ -17,44 +17,44 @@ import {
 } from "react";
 import { SubmitHandler } from "react-hook-form";
 
-export default function AddNewCategoryDiaolog({
+export default function AddNewBrandDialog({
   open = false,
-  setShowAddCategory,
-  onAddNewCategory,
+  setShowAddBrand,
+  onAddNewBrand,
 }: {
   open: boolean;
-  setShowAddCategory: Dispatch<SetStateAction<boolean>>;
-  onAddNewCategory: (category: Categories[number]) => void;
+  setShowAddBrand: Dispatch<SetStateAction<boolean>>;
+  onAddNewBrand: (brandId: number) => void;
 }) {
-  const [category, setCategory] = useState<string>("");
+  const [brand, setBrand] = useState<string>("");
   const [error, setError] = useState("");
   const router = useRouter();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCategory(e.target.value);
+    setBrand(e.target.value);
     setError("");
   };
 
   const handleCancel = () => {
-    setShowAddCategory(false);
+    setShowAddBrand(false);
     setError("");
-    setCategory("");
+    setBrand("");
   };
 
   const validateInput = (value: string): string | null => {
     if (value == "") return "The field is required";
 
-    if (value.length < 2)
-      return "The category should be atleast 2 characters long";
+    if (value.length < 3)
+      return "The brand should be atleast 3 characters long";
 
     if (value.length > 15)
-      return "The category can't be more than 15 characters long";
+      return "The brand can't be more than 15 characters long";
 
     return null;
   };
 
   const handleBlur = () => {
-    const validateError = validateInput(category);
+    const validateError = validateInput(brand);
     setError(validateError || "");
   };
 
@@ -62,15 +62,15 @@ export default function AddNewCategoryDiaolog({
     e.stopPropagation();
     e.preventDefault();
 
-    const validationError = validateInput(category);
+    const validationError = validateInput(brand);
     if (validationError) {
       setError(validationError);
       return;
     }
 
-    const res = await fetch("http://localhost:3001/api/products/category", {
+    const res = await fetch("http://localhost:3001/api/brands", {
       method: "post",
-      body: JSON.stringify({ name: category }),
+      body: JSON.stringify({ name: brand }),
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
     });
@@ -83,8 +83,8 @@ export default function AddNewCategoryDiaolog({
 
     const result = await res.json();
     router.refresh();
-    onAddNewCategory(result)
-    setShowAddCategory(false);
+    onAddNewBrand(result.id);
+    setShowAddBrand(false);
   };
 
   return (
@@ -93,7 +93,7 @@ export default function AddNewCategoryDiaolog({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle className="text-center">Add new category</DialogTitle>
+      <DialogTitle className="text-center">Add new brand</DialogTitle>
       <DialogContent className="min-w-[400px]">
         <DialogContentText></DialogContentText>
         <form
@@ -103,8 +103,8 @@ export default function AddNewCategoryDiaolog({
           <div className="w-[80%] relative flex flex-col items-center">
             <input
               type="text"
-              placeholder="Category name"
-              value={category}
+              placeholder="Brand name"
+              value={brand}
               onChange={handleInputChange}
               onBlur={handleBlur}
               className="px-2 py-1 text-lg w-full outline-none border-b-2 border-black bg-slate-100 focus:bg-neutral-200 duration-200 "
@@ -120,7 +120,7 @@ export default function AddNewCategoryDiaolog({
               type="submit"
               className="px-4 py-2 border-2 text-new-darkblue border-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
             >
-              Add category
+              Add brand
             </button>
             <button
               type="button"
