@@ -3,9 +3,9 @@ import { useAuthContext } from "@/contexts/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import ProfileDropdown from "./profile-dropdown";
+import ProfileDropdown from "./profile/profile-dropdown";
 import useCartStore from "../../store/cart";
-import Cart from "./cart";
+import Cart from "./cart/cart";
 
 const guestLinks = [
   { href: "/products", label: "PRODUCTS" },
@@ -15,7 +15,7 @@ const guestLinks = [
 
 const userLinks = [
   { href: "/products", label: "PRODUCTS" },
-  { href: "/create", label: "POST PRODUCT" },
+  { href: "/products/post", label: "POST PRODUCT" },
 ];
 
 export default function Header() {

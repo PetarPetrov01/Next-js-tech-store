@@ -7,7 +7,7 @@ import BrandFilterWrapper from "../components/BrandFilterWrapper";
 import SearchBar from "../components/SearchBar";
 import Image from "next/image";
 import Sort from "../components/Sort";
-import LayoutToggle from "../components/ui/product-layout-toggle";
+import LayoutToggle from "../components/ui/product/product-layout-toggle";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -26,7 +26,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
     <main className="min-h-[75vh] bg-gradient-radial from-new-midnight to-new-darkblue">
       <section className="flex flex-col items-center">
         <div className="relative w-full h-80 overflow-hidden p-8">
-          <div className="flex items-center p-6">
+          <div className="max-w-[1300px] m-auto flex items-center p-6">
             <h1 className="text-black z-[1]">Catalog</h1>
           </div>
           <Image

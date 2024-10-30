@@ -1,6 +1,7 @@
 import { Prisma, Product } from "@prisma/client";
 import { prisma } from "../config/db-config";
 import categoryService from "./categoryService";
+import { PostProductSchemaType } from "../middlewares/validations/post-product";
 
 async function getProducts(params: any) {
   const getOrderByClause = (sortParam: any) => {
@@ -80,34 +81,27 @@ async function getProductById(productId: string) {
 }
 
 async function uploadProduct(
-  data: {
-    description: string;
-    price: string;
-    stock: string;
-    model: string;
-    brand: string;
-    category: string;
-  },
+  data: PostProductSchemaType,
   userId: string
 ) {
   const createdProd = await prisma.$transaction(async (tx) => {
     let category = await tx.category.findUnique({
-      where: { name: data.category },
+      where: { id: data.categoryId },
     });
 
     if (!category) {
-      category = await tx.category.create({ data: { name: data.category } });
+      throw new Error('The category does not exist!')
     }
 
-    let brand = await tx.brand.findUnique({ where: { name: data.brand } });
+    let brand = await tx.brand.findUnique({ where: { id: data.brandId } });
 
     if (!brand) {
-      brand = await tx.brand.create({ data: { name: data.brand } });
+      throw new Error('The brand does not exist!')
     }
 
     return tx.product.create({
       data: {
-        name: `${data.brand} ${data.model}`,
+        name: `${data.brandId} ${data.model}`,
         description: data.description,
         price: Number(data.price),
         stock: Number(data.stock),

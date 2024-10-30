@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 
 import productService from "../services/productService";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
-import categoryService from "../services/categoryService";
-import brandService from "../services/brandService";
 import { CustomRequest } from "../middlewares/sesssion";
 
 async function getProducts(req: Request, res: Response) {
@@ -36,34 +34,10 @@ async function getProductById(req: Request, res: Response) {
   }
 }
 
-async function getCategories(req: Request, res: Response) {
-  try {
-    const categories = await categoryService.getCategories();
-    res.json(categories);
-  } catch (error: any) {
-    res.status(400).json(error.message);
-  }
-}
-
-async function getBrands(req: Request, res: Response) {
-  try {
-    const brands = await brandService.getBrands(req.query);
-    res.json(brands);
-  } catch (error: any) {
-    if (error instanceof PrismaClientValidationError) {
-      error as PrismaClientValidationError;
-      console.log(error.message);
-      res.status(400).json({ message: "Invalid query" });
-      return;
-    }
-    res.status(400).json(error.message);
-  }
-}
-
 async function uploadProduct(req: CustomRequest, res: Response) {
   try {
     const data = req.body;
-    const userId = req.user?._id!
+    const userId = req.user?._id!;
     const createdProd = await productService.uploadProduct(data, userId);
     res.status(200).json(createdProd);
   } catch (error: any) {
@@ -74,7 +48,5 @@ async function uploadProduct(req: CustomRequest, res: Response) {
 export default {
   getProducts,
   getProductById,
-  getCategories,
-  getBrands,
   uploadProduct,
 };

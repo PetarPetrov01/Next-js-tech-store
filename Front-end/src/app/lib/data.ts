@@ -4,12 +4,11 @@ import {
   Brands,
   Categories,
   PopulatedProduct,
-  Product,
 } from "../../types/Product";
 
 type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
-const baseUrl = "http://localhost:3001/api/products";
+const baseUrl = "http://localhost:3001/api";
 
 export const getProds = async (
   queryParams: QueryParams
@@ -26,9 +25,7 @@ export const getProds = async (
     );
   }
 
-  console.log(queryParamsArr);
-
-  const res = await fetch(`${baseUrl}?${queryParamsArr.join("&")}`, {
+  const res = await fetch(`${baseUrl}/products?${queryParamsArr.join("&")}`, {
     cache: "no-cache",
     credentials: "include",
   });
@@ -37,7 +34,7 @@ export const getProds = async (
 };
 
 export const getCategories = async (): Promise<Categories> => {
-  const res = await fetch("http://localhost:3001/api/products/categories", {
+  const res = await fetch(`${baseUrl}/products/categories`, {
     next: { revalidate: 10 },
   });
 
@@ -46,13 +43,28 @@ export const getCategories = async (): Promise<Categories> => {
   return data;
 };
 
-export const getBrands = async (catId: number | null): Promise<Brands> => {
-  console.log("from data  -  " + catId);
+export const getSortedBrands = async (
+  catId: number | null
+): Promise<Brands> => {
+  const res = await fetch(
+    `${baseUrl}/brands/sorted${catId ? `?category=${catId}` : ""}`,
+    {
+      next: { revalidate: 10 },
+    }
+  );
 
+  const data = await res.json();
+
+  return data;
+};
+
+export const getBrandsByCategory = async (
+  catId: number | null
+): Promise<Brands> => {
   const res = await fetch(
     `${baseUrl}${catId ? `/brands?category=${catId}` : "/brands"}`,
     {
-      cache: "no-cache",
+      next: { revalidate: 10 },
     }
   );
 
@@ -62,7 +74,7 @@ export const getBrands = async (catId: number | null): Promise<Brands> => {
 };
 
 export const getProduct = async (prodId: string): Promise<PopulatedProduct> => {
-  const res = await fetch(`http://localhost:3001/api/products/${prodId}`, {
+  const res = await fetch(`${baseUrl}/products/${prodId}`, {
     cache: "no-cache",
   });
   return res.json();

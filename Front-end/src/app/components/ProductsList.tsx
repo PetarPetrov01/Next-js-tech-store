@@ -1,5 +1,5 @@
 import { getProds } from "../lib/data";
-import ProductCard from "./ui/product-card";
+import ProductCard from "./ui/product/product-card";
 
 export default async function ProductsList({
   searchParams,

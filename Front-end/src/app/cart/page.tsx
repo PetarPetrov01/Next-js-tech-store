@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import CartOrder from "../components/ui/cart-order";
-import CartProducts from "../components/ui/cart-products";
+import CartOrder from "../components/ui/cart/cart-order";
+import CartProducts from "../components/ui/cart/cart-products";
 import { checkAuth } from "../utils/checkAuth";
 import { cookies } from "next/headers";
 
