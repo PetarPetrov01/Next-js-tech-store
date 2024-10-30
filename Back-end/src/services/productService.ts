@@ -3,6 +3,21 @@ import { prisma } from "../config/db-config";
 import categoryService from "./categoryService";
 import { PostProductSchemaType } from "../middlewares/validations/post-product";
 
+type CheckProductReturnType = "brand" | "images";
+
+type ProductWithBrand = {
+  id: string;
+  ownerId: string;
+  brand: { name: string };
+};
+
+type ProductWithImages = {
+  id: string;
+  ownerId: string;
+  name: string;
+  images: { id: string; url: string }[];
+};
+
 async function getProducts(params: any) {
   const getOrderByClause = (sortParam: any) => {
     if (!sortParam) {
@@ -80,23 +95,20 @@ async function getProductById(productId: string) {
   };
 }
 
-async function uploadProduct(
-  data: PostProductSchemaType,
-  userId: string
-) {
+async function uploadProduct(data: PostProductSchemaType, userId: string) {
   const createdProd = await prisma.$transaction(async (tx) => {
     let category = await tx.category.findUnique({
       where: { id: data.categoryId },
     });
 
     if (!category) {
-      throw new Error('The category does not exist!')
+      throw new Error("The category does not exist!");
     }
 
     let brand = await tx.brand.findUnique({ where: { id: data.brandId } });
 
     if (!brand) {
-      throw new Error('The brand does not exist!')
+      throw new Error("The brand does not exist!");
     }
 
     return tx.product.create({
@@ -128,13 +140,37 @@ async function updateProductImages(productId: string, imageUrls: string[]) {
   return result;
 }
 
-async function checkProductExistence(productId: string) {
+async function checkProductExistence(
+  productId: string,
+  returnType: CheckProductReturnType = "brand"
+) {
   const product = await prisma.product.findUnique({
     where: { id: productId },
-    select: { id: true, brand: { select: { name: true } }, ownerId: true },
+    select: {
+      id: true,
+      ownerId: true,
+      ...(returnType == "brand"
+        ? {
+            brand: { select: { name: true } },
+          }
+        : {
+            name: true,
+            images: { select: { id: true, url: true } },
+          }),
+    },
   });
 
-  return product ? { ...product, brand: product.brand.name } : null;
+  if (product) {
+    if (returnType == "brand") {
+      return {
+        ...product,
+        brand: (product as ProductWithBrand).brand.name,
+      };
+    } else {
+      return product as ProductWithImages;
+    }
+  }
+  return null;
 }
 
 export default {

@@ -13,6 +13,7 @@ const productsRouter = Router();
 productsRouter.get("/", productController.getProducts);
 productsRouter.get("/categories", categoryController.getCategories);
 productsRouter.get("/:id", productController.getProductById);
+productsRouter.get("/:id/images", isUser(), productController.getProductImages);
 
 productsRouter.post(
   "/upload",
