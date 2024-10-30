@@ -7,7 +7,7 @@ import BrandFilterWrapper from "../components/BrandFilterWrapper";
 import SearchBar from "../components/SearchBar";
 import Image from "next/image";
 import Sort from "../components/Sort";
-import LayoutToggle from "../components/ui/product-layout-toggle";
+import LayoutToggle from "../components/ui/product/product-layout-toggle";
 
 export const metadata: Metadata = {
   title: "Products",

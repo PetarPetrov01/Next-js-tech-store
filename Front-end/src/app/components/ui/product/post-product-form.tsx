@@ -7,12 +7,12 @@ import {
 } from "@/zodSchemas/postProductSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { IoWarning } from "react-icons/io5";
-import AddNewCategoryDialog from "../add-new-category-dialog";
+import AddNewCategoryDialog from "./add-new-category-dialog";
 import { Categories } from "@/types/Product";
-import AddNewBrandDialog from "../add-new-brand-dialog";
+import AddNewBrandDialog from "./add-new-brand-dialog";
 
 export default function PostProductForm({
   categories,
@@ -38,14 +38,19 @@ export default function PostProductForm({
     setValue,
     formState: { dirtyFields, errors, isValid },
     register,
-    watch,
+    control,
+    setError,
     handleSubmit,
   } = useForm<postProductSchemaType>({
     resolver: zodResolver(postProductSchema),
   });
 
-  const watchedCatId = watch("categoryId");
-  const wathedBrandId = watch("brandId");
+  const watchedCatId = useWatch({
+    control,
+    name: "categoryId",
+    defaultValue: 0,
+  });
+  const wathedBrandId = useWatch({ control, name: "brandId", defaultValue: 0 });
 
   const onAddNewCategory = (category: Categories[number]) => {
     setCats((prev) => [...prev, { id: category.id, name: category.name }]);
@@ -62,7 +67,14 @@ export default function PostProductForm({
       setBrands(brands);
     };
     fetchBrands();
-  }, [watchedCatId, pendingNewBrandId]);
+  }, [watchedCatId]);
+
+  useEffect(() => {
+    if (pendingNewBrandId) {
+      setValue("brandId", pendingNewBrandId);
+      setPendingNewCategoryId(null);
+    }
+  }, [setValue, pendingNewBrandId]);
 
   useEffect(() => {
     if (pendingNewCategoryId) {
@@ -72,16 +84,31 @@ export default function PostProductForm({
   }, [setValue, pendingNewCategoryId]);
 
   const processSubmit = handleSubmit(async (data) => {
-    console.log(data);
-    console.log(errors);
-    console.log(isValid);
+    const res = await fetch("http://localhost:3001/api/products/upload", {
+      method: "post",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      cache: "no-cache",
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      setError("root.apiError", { message: error.message });
+      return;
+    }
+
+    const product = await res.json();
+    console.log(product);
+
+    //navigate to product/id/images
   });
 
   return (
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="w-1/2 flex items-center flex-col gap-6"
+      className="relative w-1/2 flex items-center flex-col gap-6"
     >
       <AddNewCategoryDialog
         open={showAddCategory}
@@ -105,21 +132,19 @@ export default function PostProductForm({
             Choose category
           </option>
           {cats.map((cat) => (
-            <option key={cat.id} value={cat.id} className="text-new-darkblue">
+            <option
+              key={`${cat.id}-${cat.name}`}
+              value={cat.id}
+              className="text-new-darkblue"
+            >
               {cat.name}
             </option>
           ))}
         </select>
         {errors.categoryId && (
-          <>
-            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
-              {errors.categoryId.message}
-            </span>
-            {/* <IoWarning
-              size={"1.4em"}
-              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
-            /> */}
-          </>
+          <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+            {errors.categoryId.message}
+          </span>
         )}
         <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
           <button
@@ -155,7 +180,7 @@ export default function PostProductForm({
           {brands.length &&
             brands.map((brand) => (
               <option
-                key={brand.id}
+                key={`${brand.id}-${brand.name}`}
                 value={brand.id}
                 className="text-new-darkblue"
               >
@@ -164,15 +189,9 @@ export default function PostProductForm({
             ))}
         </select>
         {errors.brandId && (
-          <>
-            <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
-              {errors.brandId.message}
-            </span>
-            {/* <IoWarning
-              size={"1.4em"}
-              className="absolute top-1/2 -translate-y-1/2 right-2 z-20 text-red-400"
-            /> */}
-          </>
+          <span className="absolute text-[0.9em] bottom-[-1.5em] left-1 text-red-400">
+            {errors.brandId.message}
+          </span>
         )}
         <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
           <button
@@ -234,7 +253,7 @@ export default function PostProductForm({
       </div>
       <div
         className={`w-[90%] relative bg-new-mint p-0.5 after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
-          dirtyFields.price && "after:w-full"
+          dirtyFields.stock && "after:w-full"
         }`}
       >
         <input
@@ -259,7 +278,7 @@ export default function PostProductForm({
       </div>
       <div
         className={`w-[90%] relative bg-new-mint p-[2px_2px_1px_2px] after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
-          dirtyFields.price && "after:w-full"
+          dirtyFields.description && "after:w-full"
         }`}
       >
         <textarea
@@ -281,10 +300,19 @@ export default function PostProductForm({
       </div>
       <button
         type="submit"
-        className="relative bg-neutral-700 capitalize py-2 px-5 z-10 text-lg border-b-2 border-new-peach-90 duration-150 hover:text-white after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 hover:after:w-full after:duration-500"
+        className={`relative capitalize py-2 px-5 z-10 text-lg duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
+          isValid
+            ? "bg-neutral-700 border-b-2 border-new-peach-90 hover:after:w-full"
+            : "bg-neutral-500 hover:text-white"
+        }`}
       >
         Next
       </button>
+      {errors.root?.apiError && (
+        <span className="absolute text-[0.9em] bottom-[-1.5em] left-1/2 -translate-x-1/2 text-red-400">
+          {errors.root.apiError.message}
+        </span>
+      )}
     </form>
   );
 }
