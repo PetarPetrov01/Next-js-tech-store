@@ -7,9 +7,7 @@ export type Product = {
   price: number;
   stock: number;
   categoryId: number;
-  category: string;
   brandId: number;
-  brand: string;
   model: string;
   images: string[];
   createdAt: Date;
@@ -23,6 +21,16 @@ export type APIProduct = Product & {
 export type PopulatedProduct = Omit<APIProduct, "_ownerId"> & {
   _ownerId: User;
 };
+
+export type ProductWithImages = {
+  id: string;
+  ownerId: string;
+  name: string;
+  images: {
+      id: string;
+      url: string;
+  }[];
+}
 
 export type Categories = {
   id: number;

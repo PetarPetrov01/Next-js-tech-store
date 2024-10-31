@@ -47,7 +47,7 @@ async function uploadProduct(req: CustomRequest, res: Response) {
 
 async function getProductImages(req: CustomRequest, res: Response) {
   try {
-    const productWithImages = productService.checkProductExistence(
+    const productWithImages = await productService.checkProductExistence(
       req.params.id,
       "images"
     );

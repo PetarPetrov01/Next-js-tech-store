@@ -1,9 +1,11 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import {
   Brands,
   Categories,
   PopulatedProduct,
+  ProductWithImages,
 } from "../../types/Product";
 
 type QueryParams = Record<string, string | number | boolean | null | undefined>;
@@ -78,4 +80,24 @@ export const getProduct = async (prodId: string): Promise<PopulatedProduct> => {
     cache: "no-cache",
   });
   return res.json();
+};
+
+export const getProductImages = async (
+  prodId: string,
+  cookie: string
+): Promise<ProductWithImages> => {
+  const res = await fetch(`${baseUrl}/products/${prodId}/images`, {
+    headers: { Cookie: cookie },
+    cache: "no-cache",
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    redirect("/login");
+  }
+
+  const product = await res.json();
+  // console.log(res);
+
+  return product
 };

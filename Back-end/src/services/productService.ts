@@ -113,7 +113,7 @@ async function uploadProduct(data: PostProductSchemaType, userId: string) {
 
     return tx.product.create({
       data: {
-        name: `${data.brandId} ${data.model}`,
+        name: `${brand.name} ${data.model}`,
         description: data.description,
         price: Number(data.price),
         stock: Number(data.stock),
