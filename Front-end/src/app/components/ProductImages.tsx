@@ -65,7 +65,7 @@ export default function ProductImages({ images }: { images: string[] }) {
         <>
           <div className="flex justify-center">
             <Image
-              src={images[displayImageIndex]}
+              src={images[displayImageIndex] || '/no-image.png'}
               alt={`image-${displayImageIndex.toString()}`}
               className="w-[90%] object-cover pointer-events-none"
               width={600}
