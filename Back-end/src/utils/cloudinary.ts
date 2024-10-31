@@ -1,4 +1,8 @@
-import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
+import {
+  UploadApiErrorResponse,
+  UploadApiResponse,
+  DeleteApiResponse,
+} from "cloudinary";
 import cloudinary from "../config/cloudinary-config";
 
 export function uploadToCloudinary(
@@ -43,4 +47,12 @@ export function deleteFromCloudinary(
       }
     });
   });
+}
+
+export function deleteMultipleFromCloudinary(
+  publicIds: string[]
+): Promise<{ result: string }[]> {
+  return Promise.all(
+    publicIds.map((publicId) => deleteFromCloudinary(publicId))
+  );
 }

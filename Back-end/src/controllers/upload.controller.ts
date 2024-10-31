@@ -5,6 +5,7 @@ import {
   uploadToCloudinary,
   deleteFromCloudinary,
   uploadMultipleToCloudinary,
+  deleteMultipleFromCloudinary,
 } from "../utils/cloudinary";
 import authService from "../services/authService";
 import userService from "../services/userService";
@@ -34,6 +35,7 @@ async function uploadProfileImage(req: CustomRequest, res: Response) {
       );
       console.log("Deleting old image: " + oldImageId);
       const deleted = await deleteFromCloudinary(oldImageId);
+      console.log(deleted);
       console.log(`Result: ${deleted.result}`);
     }
     await authService.updateImage(imageUrl, req.user?._id);
@@ -105,5 +107,29 @@ async function deleteProductImage(imageUrl: string) {
   } catch (error) {}
 }
 
-const uploadController = { uploadProfileImage, uploadProductImages };
+async function deleteProductImages(req: CustomRequest, res: Response) {
+  try {
+    const imageUrls = req.body.images;
+    const productBrand = res.locals.product.brand;
+    const imagePublicIds = imageUrls.map((imageUrl: string) =>
+      imageUrl.substring(
+        imageUrl.indexOf(`Images/${productBrand}/`),
+        imageUrl.lastIndexOf(".")
+      )
+    );
+
+    const deletedFromCloudinary = await deleteMultipleFromCloudinary(
+      imagePublicIds
+    res.status(204).json();
+  } catch (error: any) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+}
+
+const uploadController = {
+  uploadProfileImage,
+  uploadProductImages,
+  deleteProductImages,
+};
 export default uploadController;

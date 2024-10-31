@@ -87,7 +87,6 @@ async function logout(req: CustomRequest, res: Response) {
 
 async function getProfile(req: CustomRequest, res: Response) {
   try {
-    console.log("Get prof req");
     if (!req.user?._id) {
       throw new Error("You must be logged in");
     }

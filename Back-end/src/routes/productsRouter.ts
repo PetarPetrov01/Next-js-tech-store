@@ -30,4 +30,11 @@ productsRouter.post(
 );
 productsRouter.post("/category", categoryController.createCategory);
 
+productsRouter.delete(
+  "/:id/images",
+  isUser(),
+  checkProductId,
+  uploadController.deleteProductImages
+);
+
 export default productsRouter;
