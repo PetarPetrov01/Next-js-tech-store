@@ -120,6 +120,25 @@ async function deleteProductImages(req: CustomRequest, res: Response) {
 
     const deletedFromCloudinary = await deleteMultipleFromCloudinary(
       imagePublicIds
+    );
+    const [failedDeletedURLs, successfullyDeletedURLs]: [string[], string[]] = [
+      [],
+      [],
+    ];
+
+    deletedFromCloudinary.forEach((img, index) => {
+      console.log(img.result);
+      if (img.result == "ok") {
+        successfullyDeletedURLs.push(imageUrls[index]);
+      } else {
+        failedDeletedURLs.push(imageUrls[index]);
+      }
+    });
+
+    await productService.deleteProductImages(
+      req.params.id,
+      successfullyDeletedURLs
+    );
     res.status(204).json();
   } catch (error: any) {
     console.log(error);

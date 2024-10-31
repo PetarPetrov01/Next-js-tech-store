@@ -140,6 +140,14 @@ async function updateProductImages(productId: string, imageUrls: string[]) {
   return result;
 }
 
+async function deleteProductImages(productId: string, imageUrls: string[]) {
+  await prisma.productImage.deleteMany({
+    where: { productId, url: { in: imageUrls } },
+  });
+
+  return;
+}
+
 async function checkProductExistence(
   productId: string,
   returnType: CheckProductReturnType = "brand"
@@ -178,5 +186,6 @@ export default {
   getProductById,
   uploadProduct,
   updateProductImages,
+  deleteProductImages,
   checkProductExistence,
 };
