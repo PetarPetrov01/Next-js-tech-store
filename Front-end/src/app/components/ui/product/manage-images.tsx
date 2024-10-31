@@ -63,10 +63,10 @@ export default function ManageProductImages({
             </div>
             <button
               onClick={() => setShowDeleteImages(true)}
-              className={`py-2 duration-300 bg-red-400 ${
+              className={`py-2 duration-300 bg-red-400/85 hover:bg-red-400 ${
                 selectedImages.length > 0
-                  ? "px-4 opacity-100 pointer-events-auto"
-                  : "px-0 opacity-0 pointer-events-none"
+                  ? "px-4 opacity-100 pointer-events-auto tracking-normal"
+                  : "px-0 opacity-0 pointer-events-none tracking-[-0.12em]"
               }`}
             >
               Delete selected
@@ -78,7 +78,7 @@ export default function ManageProductImages({
                 key={`${i}-${im.id}`}
                 className="relative group h-auto aspect-[5/4] basis-[23%] snap-center p-4 bg-neutral-400/25 rounded-sm"
               >
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-full group-hover:opacity-75 duration-200">
                   <Image
                     fill={true}
                     src={im.url}
