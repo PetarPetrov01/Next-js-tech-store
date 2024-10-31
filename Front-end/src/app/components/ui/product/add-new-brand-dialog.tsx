@@ -95,7 +95,6 @@ export default function AddNewBrandDialog({
     >
       <DialogTitle className="text-center">Add new brand</DialogTitle>
       <DialogContent className="min-w-[400px]">
-        <DialogContentText></DialogContentText>
         <form
           onSubmit={handleSubmit}
           className="w-full p-2 flex flex-col items-center gap-12"
