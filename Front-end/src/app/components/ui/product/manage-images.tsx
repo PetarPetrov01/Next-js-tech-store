@@ -4,6 +4,7 @@ import { ProductWithImages } from "@/types/Product";
 import Image from "next/image";
 import { useState } from "react";
 import { FaRegSquare, FaSquareCheck, FaXmark } from "react-icons/fa6";
+import DeleteImagesDialog from "./delete-images-dialog";
 
 export default function ManageProductImages({
   product,
@@ -12,6 +13,7 @@ export default function ManageProductImages({
 }) {
   const [images, setImages] = useState(product.images);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [showDeleteImages, setShowDeleteImages] = useState(false);
 
   const handleSelectImage = (id: string) => {
     console.log("Selecting");
@@ -26,13 +28,21 @@ export default function ManageProductImages({
     setSelectedImages([]);
   };
 
-  const handleDeleteImage = (id: string) => {
-    console.log(id);
+  const handleDeleteImages = () => {
+    console.log(selectedImages);
   };
 
   return (
     <div className="w-full flex flex-col items-center gap-8 py-4">
       <h1>Manage images</h1>
+      {showDeleteImages && (
+        <DeleteImagesDialog
+          open={showDeleteImages}
+          setShowDeleteImages={setShowDeleteImages}
+          handleDeleteImages={handleDeleteImages}
+          imagesCount={selectedImages.length}
+        />
+      )}
       {images.length ? (
         <>
           <div className="w-[80%] flex items-end justify-between pb-2 min-h-16 border-b-2 border-new-mint">
@@ -52,6 +62,7 @@ export default function ManageProductImages({
               <h3>selected: {selectedImages.length}</h3>
             </div>
             <button
+              onClick={() => setShowDeleteImages(true)}
               className={`py-2 duration-300 bg-red-400 ${
                 selectedImages.length > 0
                   ? "px-4 opacity-100 pointer-events-auto"
