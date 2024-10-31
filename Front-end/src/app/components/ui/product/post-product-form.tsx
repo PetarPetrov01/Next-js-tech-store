@@ -11,8 +11,9 @@ import { useForm, useWatch } from "react-hook-form";
 
 import { IoWarning } from "react-icons/io5";
 import AddNewCategoryDialog from "./add-new-category-dialog";
-import { Categories } from "@/types/Product";
+import { Categories, Product } from "@/types/Product";
 import AddNewBrandDialog from "./add-new-brand-dialog";
+import ProductPostSucessDialog from "./product-post-success-dialog";
 
 export default function PostProductForm({
   categories,
@@ -22,6 +23,11 @@ export default function PostProductForm({
   const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const [cats, setCats] = useState(categories);
+  const [isLoading, setIsLoading] = useState(false);
+  const [createdProd, setCreatedProd] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const [pendingNewCategoryId, setPendingNewCategoryId] = useState<
     number | null
@@ -84,6 +90,7 @@ export default function PostProductForm({
   }, [setValue, pendingNewCategoryId]);
 
   const processSubmit = handleSubmit(async (data) => {
+    setIsLoading(true);
     const res = await fetch("http://localhost:3001/api/products/upload", {
       method: "post",
       body: JSON.stringify(data),
@@ -95,13 +102,13 @@ export default function PostProductForm({
     if (!res.ok) {
       const error = await res.json();
       setError("root.apiError", { message: error.message });
+      setIsLoading(false);
       return;
     }
 
-    const product = await res.json();
-    console.log(product);
-
-    //navigate to product/id/images
+    const product: Product = await res.json();
+    setIsLoading(false);
+    setCreatedProd({ id: product.id, name: product.name });
   });
 
   return (
@@ -312,6 +319,9 @@ export default function PostProductForm({
         <span className="absolute text-[0.9em] bottom-[-1.5em] left-1/2 -translate-x-1/2 text-red-400">
           {errors.root.apiError.message}
         </span>
+      )}
+      {createdProd?.id && (
+        <ProductPostSucessDialog open={true} product={createdProd} />
       )}
     </form>
   );
