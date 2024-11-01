@@ -1,23 +1,10 @@
+import { z } from "zod";
+
+import { SubmitHandler, useForm } from "react-hook-form";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-
-const ImageSchema = z.object({
-  image: z
-    .instanceof(File)
-    .refine((file) => /jpg|png|jpeg/.test(file.name.toLocaleLowerCase()), {
-      message: "File type not allowed",
-    })
-    .refine(
-      (file) => /image\/png|image\/jpeg|image\/gif|image\/webp/.test(file.type),
-      { message: "This file is not allowed" }
-    )
-    .refine((file) => file.size <= 1024 * 1024 * 5, {
-      message: "File is too large",
-    }),
-});
+import { ImageSchema } from "@/zodSchemas/imageSchema";
 
 type Inputs = z.infer<typeof ImageSchema>;
 
