@@ -10,6 +10,13 @@ import { BiSolidGridAlt, BiSolidGrid } from "react-icons/bi";
 import DeleteImagesDialog from "./delete-images-dialog";
 import LayoutToggle from "./product-layout-toggle";
 import { ProductWithImages } from "@/types/Product";
+import UploadImages from "./upload-images";
+
+interface ReturnedImages {
+  id: number;
+  url: string;
+  productId: string;
+}
 
 export default function ManageProductImages({
   product,
@@ -19,6 +26,7 @@ export default function ManageProductImages({
   const [images, setImages] = useState(product.images);
   const [selectedImageURLs, setSelectedImageURLs] = useState<string[]>([]);
   const [showDeleteImages, setShowDeleteImages] = useState(false);
+  const [showUploadImages, setShowUploadImages] = useState(false);
 
   const searchParams = useSearchParams();
   const gridSize = searchParams.get("grid-size");
@@ -29,6 +37,11 @@ export default function ManageProductImages({
 
   const handleDeselectImage = (url: string) => {
     setSelectedImageURLs((prev) => prev.filter((imageUrl) => imageUrl != url));
+  };
+
+  const toggleUploadImages = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setShowUploadImages((prev) => !prev);
   };
 
   const handleClearSelection = () => {
@@ -46,7 +59,7 @@ export default function ManageProductImages({
       }
     );
 
-    if (res.ok) {
+    if (!res.ok) {
       console.log("Failed");
       return;
     }
@@ -55,6 +68,33 @@ export default function ManageProductImages({
     setImages((images) =>
       images.filter((img) => selectedImageURLs.includes(img.url) == false)
     );
+  };
+
+  const handleUploadImages = async (data: File[]) => {
+    const formData = new FormData();
+    if (data && data.length > 0) {
+      data.forEach((file) => formData.append("images", file));
+    }
+
+    const res = await fetch(
+      `http://localhost:3001/api/products/${product.id}/images`,
+      {
+        method: "post",
+        body: formData,
+        credentials: "include",
+      }
+    );
+
+    if (!res.ok) {
+      console.log("error");
+      return;
+    }
+
+    const returnedData: { images: ReturnedImages[] } = await res.json();
+    const { images } = returnedData;
+
+    setImages(images.map((image) => ({ id: image.id, url: image.url })));
+    console.log(images);
   };
 
   return (
@@ -70,7 +110,9 @@ export default function ManageProductImages({
       )}
       {images.length ? (
         <>
-          <div className="w-[80%] flex items-end justify-between pb-2 min-h-16 border-b-2 border-new-mint">
+          <div
+            className={`w-[80%] flex items-end justify-between pb-2 min-h-16 duration-200 overflow-hidden border-b-2 border-new-mint`}
+          >
             <div className="flex gap-2 items-center">
               <LayoutToggle
                 paramName="grid-size"
@@ -114,20 +156,19 @@ export default function ManageProductImages({
             </button>
           </div>
           <div
-            className={`w-[80%] min-h-[300px] flex flex-wrap duration-150 ${
+            className={`w-[80%] flex flex-wrap duration-150 overflow-hidden ${
               gridSize == "big" ? "gap-[2%] gap-y-6" : "gap-[1%] gap-y-2"
             }`}
           >
             {images.map((im, i) => (
               <div
                 onTouchStart={(e) => {
-                  console.log("touch");
                   e.preventDefault();
                   handleSelectImage(im.url);
                 }}
                 key={`${i}-${im.id}`}
-                className={`relative group h-auto aspect-[5/4] duration-200 p-4 hover:bg-neutral-300/30 rounded-lg ${
-                  gridSize == "big" ? "basis-[32%]" : "basis-[19.2%]"
+                className={`relative group h-auto aspect-[4/3] duration-200 p-4 hover:bg-neutral-300/30 rounded-lg ${
+                  gridSize == "big" ? "flex-[0_0_32%]" : "flex-[0_0_19.2%]"
                 } ${
                   selectedImageURLs.includes(im.url)
                     ? "bg-neutral-300/30"
@@ -139,7 +180,7 @@ export default function ManageProductImages({
                     fill={true}
                     src={im.url}
                     alt={`${product.id}-image-${i}`}
-                    className="object-contain pointer-events-none group-hover:scale-105 duration-150"
+                    className="object-cover pointer-events-none group-hover:scale-105 duration-150"
                   />
                 </div>
                 <div
@@ -186,9 +227,17 @@ export default function ManageProductImages({
           </h2>
         </>
       )}
-      <button className="py-2 px-4 border-2 border-new-peach-100 duration-200 hover:text-new-darkblue hover:bg-new-peach-100">
-        Upload {images.length > 0 && "more "}images
-      </button>
+      <div className="flex flex-col items-center gap-8 w-[80%]">
+        <a
+          onClick={toggleUploadImages}
+          className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
+        >
+          Upload {images.length > 0 && "more "}images
+        </a>
+        {showUploadImages && (
+          <UploadImages handleUploadImages={handleUploadImages} />
+        )}
+      </div>
     </div>
   );
 }

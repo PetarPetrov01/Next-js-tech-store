@@ -11,7 +11,9 @@ type FileWithPreview = File & {
 };
 
 export default function UploadImages({
+  handleUploadImages,
 }: {
+  handleUploadImages: (data: File[]) => void;
 }) {
   const [images, setImages] = useState<FileWithPreview[]>([]);
   const [rejectedFiles, setRejectedFiles] = useState<FileRejection[]>([]);
@@ -67,6 +69,12 @@ export default function UploadImages({
     },
   });
 
+  const handleUploadClick = () => {
+    handleUploadImages(images);
+    setImages([]);
+    setRejectedFiles([]);
+  };
+
   return (
     <article className="bg-new-darkblue min-w-[900px] min-h-[600px] flex flex-col items-center duration-300 overflow-hidden h-full gap-8 py-8 text-new-mint">
       <div
@@ -88,6 +96,7 @@ export default function UploadImages({
         {images.length > 0 && (
           <>
             <button
+              onClick={handleUploadClick}
               className="py-2 px-4 border-[1px] border-new-peach-100"
             >
               Upload images
