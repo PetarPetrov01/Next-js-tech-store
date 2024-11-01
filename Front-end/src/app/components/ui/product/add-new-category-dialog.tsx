@@ -90,11 +90,14 @@ export default function AddNewCategoryDialog({
   return (
     <Dialog
       open={open}
+      onClose={() => setShowAddCategory(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle className="text-center">Add new category</DialogTitle>
-      <DialogContent className="min-w-[400px]">
+      <DialogTitle className="text-center bg-new-midnight-100 text-new-mint">
+        Add new category
+      </DialogTitle>
+      <DialogContent className="min-w-[400px] bg-new-midnight-100">
         <DialogContentText></DialogContentText>
         <form
           onSubmit={handleSubmit}
@@ -107,7 +110,7 @@ export default function AddNewCategoryDialog({
               value={category}
               onChange={handleInputChange}
               onBlur={handleBlur}
-              className="px-2 py-1 text-lg w-full outline-none border-b-2 border-black bg-slate-100 focus:bg-neutral-200 duration-200 "
+              className="px-2 py-1 text-lg w-full outline-none  bg-slate-300 focus:bg-neutral-100 duration-200"
             />
             {error && (
               <span className="text-center text-red-400 italic text-sm absolute bottom-0 translate-y-[110%] leading-3">
@@ -115,17 +118,17 @@ export default function AddNewCategoryDialog({
               </span>
             )}
           </div>
-          <div className="flex justify-between gap-6">
+          <div className="flex justify-between gap-6 text-new-mint">
             <button
               type="submit"
-              className="px-4 py-2 border-2 text-new-darkblue border-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
+              className="px-4 py-2 bg-red-400/90 hover:bg-red-400 duration-200"
             >
-              Add category
+              Add brand
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="px-4 py-2 text-new-mint bg-black hover:bg-gray-700 duration-150"
+              className="px-4 py-2 bg-black hover:bg-gray-800 duration-150"
               autoFocus
             >
               Cancel

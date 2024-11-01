@@ -14,6 +14,10 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontFamily: {
+        "source-sans": ['var(--font-source-sans)'],
+        "playfair-display": ['var(--font-playfair-display)']
+      },
       colors: {
         darkblue: "#03045e",
         lightblue: "#00b4d8",

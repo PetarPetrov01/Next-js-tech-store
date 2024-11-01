@@ -1,6 +1,7 @@
 import jwt, { JwtPayload, Secret, TokenExpiredError } from "jsonwebtoken";
 
 const secret = process.env.JWT_SECRET || "1qsc2wdv3efv";
+const TOKEN_EXPIRATION_TIME = 60 * 30;
 
 export interface UserPayload extends JwtPayload {
   _id: string;
@@ -17,7 +18,7 @@ export async function signJWT(payload: UserPayload): Promise<string> {
     jwt.sign(
       payload,
       secret,
-      { expiresIn: 60 * 15, algorithm: "HS256" },
+      { expiresIn: TOKEN_EXPIRATION_TIME, algorithm: "HS256" },
       (err, encoded) => {
         if (err) {
           reject(err);

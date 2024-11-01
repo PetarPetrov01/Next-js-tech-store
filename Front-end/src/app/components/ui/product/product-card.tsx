@@ -47,7 +47,7 @@ export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
           }`}
         >
           <Image
-            src={prod.images[0]}
+            src={prod.images[0] || '/no-image-card.png'}
             alt={prod.name}
             width={200}
             height={200}

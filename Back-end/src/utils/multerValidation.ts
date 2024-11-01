@@ -39,6 +39,6 @@ const multipleOptions: multer.Options = {
 };
 
 const uploadSingle = multer(options).single("image");
-const uploadMultiple = multer(multipleOptions).array("image");
+const uploadMultiple = multer(multipleOptions).array("images");
 
 export { uploadSingle, uploadMultiple };
