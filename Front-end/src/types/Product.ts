@@ -27,7 +27,7 @@ export type ProductWithImages = {
   ownerId: string;
   name: string;
   images: {
-      id: string;
+      id: number;
       url: string;
   }[];
 }

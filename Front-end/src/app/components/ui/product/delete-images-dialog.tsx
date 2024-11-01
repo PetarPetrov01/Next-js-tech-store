@@ -41,11 +41,9 @@ export default function DeleteImagesDialog({
         Deleted images
       </DialogTitle>
       <DialogContent className="bg-new-midnight-100">
-        <DialogContentText id="alert-dialog-description">
-          <p className="text-new-mint">
+        <p className="text-new-mint">
             Are you sure you want to delete all selected images &#40;{imagesCount}&#41;?
-          </p>
-        </DialogContentText>
+        </p>
         <div className="flex justify-center gap-4 pt-3 text-new-mint">
           <button
             onClick={handleConfirm}
