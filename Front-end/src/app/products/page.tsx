@@ -9,6 +9,10 @@ import Image from "next/image";
 import Sort from "../components/Sort";
 import LayoutToggle from "../components/ui/product/product-layout-toggle";
 
+import { BsGrid3X3GapFill } from "react-icons/bs";
+
+import { MdViewList } from "react-icons/md";
+
 export const metadata: Metadata = {
   title: "Products",
 };
@@ -45,7 +49,20 @@ export default async function Page({ searchParams }: { searchParams: any }) {
             </article>
             <article className="sm:w-[71%] lg:w-[75%] flex flex-col items-center justify-center p-2">
               <div className="flex justify-between px-3 items-center w-full border-2 border-new-peach-100">
-                <LayoutToggle />
+                <LayoutToggle
+                  paramName="view"
+                  options={[
+                    {
+                      value: "grid",
+                      icon: <BsGrid3X3GapFill className="w-full h-full" />,
+                    },
+                    {
+                      value: "list",
+                      icon: <MdViewList className="w-full h-full" />,
+                    },
+                  ]}
+                  defaultValue="grid"
+                />
                 <SearchBar />
                 <Sort />
               </div>
