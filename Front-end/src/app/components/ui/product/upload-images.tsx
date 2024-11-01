@@ -14,6 +14,7 @@ export default function UploadImages({
 }: {
 }) {
   const [images, setImages] = useState<FileWithPreview[]>([]);
+  const [rejectedFiles, setRejectedFiles] = useState<FileRejection[]>([]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
@@ -24,12 +25,29 @@ export default function UploadImages({
         ),
       ]);
 
+      if (rejectedFiles.length > 0) {
+        setRejectedFiles((prev) => {
+          return [
+            ...prev,
+            ...rejectedFiles.filter(
+              ({ file }) =>
+                !prev.some(({ file: prevFile }) => prevFile.name == file.name)
+            ),
+          ];
+        });
+      }
     },
     []
   );
 
   const onRemoveImage = (fileName: string) => {
     setImages((files) => files.filter((file) => file.name !== fileName));
+  };
+
+  const onRemoveRejected = (fileName: string) => {
+    setRejectedFiles((files) =>
+      files.filter(({ file }) => file.name !== fileName)
+    );
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -93,6 +111,40 @@ export default function UploadImages({
                     className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 p-1 rounded-full duration-150 bg-red-400/90 hover:bg-red-500/95"
                   >
                     <FaXmark size={"1.2em"} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {rejectedFiles.length > 0 && (
+          <>
+            <h3>Rejected images</h3>
+            <ul className="flex flex-col w-full">
+              {rejectedFiles.map(({ file, errors }, i) => (
+                <li
+                  key={i + file.name}
+                  className="flex items-start justify-between"
+                >
+                  <div className="flex flex-col gap-2">
+                    <p>{file.name}</p>
+                    <ul className="text-sm text-red-400">
+                      {errors.map((er, i) => (
+                        <li key={er.code + i}>
+                          {er.code == "file-too-large"
+                            ? `File is too large. Maximum allowed size is ${formatDataSize(
+                                IMAGE_MAX_SIZE
+                              )}`
+                            : er.message}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => onRemoveRejected(file.name)}
+                    className="p-2 border-[1px] border-new-mint"
+                  >
+                    Remove
                   </button>
                 </li>
               ))}
