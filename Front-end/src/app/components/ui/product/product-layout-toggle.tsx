@@ -37,12 +37,12 @@ export default function LayoutToggle({
   };
 
   return (
-    <div className="flex justify-between border-[1px] border-new-peach-100 w-20 h-10 cursor-pointer">
+    <div className="flex justify-between border-[1px] border-new-peach-100 w-24 h-12 mdl:w-20 mdl:h-10 cursor-pointer">
       {options.map(({ value, icon }) => (
         <div
           key={value}
           onClick={() => toggleLayout(value)}
-          className={`flex-1 p-1 ${
+          className={`flex-1 flex items-center justify-center p-1 ${
             selectedOption === value
               ? "bg-new-peach-100 text-new-darkblue"
               : "bg-transparent text-new-mint duration-150 hover:bg-neutral-700/70"

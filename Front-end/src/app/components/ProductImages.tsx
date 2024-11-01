@@ -58,18 +58,18 @@ export default function ProductImages({ images }: { images: string[] }) {
   console.log(images);
 
   return (
-    <div className="w-full flex flex-col gap-6 overflow-hidden">
+    <div className="w-full flex flex-col items-center gap-6 overflow-hidden">
       {windowWidth < 640 ? (
         <MobileProductImages images={images} />
       ) : (
         <>
-          <div className="flex justify-center">
+          <div className="relative w-[90%] aspect-[5/4] h-auto flex justify-center">
             <Image
-              src={images[displayImageIndex] || '/no-image.png'}
+              src={images[displayImageIndex] || "/no-image.png"}
               alt={`image-${displayImageIndex.toString()}`}
-              className="w-[90%] object-cover pointer-events-none"
-              width={600}
-              height={600}
+              className="w-[90%] object-contain pointer-events-none"
+              fill={true}
+              sizes="(min-width: 1280px) 549px, (min-width: 1024px) 486px,(min-width: 768px) 42vw, 70vw"
             />
           </div>
           <div className="relative flex justify-center w-full">
@@ -100,6 +100,8 @@ export default function ProductImages({ images }: { images: string[] }) {
                     <Image
                       src={image}
                       fill={true}
+                      // sizes="(max-width: 768px) 13vw, (max-width: 1024px) 7vw, (max-width: 1280px) 8vw"
+                      sizes="(min-width: 1280px) 98px, (min-width: 1024px) 86px,(min-width: 768px) 7vw, 20vw"
                       alt={`image-${i.toString()}`}
                       className="object-contain pointer-events-none"
                     />
