@@ -115,7 +115,7 @@ export default function PostProductForm({
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="relative w-1/2 flex items-center flex-col gap-6"
+      className="relative w-[90%] sm:w-2/3 mdl:w-1/2 flex items-center flex-col gap-6"
     >
       <AddNewCategoryDialog
         open={showAddCategory}

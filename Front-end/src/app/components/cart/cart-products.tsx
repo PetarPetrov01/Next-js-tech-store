@@ -12,8 +12,8 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 import { BsFillXCircleFill } from "react-icons/bs";
 import {FaRegHeart} from 'react-icons/fa'
 
-import EraseProductDiaolog from "./cart-erase-product-dialog";
-import ClearCartDialog from "./clear-cart-dialog";
+import EraseProductDiaolog from "./dialogs/cart-erase-product-dialog";
+import ClearCartDialog from "./dialogs/clear-cart-dialog";
 
 
 export default function CartProducts() {

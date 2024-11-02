@@ -97,7 +97,7 @@ export default function AddNewCategoryDialog({
       <DialogTitle className="text-center bg-new-midnight-100 text-new-mint">
         Add new category
       </DialogTitle>
-      <DialogContent className="min-w-[400px] bg-new-midnight-100">
+      <DialogContent className="min-w-[320px] sm:min-w-[400px] bg-new-midnight-100">
         <DialogContentText></DialogContentText>
         <form
           onSubmit={handleSubmit}

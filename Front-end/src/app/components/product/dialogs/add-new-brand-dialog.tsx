@@ -95,7 +95,7 @@ export default function AddNewBrandDialog({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle className="text-center bg-new-midnight-100 text-new-mint">Add new brand</DialogTitle>
-      <DialogContent className="min-w-[400px]  bg-new-midnight-100">
+      <DialogContent className="min-w-[320px] sm:min-w-[400px]  bg-new-midnight-100">
         <form
           onSubmit={handleSubmit}
           className="w-full p-2 flex flex-col items-center gap-12"

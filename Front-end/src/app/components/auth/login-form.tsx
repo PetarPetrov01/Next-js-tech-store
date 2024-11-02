@@ -2,14 +2,13 @@
 
 import { NextFont } from "next/dist/compiled/@next/font";
 import { useFormState } from "react-dom";
-import { login } from "../../../lib/actions";
 import { set, z } from "zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthContext } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
-import { checkAuth } from "../../../utils/checkAuth";
+import { checkAuth } from "@/app/utils/checkAuth";
 
 const UserLoginSchema = z.object({
   email: z
@@ -84,7 +83,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
       ref={formRef}
       // action={dispatch}
       onSubmit={processSubmit}
-      className="login flex flex-col items-center justify-start gap-8  w-[80%] "
+      className="login flex flex-col items-center justify-start gap-8 w-[90%] sm:w-[80%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
         <h1 className="text-3xl">Login to your account</h1>
