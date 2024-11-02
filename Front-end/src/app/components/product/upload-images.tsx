@@ -76,11 +76,11 @@ export default function UploadImages({
   };
 
   return (
-    <article className="bg-new-darkblue min-w-[900px] min-h-[600px] flex flex-col items-center duration-300 overflow-hidden h-full gap-8 py-8 text-new-mint">
+    <article className="bg-new-darkblue w-full min-h-[300px] flex flex-col items-center duration-300 overflow-hidden gap-8 py-8 text-new-mint">
       <div
         {...getRootProps({
           className:
-            "flex justify-center items-center w-[70%] h-48 border-[3px] border-dashed rounded-3xl border-gray-400 p-4 bg-neutral-200/15 duration-150 hover:bg-neutral-200/20  text-center cursor-pointer",
+            "flex justify-center items-center w-[90%] sm:w-[70%] h-48 border-[3px] border-dashed rounded-3xl border-gray-400 p-4 bg-neutral-200/15 duration-150 hover:bg-neutral-200/20  text-center cursor-pointer",
         })}
       >
         <input {...getInputProps()} />
@@ -104,12 +104,13 @@ export default function UploadImages({
             <h3>Accepted Images</h3>
             <ul className="w-full flex flex-wrap gap-6 justify-center">
               {images.map((f) => (
-                <li key={f.name} className="relative basis-[17%]">
+                <li key={f.name} className="relative basis-[40%] sm:basis-[30%] md:basis-[22%] mdl:basis-[17%]">
                   <div className="relative w-full aspect-[6/5] h-auto rounded-lg p-2 overflow-hidden">
                     <Image
                       src={f.previewUrl}
                       fill={true}
-                      sizes="(max-width:989px) 15%"
+                      sizes="(min-width: 1280px) 292px, (min-width: 1024px) 20vw, (min-width: 768px) 10vw, 14vw"
+                      /* (min-width: 1280px) 98px, (min-width: 1024px) 86px,(min-width: 768px) 7vw, 20vw */
                       alt={f.name}
                       onLoad={() => URL.revokeObjectURL(f.previewUrl)}
                       className="object-cover object-center"
@@ -119,7 +120,7 @@ export default function UploadImages({
                     onClick={() => onRemoveImage(f.name)}
                     className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 p-1 rounded-full duration-150 bg-red-400/90 hover:bg-red-500/95"
                   >
-                    <FaXmark size={"1.2em"} />
+                    <FaXmark className="text-3xl md:text-xl lg:text-lg"/>
                   </button>
                 </li>
               ))}

@@ -1,4 +1,4 @@
-import ManageProductImages from "@/app/components/ui/product/manage-images";
+import ManageProductImages from "@/app/components/product/manage-images";
 import { getProductImages } from "@/app/lib/data";
 import { cookies } from "next/headers";
 

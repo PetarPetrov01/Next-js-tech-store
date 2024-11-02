@@ -7,7 +7,7 @@ import BrandFilterWrapper from "../components/BrandFilterWrapper";
 import SearchBar from "../components/SearchBar";
 import Image from "next/image";
 import Sort from "../components/Sort";
-import LayoutToggle from "../components/ui/product/product-layout-toggle";
+import LayoutToggle from "../components/product/product-layout-toggle";
 
 import { BsGrid3X3GapFill } from "react-icons/bs";
 

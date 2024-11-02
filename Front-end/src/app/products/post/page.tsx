@@ -1,4 +1,4 @@
-import PostProductForm from "@/app/components/ui/product/post-product-form";
+import PostProductForm from "@/app/components/product/post-product-form";
 import { getBrandsByCategory, getCategories } from "@/app/lib/data";
 
 export default async function PostPage() {

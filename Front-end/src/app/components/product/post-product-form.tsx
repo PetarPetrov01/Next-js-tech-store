@@ -10,10 +10,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { IoWarning } from "react-icons/io5";
-import AddNewCategoryDialog from "./add-new-category-dialog";
+import AddNewCategoryDialog from "./dialogs/add-new-category-dialog";
 import { Categories, Product } from "@/types/Product";
-import AddNewBrandDialog from "./add-new-brand-dialog";
-import ProductPostSucessDialog from "./product-post-success-dialog";
+import AddNewBrandDialog from "./dialogs/add-new-brand-dialog";
+import ProductPostSucessDialog from "./dialogs/product-post-success-dialog";
 
 export default function PostProductForm({
   categories,

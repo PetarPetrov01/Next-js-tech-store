@@ -4,7 +4,7 @@ import useWindowWidth from "@/hooks/useWindowWidth";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import MobileProductImages from "./ui/product/mobile-product.images";
+import MobileProductImages from "./product/mobile-product.images";
 
 const IMAGE_CONTAINER_WIDTH_IN_PERCENT = 23.5 / 100;
 const IMAGES_GAP_IN_PERCENT = 2 / 100;
