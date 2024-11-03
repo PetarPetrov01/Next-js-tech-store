@@ -12,8 +12,8 @@ export default async function ProductImagesPage({
   const product = await getProductImages(params.id, cookie);
 
   return (
-    <section className="flex justify-center md:min-h-screen">
-      <div className="container max-w-[1300px] p-4 flex flex-col items-center">
+    <section className="flex w-full justify-center md:min-h-screen">
+      <div className="container p-4 flex flex-col items-center">
         <ManageProductImages product={product} />
       </div>
     </section>

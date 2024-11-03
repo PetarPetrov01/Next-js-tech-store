@@ -52,7 +52,7 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-center ">
-      <div className="container max-w-[1400px] px-12 sm:px-20 py-3 flex justify-between items-center">
+      <div className="container px-12 sm:px-20 py-3 flex justify-between items-center">
         <Link href={"/"} className="relative logo w-24 h-24">
           <Image src="/logo-text.png" alt="logo" fill={true} className="object-contain"/>
         </Link>

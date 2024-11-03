@@ -11,7 +11,7 @@ export default async function ProductDetails({
 
   return (
     <section className="flex justify-center md:min-h-screen">
-      <div className="container max-w-[1300px] p-4 flex flex-col md:flex-row md:justify-between gap-2 md:gap-[2%] xl:gap-8 items-center md:items-start">
+      <div className="container p-4 flex flex-col md:flex-row md:justify-between gap-2 md:gap-[2%] xl:gap-8 items-center md:items-start">
         <article className="md:flex-shrink-0 w-[90%] sm:w-[80%] md:w-[48%] lg:w-[540px] xl:w-[610px]">
           <ProductImages images={product.images} />
         </article>

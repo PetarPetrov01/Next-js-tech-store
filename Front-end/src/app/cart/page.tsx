@@ -10,7 +10,7 @@ export default async function CartPage() {
   if (!isLogged) redirect("/login");
 
   return (
-    <div className="container max-w-[1450px] flex justify-center m-auto p-5">
+    <div className="container flex justify-center m-auto p-5">
       <section className="flex flex-col gap-10 mt-6 w-full">
         <div className="flex w-full justify-between gap-8 items-start">
           <CartProducts />

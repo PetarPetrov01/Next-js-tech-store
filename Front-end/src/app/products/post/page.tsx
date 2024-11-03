@@ -5,7 +5,7 @@ export default async function PostPage() {
   const categories = await getCategories();
 
   return (
-      <div className="max-w-[1400px] mx-auto p-8">
+      <div className="container mx-auto p-8">
         <section className="w-full flex flex-col gap-8 items-center">
             <h1>Post your product</h1>
           <PostProductForm categories={categories} />
