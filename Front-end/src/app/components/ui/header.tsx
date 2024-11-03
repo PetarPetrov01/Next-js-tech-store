@@ -2,49 +2,35 @@
 import { useAuthContext } from "@/contexts/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import ProfileDropdown from "../profile/profile-dropdown";
-import useCartStore from "../../store/cart";
-import Cart from "../cart/cart";
+import useWindowWidth from "@/hooks/useWindowWidth";
+import DesktopNav from "./desktop-nav";
+import MobileNav from "./mobile-nav";
+import { useMemo } from "react";
+
+export type Links = { href: string; label: string }[];
+export type LinksObject = {
+  type: "user" | "guest";
+  links: Links;
+};
 
 const guestLinks = [
-  { href: "/products", label: "PRODUCTS" },
-  { href: "/login", label: "LOGIN" },
-  { href: "/register", label: "REGISTER" },
+  { href: "/products", label: "Products" },
+  { href: "/login", label: "Login" },
+  { href: "/register", label: "Register" },
 ];
 
 const userLinks = [
-  { href: "/products", label: "PRODUCTS" },
-  { href: "/products/post", label: "POST PRODUCT" },
+  { href: "/products", label: "Products" },
+  { href: "/products/post", label: "Post product" },
 ];
 
 export default function Header() {
   const { user, clearAuth } = useAuthContext();
-  const { cart } = useCartStore();
+  const { windowWidth } = useWindowWidth();
 
-  const [profileDropdown, setProfileDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLLIElement>(null);
-
-  const handleOutsideClick = (event: Event) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setProfileDropdown(false);
-    }
-  };
-
-  useEffect(() => {
-    if (profileDropdown) {
-      document.addEventListener("click", handleOutsideClick);
-    } else {
-      document.removeEventListener("click", handleOutsideClick);
-    }
-
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, [profileDropdown]);
+  const links = useMemo(() => {
+    return user?.email ? userLinks : guestLinks;
+  }, [user]);
 
   async function logout() {
     try {
@@ -64,77 +50,18 @@ export default function Header() {
     }
   }
 
-  const toggleProfileDropdown = () => {
-    setProfileDropdown((state) => !state);
-  };
-
   return (
-    <>
-      <header className="flex items-center justify-center ">
-        <div className="container max-w-[1400px] px-20 py-3 flex justify-between items-center">
-          <Link href={"/"} className="logo min-w-[4rem]">
-            <Image src="/logo-text.png" alt="logo" width={110} height={110} />
-          </Link>
-          <nav>
-            <ul className="flex justify-center gap-4 items-center">
-              {user?.email ? (
-                <>
-                  {userLinks.map((link) => (
-                    <li key={link.href + link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-white text-lg px-3 py-1 hover:text-new-peach-90 duration-200"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-
-                  <li
-                    ref={dropdownRef}
-                    onClick={toggleProfileDropdown}
-                    className="flex items-center gap-2 cursor-pointer relative text-white text-lg mx-3 py-1 "
-                  >
-                    <ProfileDropdown
-                      user={user}
-                      profileDropdown={profileDropdown}
-                      logout={logout}
-                      setProfileDropdown={setProfileDropdown}
-                    />
-                    <div className="rounded-full overflow-hidden flex justify-center items-center">
-                      <Image
-                        src={user.image || "/default-profile.jpg"}
-                        width={40}
-                        height={40}
-                        alt={user.email}
-                        className="aspect-square object-cover"
-                      />
-                    </div>
-                    <p className="text-lg hover:text-new-peach-90 duration-200">
-                      PROFILE
-                    </p>
-                  </li>
-                  <li className="flex items-center cursor-pointer text-white text-lg mx-3 py-1">
-                    <Cart />
-                    <Link href={'/cart'} className="text-white text-lg py-1 hover:text-new-peach-90 duration-200" >CART</Link>
-                  </li>
-                </>
-              ) : (
-                guestLinks.map((link) => (
-                  <li key={link.href + link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-white text-lg px-3 py-1 hover:text-new-peach-90 duration-200"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))
-              )}
-            </ul>
-          </nav>
-        </div>
-      </header>
-    </>
+    <header className="flex items-center justify-center ">
+      <div className="container max-w-[1400px] px-12 sm:px-20 py-3 flex justify-between items-center">
+        <Link href={"/"} className="relative logo w-24 h-24">
+          <Image src="/logo-text.png" alt="logo" fill={true} className="object-contain"/>
+        </Link>
+        {windowWidth > 640 ? (
+          <DesktopNav links={links} user={user} logout={logout} />
+        ) : (
+          <MobileNav links={links} user={user} logout={logout} />
+        )}
+      </div>
+    </header>
   );
 }
