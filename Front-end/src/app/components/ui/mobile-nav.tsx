@@ -1,8 +1,7 @@
 import { Drawer } from "@mui/material";
 import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
-import { Links, LinksObject } from "./header";
-import { useAuthContext } from "@/contexts/AuthProvider";
+import { Links } from "./header";
 import { User } from "@/types/User";
 import Link from "next/link";
 import Image from "next/image";

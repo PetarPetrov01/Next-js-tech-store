@@ -1,4 +1,3 @@
-import { useAuthContext } from "@/contexts/AuthProvider";
 import Link from "next/link";
 import ProfileDropdown from "../profile/profile-dropdown";
 import Cart from "../cart/cart";
