@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-import { FaRegSquare, FaSquareCheck, FaXmark } from "react-icons/fa6";
+import { FaRegSquare, FaSquare, FaSquareCheck, FaXmark } from "react-icons/fa6";
 import { BiSolidGridAlt, BiSolidGrid } from "react-icons/bi";
 
-import DeleteImagesDialog from "./delete-images-dialog";
+import DeleteImagesDialog from "./dialogs/delete-images-dialog";
 import LayoutToggle from "./product-layout-toggle";
 import { ProductWithImages } from "@/types/Product";
 import UploadImages from "./upload-images";
+import useWindowWidth from "@/hooks/useWindowWidth";
 
 interface ReturnedImages {
   id: number;
@@ -28,8 +29,11 @@ export default function ManageProductImages({
   const [showDeleteImages, setShowDeleteImages] = useState(false);
   const [showUploadImages, setShowUploadImages] = useState(false);
 
+  const { windowWidth } = useWindowWidth();
+
   const searchParams = useSearchParams();
-  const gridSize = searchParams.get("grid-size");
+
+  const gridSize = useMemo(() => searchParams.get("grid-size"), [searchParams]);
 
   const handleSelectImage = (url: string) => {
     setSelectedImageURLs((prev) => [...prev, url]);
@@ -111,7 +115,7 @@ export default function ManageProductImages({
       {images.length ? (
         <>
           <div
-            className={`w-[80%] flex items-end justify-between pb-2 min-h-16 duration-200 overflow-hidden border-b-2 border-new-mint`}
+            className={`w-[90%] sm:w-[80%] flex items-end justify-between pb-2 min-h-16 duration-200 overflow-hidden border-b-2 border-new-mint`}
           >
             <div className="flex gap-2 items-center">
               <LayoutToggle
@@ -119,11 +123,21 @@ export default function ManageProductImages({
                 options={[
                   {
                     value: "normal",
-                    icon: <BiSolidGrid className="w-full h-full" />,
+                    icon:
+                      windowWidth < 640 ? (
+                        <BiSolidGridAlt className="w-full h-full" />
+                      ) : (
+                        <BiSolidGrid className="w-full h-full" />
+                      ),
                   },
                   {
                     value: "big",
-                    icon: <BiSolidGridAlt className="w-full h-full" />,
+                    icon:
+                      windowWidth < 640 ? (
+                        <FaSquare className="w-[80%] h-[80%]" />
+                      ) : (
+                        <BiSolidGridAlt className="w-full h-full" />
+                      ),
                   },
                 ]}
                 defaultValue="normal"
@@ -156,8 +170,10 @@ export default function ManageProductImages({
             </button>
           </div>
           <div
-            className={`w-[80%] flex flex-wrap duration-150 overflow-hidden ${
-              gridSize == "big" ? "gap-[2%] gap-y-6" : "gap-[1%] gap-y-2"
+            className={`w-[90%] sm:w-[80%] flex flex-wrap duration-150 overflow-hidden ${
+              gridSize == "big"
+                ? "gap-0 gap-y-10 sm:gap-[4%] sm:gap-y-8 mdl:gap-[2%] mdl:gap-y-6"
+                : "gap-[4%] gap-y-8 sm:gap-[2%] sm:gap-y-6 mdl:gap-[1%] mdl:gap-y-2"
             }`}
           >
             {images.map((im, i) => (
@@ -168,7 +184,9 @@ export default function ManageProductImages({
                 }}
                 key={`${i}-${im.id}`}
                 className={`relative group h-auto aspect-[4/3] duration-200 p-4 hover:bg-neutral-300/30 rounded-lg ${
-                  gridSize == "big" ? "flex-[0_0_32%]" : "flex-[0_0_19.2%]"
+                  gridSize == "big"
+                    ? "flex-[0_0_100%] sm:flex-[0_0_48%] mdl:flex-[0_0_32%]"
+                    : "flex-[0_0_48%] sm:flex-[0_0_32%] mdl:flex-[0_0_19.2%]"
                 } ${
                   selectedImageURLs.includes(im.url)
                     ? "bg-neutral-300/30"
@@ -178,6 +196,7 @@ export default function ManageProductImages({
                 <div className="relative w-full h-full group-hover:opacity-75 duration-200">
                   <Image
                     fill={true}
+                    sizes="(min-width: 1280px) 292px, (min-width: 940px) 23vw, (min-width: 640px) 34vw, 82vw"
                     src={im.url}
                     alt={`${product.id}-image-${i}`}
                     className="object-cover pointer-events-none group-hover:scale-105 duration-150"
@@ -227,7 +246,7 @@ export default function ManageProductImages({
           </h2>
         </>
       )}
-      <div className="flex flex-col items-center gap-8 w-[80%]">
+      <div className="flex flex-col items-center gap-8 w-[90%] sm:w-[80%]">
         <a
           onClick={toggleUploadImages}
           className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"

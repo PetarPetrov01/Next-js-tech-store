@@ -4,7 +4,6 @@ import { NextFont } from "next/dist/compiled/@next/font";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { registerUser } from "../../../lib/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthProvider";
@@ -99,7 +98,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="register flex flex-col items-center justify-start gap-8  w-[80%] "
+      className="register flex flex-col items-center justify-start gap-8  w-[90%] sm:w-[80%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
         <h1 className="text-3xl text-new-peach-100">Register your account</h1>

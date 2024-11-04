@@ -4,7 +4,7 @@ import { Categories } from "@/types/Product";
 import { parseVersionInfo } from "next/dist/server/dev/parse-version-info";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FormEventHandler, useState } from "react";
+import { useState } from "react";
 
 export default function CategoryFilter({
   categories,
@@ -68,10 +68,14 @@ export default function CategoryFilter({
 
   return (
     <>
-      <div className="flex justify-between items-center border-b-2 border-new-peach-100">
+      <div className="flex justify-between items-center text-new-mint border-b-2 border-new-peach-100">
         <h2 className="py-3">Filter</h2>
         {showClear() && (
-          <Link href={clearFilters()} scroll={false} className="hover:text-new-peach-90 duration-150">
+          <Link
+            href={clearFilters()}
+            scroll={false}
+            className="text-xl hover:text-new-peach-90 duration-150"
+          >
             Clear filters
           </Link>
         )}

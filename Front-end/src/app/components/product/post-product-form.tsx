@@ -10,10 +10,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { IoWarning } from "react-icons/io5";
-import AddNewCategoryDialog from "./add-new-category-dialog";
+import AddNewCategoryDialog from "./dialogs/add-new-category-dialog";
 import { Categories, Product } from "@/types/Product";
-import AddNewBrandDialog from "./add-new-brand-dialog";
-import ProductPostSucessDialog from "./product-post-success-dialog";
+import AddNewBrandDialog from "./dialogs/add-new-brand-dialog";
+import ProductPostSucessDialog from "./dialogs/product-post-success-dialog";
 
 export default function PostProductForm({
   categories,
@@ -115,7 +115,7 @@ export default function PostProductForm({
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="relative w-1/2 flex items-center flex-col gap-6"
+      className="relative w-[90%] sm:w-2/3 mdl:w-1/2 flex items-center flex-col gap-6"
     >
       <AddNewCategoryDialog
         open={showAddCategory}

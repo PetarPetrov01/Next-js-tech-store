@@ -1,7 +1,9 @@
+'use client'
+
 import { useEffect, useState } from "react";
 
 function getCurrentWidth(): number {
-  if (window) {
+  if (typeof window !== "undefined") {
     return window.innerWidth;
   }
   return 0;

@@ -18,6 +18,9 @@ const config: Config = {
         "source-sans": ['var(--font-source-sans)'],
         "playfair-display": ['var(--font-playfair-display)']
       },
+      screens: {
+        'mdl': '940px'
+      },
       colors: {
         darkblue: "#03045e",
         lightblue: "#00b4d8",

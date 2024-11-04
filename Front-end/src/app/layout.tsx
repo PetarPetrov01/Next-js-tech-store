@@ -32,11 +32,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${sourseSans.className} ${playfairDisplay.variable} ${sourseSans.variable} min-h-[100vh]`}
+        className={`${sourseSans.className} ${playfairDisplay.variable} ${sourseSans.variable} flex flex-col min-h-[100vh]`}
       >
         <AuthProvider>
           <Header />
-          {children}
+          <main className="bg-new-darkblue flex justify-center">
+            {children}
+          </main>
           <Footer />
         </AuthProvider>
       </body>
