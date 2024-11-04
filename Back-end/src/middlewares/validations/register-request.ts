@@ -10,23 +10,19 @@ const userSchema = z.object({
   firstName: z
     .string()
     .trim()
-    .min(1, { message: "first name is required" })
-    .min(3, { message: "first name be atleast 3 characters long" }),
+    .min(3, { message: "Must be atleast 3 characters long" }),
   lastName: z
     .string()
     .trim()
-    .min(1, { message: "last name is required" })
-    .min(3, { message: "last name be atleast 3 characters long" }),
+    .min(3, { message: "Must be atleast 3 characters long" }),
   username: z
     .string()
     .trim()
-    .min(1, { message: "Username is required" })
-    .min(3, { message: "Username must be atleast 3 characters long" }),
+    .min(3, { message: "Must be atleast 3 characters long" }),
   password: z
     .string()
     .trim()
-    .min(1, { message: "Password is required" })
-    .min(6, { message: "Password must be atleast 6 characters long" }),
+    .min(6, { message: "Must be atleast 6 characters long" }),
 });
 
 const validateRegister = validateRequestBody(userSchema, {
@@ -34,7 +30,7 @@ const validateRegister = validateRequestBody(userSchema, {
     const errs = errors[0].errors.issues.map((err) => {
       return {
         //consider path
-        message: err.message,
+        message: `${err.path} - ${err.message}`,
       };
     });
     res.status(400).json(errs);

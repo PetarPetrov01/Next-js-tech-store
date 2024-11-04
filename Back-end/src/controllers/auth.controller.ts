@@ -51,7 +51,6 @@ async function register(
       password
     );
 
-
     res.cookie("authToken", authToken, cookieOptions);
 
     res.status(201).json(user);
