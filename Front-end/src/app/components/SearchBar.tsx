@@ -42,7 +42,7 @@ export default function SearchBar() {
   });
 
   return (
-    <div className="py-4 w-3/5">
+    <div className="py-4 w-[70%] sm:w-[80%] md:w-[50%] mdl:[58%]">
       <form onSubmit={handleSearchSubmit}>
         <div
           className={`relative flex border-b-2 border-transparent duration-500  after:absolute after:h-[2px] after:bottom-[-1px] after:left-0 after:duration-700  after:bg-new-peach-100 ${

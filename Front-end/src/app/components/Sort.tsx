@@ -15,8 +15,8 @@ export default function Sort() {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="font-bold">Sort by:</span>
+    <div className="pt-4 md:pt-0 flex items-center gap-2 text-new-mint">
+      <span className="text-[1.2em] font-normal leading-4 font-playfair-display md:font-source-sans md:text-[1em] md:font-bold">Sort by:</span>
       <select
         name="sort"
         id=""

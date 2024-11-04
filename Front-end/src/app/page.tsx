@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="container px-40">
-      <section className="left flex items-center justify-around gap-4 max-w-[100%] pt-20">
+      <section className="flex items-center justify-around gap-4 max-w-[100%] py-20">
         <article className="flex flex-col max-w-[60%] w-[65ch]">
           <h1 className="text-5xl text-new-peach-100">Welcome to Tech Store</h1>
           <p className="text-white text-2xl">

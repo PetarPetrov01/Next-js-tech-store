@@ -8,18 +8,16 @@ import {
   ProductWithImages,
 } from "../../types/Product";
 
-type QueryParams = Record<string, string | number | boolean | null | undefined>;
-
 const baseUrl = "http://localhost:3001/api";
 
 export const getProds = async (
-  queryParams: QueryParams
+  queryParams: URLSearchParams
 ): Promise<PopulatedProduct[]> => {
   const queryParamsArr: string[] = [];
 
   if (queryParams) {
-    Object.entries(queryParams).forEach(
-      ([key, val]: [string, QueryParams[keyof QueryParams]]) => {
+    Object.values(queryParams).forEach(
+      ([key, val]: [string, [keyof URLSearchParams]]) => {
         if (val) {
           queryParamsArr.push(`${key}=${encodeURIComponent(val.toString())}`);
         }
@@ -36,8 +34,9 @@ export const getProds = async (
 };
 
 export const getCategories = async (): Promise<Categories> => {
+  console.log("fetcihg cats...");
   const res = await fetch(`${baseUrl}/products/categories`, {
-    next: { revalidate: 10 },
+    next: { revalidate: 50 },
   });
 
   const data = await res.json();
@@ -99,5 +98,5 @@ export const getProductImages = async (
   const product = await res.json();
   // console.log(res);
 
-  return product
+  return product;
 };
