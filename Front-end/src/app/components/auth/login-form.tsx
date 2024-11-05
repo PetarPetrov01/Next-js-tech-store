@@ -1,25 +1,17 @@
 "use client";
 
-import { NextFont } from "next/dist/compiled/@next/font";
-import { useFormState } from "react-dom";
-import { set, z } from "zod";
-import { useForm } from "react-hook-form";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthContext } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
+import { NextFont } from "next/dist/compiled/@next/font";
+
+import {  useLayoutEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { LoginSchemaType, UserLoginSchema } from "@/zodSchemas/loginSchema";
+
+import { login } from "@/app/lib/actions";
 import { checkAuth } from "@/app/utils/checkAuth";
-
-const UserLoginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email" }),
-  password: z.string().trim().min(1, { message: "Password is required" }),
-});
-
-type Inputs = z.infer<typeof UserLoginSchema>;
+import { useAuthContext } from "@/contexts/AuthProvider";
 
 export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +23,6 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   useLayoutEffect(() => {
     if (user?.email) {
       const initAuth = async () => {
-        console.log('Login form is fetching...')
         const user = await checkAuth();
         if (!user?.email) {
           clearAuth();
@@ -47,7 +38,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<Inputs>({
+  } = useForm<LoginSchemaType>({
     resolver: zodResolver(UserLoginSchema),
     defaultValues: {
       email: "",
@@ -58,24 +49,21 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
 
-    const res = await fetch("http://localhost:3001/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      cache: "no-store",
-    });
+    const { error, result } = await login(data);
 
-    if (!res.ok) {
-      setError("root.apiError", { message: "Invalid email or password!" });
+    if (error) {
+      setError("root.apiError", error);
       setIsLoading(false);
       return;
     }
 
-    const result = await res.json();
-    setAuth(result);
-    setIsLoading(false);
-    router.replace("/");
+    console.log(result);
+    if (result) {
+      console.log("in result");
+      setAuth(result);
+      setIsLoading(false);
+      router.replace("/");
+    }
   });
 
   return (

@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      console.log('Context is fetching...')
+      
       const user = await checkAuth();
       if (user) {
         dispatch({ type: ActionTypes.SETAUTH, payload: user });

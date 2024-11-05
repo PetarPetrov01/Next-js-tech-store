@@ -1,52 +1,17 @@
 "use client";
 
 import { NextFont } from "next/dist/compiled/@next/font";
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm, useWatch } from "react-hook-form";
+import { z, ZodEffects, ZodObject } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthProvider";
-
-const UserRegisterSchema = z
-  .object({
-    firstName: z
-      .string()
-      .trim()
-      .min(1, { message: "First name is required" })
-      .min(3, { message: "First name must be atleast 3 characters long" }),
-    lastName: z
-      .string()
-      .trim()
-      .min(1, { message: "Last name is required" })
-      .min(3, { message: "Last name must be atleast 3 characters long" }),
-    email: z
-      .string()
-      .trim()
-      .min(1, { message: "Email is required" })
-      .email({ message: "Invalid email" }),
-    username: z
-      .string()
-      .trim()
-      .min(1, { message: "Username is required" })
-      .min(3, { message: "Username must be atleast 3 characters long" }),
-    password: z
-      .string()
-      .trim()
-      .min(1, { message: "Password is required" })
-      .min(6, { message: "Password must be atleast 6 characters long" }),
-    repassword: z
-      .string()
-      .trim()
-      .min(1, { message: "Password is required" })
-      .min(6, { message: "Password must be atleast 6 characters long" }),
-  })
-  .refine((data) => data.password == data.repassword, {
-    message: "Passwords do not match",
-    path: ["repassword"],
-  });
-
-type Inputs = z.infer<typeof UserRegisterSchema>;
+import {
+  RegisterSchemaType,
+  UserRegisterSchema,
+} from "@/zodSchemas/registerSchema";
+import { registerUser } from "@/app/lib/actions";
+import useDebouncedEffect from "@/hooks/useDebouncedEffect";
 
 export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -58,9 +23,8 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     formState: { errors },
     handleSubmit,
     register,
-    reset,
     setError,
-  } = useForm<Inputs>({
+  } = useForm<RegisterSchemaType>({
     resolver: zodResolver(UserRegisterSchema),
     defaultValues: {
       firstName: "",
@@ -74,24 +38,21 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
 
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
-    const res = await fetch("http://localhost:3001/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      cache: "no-store",
-    });
 
-    if (!res.ok) {
-      //Check the error from the res itself
-      setError("root.apiError", { message: "Registration failed" });
+    const { repassword, ...registerData } = data;
+    const { error, result } = await registerUser(registerData);
+
+    if (error) {
+      setError("root.apiError", error);
       setIsLoading(false);
+      return;
     }
 
-    const result = await res.json();
-    setAuth(result);
-    setIsLoading(false);
-    router.replace("/");
+    if (result) {
+      setAuth(result);
+      setIsLoading(false);
+      router.replace("/");
+    }
   });
 
   return (
