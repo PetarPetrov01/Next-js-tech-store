@@ -4,6 +4,8 @@ import { cookies } from "next/headers";
 import { User } from "@/types/User";
 import { RegisterSchemaType } from "@/zodSchemas/registerSchema";
 
+const baseUrl = "http://localhost:3001/api";
+
 interface ErrorObject {
   message: string;
 }
@@ -40,16 +42,13 @@ const isErrorArray = (error: any): error is ErrorArray => {
 const formatError = (error: any) => {
   if (isErrorArray(error)) {
     return {
-      error: {
-        message: error[0].message,
-      },
-      result: null,
+      message: error[0].message,
     };
   } else if (isErrorObject(error)) {
-    return { error: { message: error.message }, result: null };
+    return { message: error.message };
   }
 
-  return { error: { message: error.message }, result: null };
+  return { message: error.message };
 };
 
 const constructCookie = (serializedCookie: string): CookieOptions => {
@@ -71,7 +70,7 @@ export const login = async (data: {
   password: string;
 }): Promise<{ error: ErrorObject | null; result: User | null }> => {
   try {
-    const res = await fetch("http://localhost:3001/api/auth/login", {
+    const res = await fetch(`${baseUrl}/auth/login`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
@@ -80,7 +79,7 @@ export const login = async (data: {
 
     if (!res.ok) {
       const error = await res.json();
-      return formatError(error);
+      return { error: formatError(error), result: null };
     }
 
     const authCookie = res.headers.getSetCookie()[0];
@@ -93,7 +92,7 @@ export const login = async (data: {
     return { result, error: null };
   } catch (error: any) {
     console.log(error.message);
-    return formatError(error);
+    return { error: formatError(error), result: null };
   }
 };
 
@@ -101,7 +100,7 @@ export const registerUser = async (
   data: RegisterData
 ): Promise<{ error: ErrorObject | null; result: User | null }> => {
   try {
-    const res = await fetch("http://localhost:3001/api/auth/register", {
+    const res = await fetch(`${baseUrl}/auth/register`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
@@ -110,7 +109,7 @@ export const registerUser = async (
 
     if (!res.ok) {
       const error = await res.json();
-      return formatError(error);
+      return { error: formatError(error), result: null };
     }
 
     const authCookie = res.headers.getSetCookie()[0];
@@ -124,6 +123,26 @@ export const registerUser = async (
     return { error: null, result };
   } catch (error: any) {
     console.log(error.message);
-    return formatError(error);
+    return { error: formatError(error), result: null };
   }
+};
+
+export const checkEmail = async (
+  email: string
+): Promise<{ isFree: boolean; error: { message: string } | null }> => {
+  const res = await fetch(`${baseUrl}/auth/checkEmail`, {
+    method: 'post',
+    body: JSON.stringify({ email }),
+    headers: { "Content-Type": "application/json" },
+    cache: "no-cache",
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    return { isFree: false, error: formatError(error) };
+  }
+  const result = await res.json();
+  console.log(result);
+
+  return { isFree: true, error: null };
 };

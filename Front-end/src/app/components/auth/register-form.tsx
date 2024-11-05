@@ -1,6 +1,7 @@
 "use client";
 
 import { NextFont } from "next/dist/compiled/@next/font";
+import { useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z, ZodEffects, ZodObject } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +11,7 @@ import {
   RegisterSchemaType,
   UserRegisterSchema,
 } from "@/zodSchemas/registerSchema";
-import { registerUser } from "@/app/lib/actions";
+import { checkEmail, registerUser } from "@/app/lib/actions";
 import useDebouncedEffect from "@/hooks/useDebouncedEffect";
 
 export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
@@ -24,6 +25,8 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     handleSubmit,
     register,
     setError,
+    control,
+    clearErrors,
   } = useForm<RegisterSchemaType>({
     resolver: zodResolver(UserRegisterSchema),
     defaultValues: {
@@ -35,6 +38,28 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
       username: "",
     },
   });
+
+  const watchedEmail = useWatch({ control, name: "email", defaultValue: "" });
+
+  useDebouncedEffect(
+    () => {
+      if (watchedEmail.length > 6) {
+        const emailCheck =
+          UserRegisterSchema._def.schema.shape.email.safeParse(watchedEmail);
+        if (emailCheck.success) {
+          (async () => {
+            const { error, isFree } = await checkEmail(watchedEmail);
+            if (error) {
+              return setError("email", error);
+            } 
+          })();
+          clearErrors("email");
+        }
+      }
+    },
+    500,
+    [watchedEmail]
+  );
 
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
@@ -59,7 +84,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="register flex flex-col items-center justify-start gap-8  w-[90%] sm:w-[80%] "
+      className="register flex flex-col items-center justify-start gap-8  w-[90%] sm:w-[85%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
         <h1 className="text-3xl text-new-peach-100">Register your account</h1>

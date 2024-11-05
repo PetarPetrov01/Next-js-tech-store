@@ -5,7 +5,8 @@ import Link from "next/link";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import DesktopNav from "./desktop-nav";
 import MobileNav from "./mobile-nav";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export type Links = { href: string; label: string }[];
 export type LinksObject = {
@@ -27,10 +28,16 @@ const userLinks = [
 export default function Header() {
   const { user, clearAuth } = useAuthContext();
   const { windowWidth } = useWindowWidth();
+  const [hasMounted, setHasMounted] = useState(false);
+  const router = useRouter();
 
   const links = useMemo(() => {
     return user?.email ? userLinks : guestLinks;
   }, [user]);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   async function logout() {
     try {
@@ -42,6 +49,7 @@ export default function Header() {
       if (res.ok) {
         const result = await res.json();
         clearAuth();
+        router.replace("/");
       } else {
         throw new Error(await res.json());
       }
@@ -54,12 +62,17 @@ export default function Header() {
     <header className="flex items-center justify-center ">
       <div className="container px-12 sm:px-20 py-3 flex justify-between items-center">
         <Link href={"/"} className="relative logo w-24 h-24">
-          <Image src="/logo-text.png" alt="logo" fill={true} className="object-contain"/>
+          <Image
+            src="/logo-text.png"
+            alt="logo"
+            fill={true}
+            className="object-contain"
+          />
         </Link>
-        {windowWidth > 640 ? (
-          <DesktopNav links={links} user={user} logout={logout} />
-        ) : (
+        {hasMounted && windowWidth < 640 ? (
           <MobileNav links={links} user={user} logout={logout} />
+        ) : (
+          <DesktopNav links={links} user={user} logout={logout} />
         )}
       </div>
     </header>
