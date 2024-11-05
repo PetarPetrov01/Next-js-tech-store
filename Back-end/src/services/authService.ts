@@ -78,10 +78,21 @@ async function register(
 
   return {
     user: {
-      ...safeUser
+      ...safeUser,
     },
     authToken: await signJWT(userPayload),
   };
+}
+
+async function checkEmail(email: string) {
+  const existingEmail = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      email: true,
+    },
+  });
+
+  return existingEmail;
 }
 
 async function updateImage(imageUrl: string, id: string) {
@@ -98,6 +109,7 @@ export function verifyJWT(token: string): UserPayload {
 const authService = {
   login,
   register,
+  checkEmail,
   updateImage,
 };
 export default authService;

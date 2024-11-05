@@ -37,6 +37,22 @@ const validateRegister = validateRequestBody(userSchema, {
   },
 });
 
+const validateMail = validateRequestBody(
+  z.object({
+    email: userSchema.shape.email,
+  }),
+  {
+    sendErrors(errors, res) {
+      const errs = errors[0].errors.issues.map((err) => {
+        return {
+          message: `${err.path} - ${err.message}`,
+        };
+      });
+      res.status(400).json(errs);
+    },
+  }
+);
+
 export type RegisterSchemaType = typeof userSchema;
 
-export default validateRegister;
+export { validateRegister, validateMail };
