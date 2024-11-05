@@ -1,18 +1,20 @@
 "use client";
 
 import { NextFont } from "next/dist/compiled/@next/font";
-import { useEffect, useRef, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { z, ZodEffects, ZodObject } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+
+import { useRef, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { useAuthContext } from "@/contexts/AuthProvider";
+import { checkEmail, registerUser } from "@/app/lib/actions";
+import useDebouncedEffect from "@/hooks/useDebouncedEffect";
+
 import {
   RegisterSchemaType,
   UserRegisterSchema,
 } from "@/zodSchemas/registerSchema";
-import { checkEmail, registerUser } from "@/app/lib/actions";
-import useDebouncedEffect from "@/hooks/useDebouncedEffect";
 
 export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +53,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
             const { error, isFree } = await checkEmail(watchedEmail);
             if (error) {
               return setError("email", error);
-            } 
+            }
           })();
           clearErrors("email");
         }
@@ -84,7 +86,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="register flex flex-col items-center justify-start gap-8  w-[90%] sm:w-[85%] "
+      className="register flex flex-col items-center justify-start gap-8  w-[95%] sm:w-[85%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
         <h1 className="text-3xl text-new-peach-100">Register your account</h1>
@@ -97,7 +99,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("email")}
         />
         {errors.email && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.email.message}
           </span>
         )}
@@ -110,7 +112,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("firstName")}
         />
         {errors.firstName && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.firstName.message}
           </span>
         )}
@@ -123,7 +125,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("lastName")}
         />
         {errors.lastName && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.lastName.message}
           </span>
         )}
@@ -136,7 +138,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("username")}
         />
         {errors.username && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.username.message}
           </span>
         )}
@@ -149,7 +151,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("password")}
         />
         {errors.password && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.password.message}
           </span>
         )}
@@ -162,12 +164,12 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("repassword")}
         />
         {errors.repassword && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.repassword.message}
           </span>
         )}
         {errors.root?.apiError && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.root.apiError.message}
           </span>
         )}

@@ -69,9 +69,8 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   return (
     <form
       ref={formRef}
-      // action={dispatch}
       onSubmit={processSubmit}
-      className="login flex flex-col items-center justify-start gap-8 w-[90%] sm:w-[80%] "
+      className="login flex flex-col items-center justify-start gap-8 w-[95%] sm:w-[80%] "
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
         <h1 className="text-3xl">Login to your account</h1>
@@ -84,7 +83,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("email")}
         />
         {errors.email && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.email.message}
           </span>
         )}
@@ -97,18 +96,17 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
           {...register("password")}
         />
         {errors.password && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.password.message}
           </span>
         )}
         {errors.root?.apiError && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.root?.apiError.message}
           </span>
         )}
       </div>
       <div className="w-[80%] relative ">
-        {/* <p className="absolute -top-6 text-center w-[100%]">{state?.message}</p> */}
         <button
           disabled={isLoading}
           className="relative w-[100%] py-1 rounded-md border-new-mint border-[1px] duration-150 bg-new-mint text-new-darkblue after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-sandstone disabled:cursor-default"

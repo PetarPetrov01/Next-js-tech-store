@@ -1,12 +1,13 @@
-import RegisterForm from "../components/auth/register-form";
+import Link from "next/link";
 
 import { ptSerif } from "../layout";
-import Link from "next/link";
+import RegisterForm from "../components/auth/register-form";
+
 
 export default function RegisterPage() {
   return (
     <div className="container flex justify-center items-start py-5">
-      <section className="register flex flex-col items-center w-[80%] sm:w-[70%] md:w-[55%] mdl:w-[40%] mb-8 justify-start min-h-[500px] px-5 py-4 rounded-3xl bg-gradient-to-tr from-[#ffcB9a22] via-[#ffcB9a11] to-[#ffcB9a22] border-new-peach border shadow-[0_0_15px_2px_rgba(255,203,154,0.3)]">
+      <section className="register flex flex-col items-center w-[85%] sm:w-[70%] md:w-[60%] mdl:w-[50%] lg:w-[45%] xl:w-[40%] mb-8 justify-start min-h-[500px] px-3 sm:px-5 py-4 rounded-3xl bg-gradient-to-tr from-[#ffcB9a22] via-[#ffcB9a11] to-[#ffcB9a22] border-new-peach border shadow-[0_0_15px_2px_rgba(255,203,154,0.3)]">
         <RegisterForm ptSerif={ptSerif} />
         <div className="flex flex-col items-center w-4/5 gap-2 pb-8 mt-4">
           <p className="text-white">or</p>
