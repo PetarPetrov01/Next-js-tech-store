@@ -1,88 +1,129 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { z } from "zod";
-import { ErrorsState } from "../../types/Errors";
+import { User } from "@/types/User";
+import { RegisterSchemaType } from "@/zodSchemas/registerSchema";
 
-interface User {
-  email: string,
-  username: string,
-  password: string,
-  repassword: string
+interface ErrorObject {
+  message: string;
 }
 
-const UserLoginSchema = z.object({
-  email: z.string().email({ message: "Invalid email" }),
-  password: z
-    .string()
-    .trim()
-    .min(1,{message: 'Password is required'})
-    .min(6, { message: "Password must be atleast 6 characters long" }),
-});
+type RegisterData = Omit<RegisterSchemaType, "repassword">;
 
-export const login = async (email: string, password: string) => {
+type ErrorArray = Error[];
+
+type CookieOptions = {
+  name: string;
+  value: string;
+  path: string;
+  maxAge: number;
+  domain: string;
+};
+
+const isErrorObject = (error: any): error is ErrorObject => {
+  return (
+    error &&
+    typeof error == "object" &&
+    "message" in error &&
+    typeof error.message == "string"
+  );
+};
+
+const isErrorArray = (error: any): error is ErrorArray => {
+  return (
+    Array.isArray(error) &&
+    "message" in error[0] &&
+    typeof error[0].message == "string"
+  );
+};
+
+const formatError = (error: any) => {
+  if (isErrorArray(error)) {
+    return {
+      error: {
+        message: error[0].message,
+      },
+      result: null,
+    };
+  } else if (isErrorObject(error)) {
+    return { error: { message: error.message }, result: null };
+  }
+
+  return { error: { message: error.message }, result: null };
+};
+
+const constructCookie = (serializedCookie: string): CookieOptions => {
+  const [cookieString, ...rest] = serializedCookie.split("; ");
+  const [cookieName, authToken] = cookieString.split("=");
+  const [maxAge, domain, path] = rest.map((str) => str.split("=")[1]);
+
+  return {
+    name: cookieName,
+    value: authToken,
+    path,
+    maxAge: Number(maxAge),
+    domain,
+  };
+};
+
+export const login = async (data: {
+  email: string;
+  password: string;
+}): Promise<{ error: ErrorObject | null; result: User | null }> => {
   try {
-    const data = {email, password}
-
-    const res = await fetch("http://localhost:3001/auth/login", {
+    const res = await fetch("http://localhost:3001/api/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
       cache: "no-store",
     });
 
+    if (!res.ok) {
+      const error = await res.json();
+      return formatError(error);
+    }
+
     const authCookie = res.headers.getSetCookie()[0];
-
-    if (authCookie && res.statusText == "OK") {
-      const [cookieString, cookiePathString] = authCookie.split("; ");
-      const [cookieName, authToken] = cookieString.split("=");
-      const cookiePath = cookiePathString.split("=")[1];
-
-      cookies().set(cookieName, authToken, { path: cookiePath });
+    if (authCookie) {
+      const cookie = constructCookie(authCookie);
+      cookies().set(cookie);
     }
+
     const result = await res.json();
-
-    if (res.statusText != "OK") {
-      throw new Error(result.message);
-    }
+    return { result, error: null };
   } catch (error: any) {
-    const message = error.message;
-    return { message };
+    console.log(error.message);
+    return formatError(error);
   }
-  redirect("/");
 };
 
-export const registerUser = async (formData: FormData) => {
+export const registerUser = async (
+  data: RegisterData
+): Promise<{ error: ErrorObject | null; result: User | null }> => {
   try {
-    const data = Object.fromEntries(formData.entries())
-    
     const res = await fetch("http://localhost:3001/api/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
       cache: "no-store",
     });
 
+    if (!res.ok) {
+      const error = await res.json();
+      return formatError(error);
+    }
+
     const authCookie = res.headers.getSetCookie()[0];
-    console.log(authCookie);
 
-    if (authCookie && res.statusText == "OK") {
-      const [cookieString, cookiePathString] = authCookie.split("; ");
-      const [cookieName, authToken] = cookieString.split("=");
-      const cookiePath = cookiePathString.split("=")[1];
-
-      console.log('setting cookie!!')
-      cookies().set(cookieName, authToken, { path: cookiePath });
+    if (authCookie) {
+      const cookie = constructCookie(authCookie);
+      cookies().set(cookie);
     }
+
     const result = await res.json();
-
-    if (res.statusText != "OK") {
-      throw new Error(result.message);
-    }
-  } catch (error) {
-    console.log(error);
+    return { error: null, result };
+  } catch (error: any) {
+    console.log(error.message);
+    return formatError(error);
   }
 };
