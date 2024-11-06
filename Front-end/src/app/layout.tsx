@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <Header />
-          <main className="bg-new-darkblue flex justify-center">
+          <main className="bg-new-darkblue flex-1 flex justify-center">
             {children}
           </main>
           <Footer />
