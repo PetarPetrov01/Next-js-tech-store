@@ -3,17 +3,16 @@ import Link from "next/link";
 import { ptSerif } from "../layout";
 import RegisterForm from "../components/auth/register-form";
 
-
 export default function RegisterPage() {
   return (
     <div className="container flex justify-center items-start py-5">
-      <section className="register flex flex-col items-center w-[85%] sm:w-[70%] md:w-[60%] mdl:w-[50%] lg:w-[45%] xl:w-[40%] mb-8 justify-start min-h-[500px] px-3 sm:px-5 py-4 rounded-3xl bg-gradient-to-tr from-[#ffcB9a22] via-[#ffcB9a11] to-[#ffcB9a22] border-new-peach border shadow-[0_0_15px_2px_rgba(255,203,154,0.3)]">
+      <section className="flex flex-col items-center justify-start w-[85%] sm:w-[80%] md:w-[70%] mdl:w-[60%] lg:w-[50%] xl:w-[45%] mb-8 min-h-[450px] px-3 sm:px-5 py-4">
         <RegisterForm ptSerif={ptSerif} />
-        <div className="flex flex-col items-center w-4/5 gap-2 pb-8 mt-4">
-          <p className="text-white">or</p>
+        <div className="flex flex-col items-center w-full gap-2 mt-4 border-t-[1px] border-[#6a6a6a]">
+          <p className="text-new-mint">or</p>
           <Link
             href="/login"
-            className="block w-[80%] py-1 text-xl text-center rounded-md bg-new-mint text-new-darkblue border-[1px] duration-150 border-new-mint hover:border-new-peach"
+            className="block py-1 text-lg text-center duration-150 text-new-mint hover:text-new-peach-90"
           >
             Login
           </Link>
