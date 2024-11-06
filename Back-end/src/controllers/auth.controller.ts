@@ -116,7 +116,7 @@ async function checkEmail(req: Request, res: Response) {
   try {
     const email = await authService.checkEmail(req.body.email);
     if (email) {
-      throw new Error("This email is already taken!");
+      throw new Error("This email is already in use!");
     }
     res.json({ email: req.body.email });
   } catch (error: any) {
