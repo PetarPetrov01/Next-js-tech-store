@@ -13,12 +13,27 @@ export const postProductSchema = z.object({
     .min(1, { message: "Model is required" })
     .min(3, { message: "Model must be atleast 3 characters long" })
     .max(15, { message: "Model must no more than 15 characters long" }),
-  price: z
-    .number({ message: "Must be a number" })
-    .min(1, { message: "Price can't be a negative number" }),
-  stock: z
-    .number({ message: "Must be a number" })
-    .min(1, { message: "Stock can't be a negative number" }),
+  price: z.union([
+    z.coerce
+      .number({ message: "Price must be a number" })
+      .positive({ message: "Price can't be a negative number" })
+      .refine(
+        (val) => {
+          const vStr = val.toString();
+          return vStr.includes(".") ? vStr.split(".")[1].length <= 2 : true;
+        },
+        { message: "Maximum precision is 2 decimal places" }
+      ),
+    z.literal("").refine((val) => false, { message: "Price is required" }),
+  ]),
+  stock: z.union([
+    z.coerce
+      .number({ message: "Stock must be a number" })
+      .positive({ message: "Stock can't be a negative number" })
+      .int({ message: "Stock must be an integer" })
+      .max(1000, { message: "Stock can't be more than 1000" }),
+    z.literal("").refine((val) => false, { message: "Stock is required" }),
+  ]),
   description: z
     .string()
     .trim()

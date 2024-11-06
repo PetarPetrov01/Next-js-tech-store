@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   Brands,
   Categories,
@@ -78,6 +78,9 @@ export const getProduct = async (prodId: string): Promise<PopulatedProduct> => {
   const res = await fetch(`${baseUrl}/products/${prodId}`, {
     cache: "no-cache",
   });
+  if(!res.ok){
+    notFound()
+  }
   return res.json();
 };
 
