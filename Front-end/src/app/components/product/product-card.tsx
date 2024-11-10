@@ -7,9 +7,9 @@ import { useState } from "react";
 import { FaRegHeart, FaRegEye } from "react-icons/fa";
 
 import useCartStore from "@/app/store/cart";
-import { PopulatedProduct } from "../../../types/Product";
+import { APIProduct } from "../../../types/Product";
 
-export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
+export default function ProductCard({ prod }: { prod: APIProduct }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -29,7 +29,7 @@ export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
       onMouseLeave={() => setIsHovered(false)}
       key={prod.id}
       className={`"duration-500 flex gap-5 ${
-        viewType == "grid" ? "w-[48%] mdl:w-[32%] flex-col" : "w-full flex-col items-center sm:items-start sm:flex-row"
+        viewType == "grid" ? "w-[48%] mdl:w-[32%] flex-col" : "w-full flex-col items-center sm:flex-row"
       }`}
     >
       <div

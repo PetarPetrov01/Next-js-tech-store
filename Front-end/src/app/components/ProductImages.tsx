@@ -2,20 +2,33 @@
 
 import useWindowWidth from "@/hooks/useWindowWidth";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import MobileProductImages from "./product/mobile-product.images";
+import { usePathname } from "next/navigation";
+import { useAuthContext } from "@/contexts/AuthProvider";
+import { RiImageEditFill } from "react-icons/ri";
+import Link from "next/link";
 
 const IMAGE_CONTAINER_WIDTH_IN_PERCENT = 23.5 / 100;
 const IMAGES_GAP_IN_PERCENT = 2 / 100;
 
-export default function ProductImages({ images }: { images: string[] }) {
+export default function ProductImages({
+  images,
+  ownerId,
+}: {
+  images: string[];
+  ownerId: string;
+}) {
   const [displayImageIndex, setDisplayImageIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const { user } = useAuthContext();
+  const [currentScrollPage, setCurrentScrollPage] = useState(1);
 
   const totalImages = images.length;
   const scrollPages = Math.ceil(totalImages / 4);
-  const [currentScrollPage, setCurrentScrollPage] = useState(1);
+  const isOwner = useMemo(() => user?.id == ownerId, [ownerId, user?.id]);
 
   const { windowWidth } = useWindowWidth();
 
@@ -55,15 +68,17 @@ export default function ProductImages({ images }: { images: string[] }) {
     }
   };
 
-  console.log(images);
-
   return (
     <div className="w-full flex flex-col items-center gap-6 overflow-hidden">
       {windowWidth < 640 ? (
-        <MobileProductImages images={images} />
+        <MobileProductImages
+          isOwner={isOwner}
+          images={images}
+          pathname={pathname}
+        />
       ) : (
         <>
-          <div className="relative w-[90%] aspect-[5/4] h-auto flex justify-center">
+          <div className="group relative w-[90%] aspect-[5/4] h-auto flex justify-center">
             <Image
               src={images[displayImageIndex] || "/no-image.png"}
               alt={`image-${displayImageIndex.toString()}`}
@@ -71,6 +86,14 @@ export default function ProductImages({ images }: { images: string[] }) {
               fill={true}
               sizes="(min-width: 1280px) 549px, (min-width: 1024px) 486px,(min-width: 768px) 42vw, 70vw"
             />
+            {isOwner && (
+              <Link
+                href={`${pathname}/images`}
+                className="absolute top-2 right-2 rounded-lg md:opacity-65 md:group-hover:opacity-90 md:group-hover:scale-110 duration-300 bg-neutral-500/25"
+              >
+                <RiImageEditFill className="text-[3em] md:text-[2.4em]" />
+              </Link>
+            )}
           </div>
           <div className="relative flex justify-center w-full">
             {currentScrollPage > 1 && (
