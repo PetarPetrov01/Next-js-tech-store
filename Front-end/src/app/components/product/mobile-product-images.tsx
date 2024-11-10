@@ -12,7 +12,7 @@ export default function MobileProductImages({
   pathname: string
 }) {
   return (
-    <div className="relative w-full flex justify-between overflow-x-scroll scrollbar-hide snap-mandatory snap-x">
+    <div className="relative w-full aspect-[5/4] h-auto flex justify-between overflow-x-scroll scrollbar-hide snap-mandatory snap-x">
       {images.map((imageUrl, i) => (
         <div
           key={i}
