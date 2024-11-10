@@ -7,6 +7,7 @@ import DesktopNav from "./desktop-nav";
 import MobileNav from "./mobile-nav";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import useMounted from "@/hooks/useMounted";
 
 export type Links = { href: string; label: string }[];
 export type LinksObject = {
@@ -28,16 +29,12 @@ const userLinks = [
 export default function Header() {
   const { user, clearAuth } = useAuthContext();
   const { windowWidth } = useWindowWidth();
-  const [hasMounted, setHasMounted] = useState(false);
+  const mounted = useMounted()
   const router = useRouter();
 
   const links = useMemo(() => {
     return user?.email ? userLinks : guestLinks;
   }, [user]);
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
 
   async function logout() {
     try {
@@ -66,10 +63,11 @@ export default function Header() {
             src="/logo-text.png"
             alt="logo"
             fill={true}
+            sizes="(min-width: 1280px) 96px, (min-width: 1024px) 85px,(min-width: 768px) 78px, 72px"
             className="object-contain"
           />
         </Link>
-        {hasMounted && windowWidth < 640 ? (
+        {mounted && windowWidth < 640 ? (
           <MobileNav links={links} user={user} logout={logout} />
         ) : (
           <DesktopNav links={links} user={user} logout={logout} />
