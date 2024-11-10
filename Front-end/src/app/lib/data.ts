@@ -35,7 +35,6 @@ export const getProds = async (
 };
 
 export const getCategories = async (): Promise<Categories> => {
-  console.log("fetcihg cats...");
   const res = await fetch(`${baseUrl}/products/categories`, {
     next: { revalidate: 50 },
   });

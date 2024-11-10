@@ -3,6 +3,8 @@
 import { cookies } from "next/headers";
 import { User } from "@/types/User";
 import { RegisterSchemaType } from "@/zodSchemas/registerSchema";
+import { postProductSchemaType } from "@/zodSchemas/postProductSchema";
+import { Product } from "@/types/Product";
 
 const baseUrl = "http://localhost:3001/api";
 
@@ -131,7 +133,7 @@ export const checkEmail = async (
   email: string
 ): Promise<{ isFree: boolean; error: { message: string } | null }> => {
   const res = await fetch(`${baseUrl}/auth/checkEmail`, {
-    method: 'post',
+    method: "post",
     body: JSON.stringify({ email }),
     headers: { "Content-Type": "application/json" },
     cache: "no-cache",
@@ -145,4 +147,32 @@ export const checkEmail = async (
   console.log(result);
 
   return { isFree: true, error: null };
+};
+
+export const postProduct = async (
+  data: postProductSchemaType
+): Promise<{ error: ErrorObject | null; result: Product | null }> => {
+  try {
+    const res = await fetch("http://localhost:3001/api/products/upload", {
+      method: "post",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookies().toString(),
+      },
+      cache: "no-cache",
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      return { error: formatError(error), result: null };
+    }
+
+    const product: Product = await res.json();
+    return { result: product, error: null };
+  } catch (error: any) {
+    console.log(error.message);
+    return { error: formatError(error), result: null };
+  }
 };

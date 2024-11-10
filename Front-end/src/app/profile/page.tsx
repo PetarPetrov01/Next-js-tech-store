@@ -4,12 +4,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Profile() {
-  //Fetch profile
-  console.log("Profile page is fetching...");
-  console.log(cookies().toString());
   const res = await fetch("http://localhost:3001/api/auth/profile", {
     method: "GET",
-    // credentials: "include",
     headers: { Cookie: cookies().toString() },
     cache: "no-cache",
   });
