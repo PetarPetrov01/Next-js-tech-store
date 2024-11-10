@@ -2,6 +2,7 @@
 
 import { notFound, redirect } from "next/navigation";
 import {
+  APIProduct,
   Brands,
   Categories,
   PopulatedProduct,
@@ -12,7 +13,7 @@ const baseUrl = "http://localhost:3001/api";
 
 export const getProds = async (
   queryParams: URLSearchParams
-): Promise<PopulatedProduct[]> => {
+): Promise<APIProduct[]> => {
   const queryParamsArr: string[] = [];
 
   if (queryParams) {

@@ -1,8 +1,8 @@
-import { APIProduct, PopulatedProduct, Product } from "@/types/Product";
+import { APIProduct, PopulatedProduct } from "@/types/Product";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface CartProduct extends PopulatedProduct {
+interface CartProduct extends APIProduct {
   quantity: number;
 }
 

@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { getProds } from "../lib/data";
 import ProductCard from "./product/product-card";
-import { PopulatedProduct } from "@/types/Product";
+import { APIProduct } from "@/types/Product";
 import { useSearchParams } from "next/navigation";
 
 export default function ProductsList() {
-  const [products, setProducts] = useState<PopulatedProduct[]>([]);
+  const [products, setProducts] = useState<APIProduct[]>([]);
   const searchParams = useSearchParams();
 
   useEffect(() => {

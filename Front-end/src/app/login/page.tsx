@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { ptSerif } from "../layout";
 import LoginForm from "../components/auth/login-form";
-import Image from "next/image";
 import Banner from "../components/ui/banner";
 
 export default function LoginPage() {
