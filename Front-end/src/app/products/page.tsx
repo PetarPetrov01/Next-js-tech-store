@@ -10,25 +10,24 @@ export const metadata: Metadata = {
   title: "Products",
 };
 
-const validCategories = [0, 1, 2, 3]; //Consider reading from the API
-
 export default async function Page({ searchParams }: { searchParams: any }) {
   const category = searchParams.category;
   const categories = await getCategories();
 
-  if (category && !validCategories.includes(Number(category))) {
+  if (category && !categories.some((cat) => cat.id == category)) {
     notFound();
   }
+
   return (
-    <section className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center">
       <Banner>
         <h1 className="text-black z-[1] uppercase">Catalog</h1>
       </Banner>
 
-      <div className="container max-w-[1450px] flex flex-col items-center py-20 px-4">
+      <section className="container max-w-[1450px] flex flex-col items-center py-20 px-4">
         <h2 className="text-[3rem] pb-10">Products</h2>
         <ProductsLayout categories={categories} />
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

@@ -1,15 +1,11 @@
 import { BsGrid3X3GapFill } from "react-icons/bs";
-import BrandFilterWrapper from "./BrandFilterWrapper";
 import Filter from "./Filter";
 import LayoutToggle from "./product/product-layout-toggle";
 import { MdViewList } from "react-icons/md";
 import SearchBar from "./SearchBar";
 import Sort from "./Sort";
 import ProductsList from "./ProductsList";
-import { Suspense, useEffect, useMemo, useState } from "react";
-import { getBrandsByCategory } from "../lib/data";
-import { useSearchParams } from "next/navigation";
-import { Brands, Categories } from "@/types/Product";
+import { Categories } from "@/types/Product";
 import MobileFilters from "./product/mobile-filters";
 
 export default function ProductsLayout({
