@@ -150,11 +150,15 @@ export const checkEmail = async (
 };
 
 export const postProduct = async (
-  data: postProductSchemaType
+  data: postProductSchemaType,
+  productId: string | null = null
 ): Promise<{ error: ErrorObject | null; result: Product | null }> => {
   try {
-    const res = await fetch("http://localhost:3001/api/products/upload", {
-      method: "post",
+    const method = productId ? "put" : "post";
+    const endpoint = productId ? `${productId}/edit` : "upload";
+
+    const res = await fetch(`${baseUrl}/products/${endpoint}`, {
+      method,
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
@@ -175,4 +179,8 @@ export const postProduct = async (
     console.log(error.message);
     return { error: formatError(error), result: null };
   }
+};
+
+export const editProduct = (data: postProductSchemaType, productId: string) => {
+  return postProduct(data, productId);
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +17,8 @@ import AddNewCategoryDialog from "./dialogs/add-new-category-dialog";
 import AddNewBrandDialog from "./dialogs/add-new-brand-dialog";
 import ProductPostSucessDialog from "./dialogs/product-post-success-dialog";
 
-import { Categories, Product } from "@/types/Product";
+import { Categories, PopulatedProduct, Product } from "@/types/Product";
+import { editProduct, postProduct } from "@/app/lib/actions";
 
 const inputWrapperPseudoElClasses =
   "before:absolute before:top-0 before:left-0 before:w-full before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
@@ -25,11 +27,14 @@ const buttonWrapperPseudoElClasses =
 
 export default function PostProductForm({
   categories,
+  product,
 }: {
   categories: { id: number; name: string }[];
+  product: PopulatedProduct | null;
 }) {
   const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const [cats, setCats] = useState(categories);
   const [isLoading, setIsLoading] = useState(false);
   const [createdProd, setCreatedProd] = useState<{
@@ -58,14 +63,23 @@ export default function PostProductForm({
     reset,
   } = useForm<postProductSchemaType>({
     resolver: zodResolver(postProductSchema),
-    defaultValues: {
-      brandId: 0,
-      categoryId: 0,
-      model: "",
-      price: "",
-      stock: "",
-      description: "",
-    },
+    defaultValues: product
+      ? {
+          brandId: product.brandId,
+          categoryId: product.categoryId,
+          model: product.model,
+          price: product.price,
+          stock: product.stock,
+          description: product.description,
+        }
+      : {
+          brandId: 0,
+          categoryId: 0,
+          model: "",
+          price: "",
+          stock: "",
+          description: "",
+        },
   });
 
   const watchedCatId = useWatch({
@@ -108,25 +122,22 @@ export default function PostProductForm({
 
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
-    const res = await fetch("http://localhost:3001/api/products/upload", {
-      method: "post",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-      cache: "no-cache",
-      credentials: "include",
-    });
 
-    if (!res.ok) {
-      const error = await res.json();
-      setError("root.apiError", { message: error.message });
+    const { result, error } = product?.id
+      ? await editProduct(data, product.id)
+      : await postProduct(data);
+
+    if (error) {
+      setError("root.apiError", error);
       setIsLoading(false);
       return;
     }
-
-    const product: Product = await res.json();
-    setIsLoading(false);
-    setCreatedProd({ id: product.id, name: product.name });
-    reset();
+    if (result) {
+      const product: Product = result;
+      setCreatedProd(product);
+      setIsLoading(false);
+      reset();
+    }
   });
 
   return (
