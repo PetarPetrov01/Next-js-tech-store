@@ -45,6 +45,17 @@ async function uploadProduct(req: CustomRequest, res: Response) {
   }
 }
 
+async function editProduct(req: CustomRequest, res: Response) {
+  try {
+    const data = req.body;
+    const productId = req.params.id;
+    const editedProduct = await productService.editProduct(data, productId);
+    res.status(200).json(editedProduct);
+  } catch (error: any) {
+    res.status(400).json({ mesage: error.mesage });
+  }
+}
+
 async function getProductImages(req: CustomRequest, res: Response) {
   try {
     const productWithImages = await productService.checkProductExistence(
@@ -61,5 +72,6 @@ export default {
   getProducts,
   getProductById,
   uploadProduct,
+  editProduct,
   getProductImages,
 };
