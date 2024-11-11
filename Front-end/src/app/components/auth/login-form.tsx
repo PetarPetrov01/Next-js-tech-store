@@ -1,25 +1,20 @@
 "use client";
 
-import { NextFont } from "next/dist/compiled/@next/font";
-import { useFormState } from "react-dom";
-import { set, z } from "zod";
-import { useForm } from "react-hook-form";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthContext } from "@/contexts/AuthProvider";
 import { useRouter } from "next/navigation";
+import { NextFont } from "next/dist/compiled/@next/font";
+
+import { HTMLAttributes, useLayoutEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { LoginSchemaType, UserLoginSchema } from "@/zodSchemas/loginSchema";
+
+import { login } from "@/app/lib/actions";
 import { checkAuth } from "@/app/utils/checkAuth";
+import { useAuthContext } from "@/contexts/AuthProvider";
 
-const UserLoginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email" }),
-  password: z.string().trim().min(1, { message: "Password is required" }),
-});
-
-type Inputs = z.infer<typeof UserLoginSchema>;
+const inputWrapperPseudoClasses =
+  "before:absolute before:top-0 before:left-0 before:w-full before:duration-150 before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
 
 export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +26,6 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   useLayoutEffect(() => {
     if (user?.email) {
       const initAuth = async () => {
-        console.log('Login form is fetching...')
         const user = await checkAuth();
         if (!user?.email) {
           clearAuth();
@@ -45,9 +39,9 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields, isValid },
     setError,
-  } = useForm<Inputs>({
+  } = useForm<LoginSchemaType>({
     resolver: zodResolver(UserLoginSchema),
     defaultValues: {
       email: "",
@@ -58,84 +52,96 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
 
-    const res = await fetch("http://localhost:3001/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      cache: "no-store",
-    });
+    const { error, result } = await login(data);
 
-    if (!res.ok) {
-      setError("root.apiError", { message: "Invalid email or password!" });
+    if (error) {
+      setError("root.apiError", error);
       setIsLoading(false);
       return;
     }
 
-    const result = await res.json();
-    setAuth(result);
-    setIsLoading(false);
-    router.replace("/");
+    console.log(result);
+    if (result) {
+      console.log("in result");
+      setAuth(result);
+      setIsLoading(false);
+      router.replace("/");
+    }
   });
 
   return (
     <form
       ref={formRef}
-      // action={dispatch}
       onSubmit={processSubmit}
-      className="login flex flex-col items-center justify-start gap-8 w-[90%] sm:w-[80%] "
+      className="login flex flex-col items-center justify-start gap-8 w-full"
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
-        <h1 className="text-3xl">Login to your account</h1>
+        <h1 className="text-[2rem]">Login to your account</h1>
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.email ? "after:w-full after:border-[1px]" : "after:w-0"
+        } `}
+      >
         <input
           type="text"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-new-mint"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="Email"
           {...register("email")}
         />
         {errors.email && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] font-thin text-new-peach-90">
             {errors.email.message}
           </span>
         )}
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.password
+            ? "after:w-full after:border-[1px]"
+            : "after:w-[0]"
+        } `}
+      >
         <input
           type="password"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-new-mint"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="Password"
           {...register("password")}
         />
         {errors.password && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] font-thin text-new-peach-90">
             {errors.password.message}
           </span>
         )}
         {errors.root?.apiError && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] font-thin text-new-peach-90">
             {errors.root?.apiError.message}
           </span>
         )}
       </div>
-      <div className="w-[80%] relative ">
-        {/* <p className="absolute -top-6 text-center w-[100%]">{state?.message}</p> */}
-        <button
-          disabled={isLoading}
-          className="relative w-[100%] py-1 rounded-md border-new-mint border-[1px] duration-150 bg-new-mint text-new-darkblue after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-sandstone disabled:cursor-default"
-        >
-          {isLoading ? (
-            <div className="flex flex-row justify-center gap-2 p-1.5">
-              <div className="w-3 h-3 rounded-full bg-white animate-bounce"></div>
-              <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
-              <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
-            </div>
-          ) : (
-            <p className="text-xl">Login</p>
-          )}
-        </button>
-      </div>
+      <button
+        type="submit"
+        disabled={isLoading}
+        className={`relative flex overflow-hidden items-stretch uppercase py-2.5 px-6 z-10 border-b-2 duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
+          isValid
+            ? "bg-neutral-700  border-new-peach-90 hover:after:w-full"
+            : "bg-neutral-600 border-new-midnight-100 hover:text-white"
+        } ${
+          isLoading
+            ? "after:w-full pointer-events-none"
+            : ""
+        }`}
+      >
+        {isLoading ? (
+          <div className="flex flex-row justify-around gap-1.5 py-[0.4rem] px-0.5">
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce"></div>
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+          </div>
+        ) : (
+          <p className="text-lg uppercase">Login</p>
+        )}
+      </button>
     </form>
   );
 }

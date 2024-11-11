@@ -1,7 +1,8 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
+  APIProduct,
   Brands,
   Categories,
   PopulatedProduct,
@@ -12,7 +13,7 @@ const baseUrl = "http://localhost:3001/api";
 
 export const getProds = async (
   queryParams: URLSearchParams
-): Promise<PopulatedProduct[]> => {
+): Promise<APIProduct[]> => {
   const queryParamsArr: string[] = [];
 
   if (queryParams) {
@@ -34,7 +35,6 @@ export const getProds = async (
 };
 
 export const getCategories = async (): Promise<Categories> => {
-  console.log("fetcihg cats...");
   const res = await fetch(`${baseUrl}/products/categories`, {
     next: { revalidate: 50 },
   });
@@ -78,6 +78,9 @@ export const getProduct = async (prodId: string): Promise<PopulatedProduct> => {
   const res = await fetch(`${baseUrl}/products/${prodId}`, {
     cache: "no-cache",
   });
+  if(!res.ok){
+    notFound()
+  }
   return res.json();
 };
 

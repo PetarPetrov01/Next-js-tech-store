@@ -36,7 +36,6 @@ async function createBrand(req: Request, res: Response) {
     res.json(brand);
   } catch (error: any) {
     if (error instanceof PrismaClientKnownRequestError) {
-      console.log(error.code);
       if (error.code == "P2002") {
         return res
           .status(400)

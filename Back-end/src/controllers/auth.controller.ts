@@ -51,7 +51,6 @@ async function register(
       password
     );
 
-
     res.cookie("authToken", authToken, cookieOptions);
 
     res.status(201).json(user);
@@ -113,6 +112,18 @@ async function updateUsername(req: CustomRequest, res: Response) {
   }
 }
 
+async function checkEmail(req: Request, res: Response) {
+  try {
+    const email = await authService.checkEmail(req.body.email);
+    if (email) {
+      throw new Error("This email is already in use!");
+    }
+    res.json({ email: req.body.email });
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 const authController = {
   login,
   register,
@@ -120,6 +131,7 @@ const authController = {
   logout,
   getProfile,
   updateUsername,
+  checkEmail,
 };
 
 export default authController;

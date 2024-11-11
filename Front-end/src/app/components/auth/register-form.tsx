@@ -1,52 +1,23 @@
 "use client";
 
 import { NextFont } from "next/dist/compiled/@next/font";
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+
+import { useRef, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { useAuthContext } from "@/contexts/AuthProvider";
+import { checkEmail, registerUser } from "@/app/lib/actions";
+import useDebouncedEffect from "@/hooks/useDebouncedEffect";
 
-const UserRegisterSchema = z
-  .object({
-    firstName: z
-      .string()
-      .trim()
-      .min(1, { message: "First name is required" })
-      .min(3, { message: "First name must be atleast 3 characters long" }),
-    lastName: z
-      .string()
-      .trim()
-      .min(1, { message: "Last name is required" })
-      .min(3, { message: "Last name must be atleast 3 characters long" }),
-    email: z
-      .string()
-      .trim()
-      .min(1, { message: "Email is required" })
-      .email({ message: "Invalid email" }),
-    username: z
-      .string()
-      .trim()
-      .min(1, { message: "Username is required" })
-      .min(3, { message: "Username must be atleast 3 characters long" }),
-    password: z
-      .string()
-      .trim()
-      .min(1, { message: "Password is required" })
-      .min(6, { message: "Password must be atleast 6 characters long" }),
-    repassword: z
-      .string()
-      .trim()
-      .min(1, { message: "Password is required" })
-      .min(6, { message: "Password must be atleast 6 characters long" }),
-  })
-  .refine((data) => data.password == data.repassword, {
-    message: "Passwords do not match",
-    path: ["repassword"],
-  });
+import {
+  RegisterSchemaType,
+  UserRegisterSchema,
+} from "@/zodSchemas/registerSchema";
 
-type Inputs = z.infer<typeof UserRegisterSchema>;
+const inputWrapperPseudoClasses =
+  "before:absolute before:top-0 before:left-0 before:w-full before:duration-150 before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
 
 export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,12 +26,13 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   const { setAuth } = useAuthContext();
 
   const {
-    formState: { errors },
+    formState: { errors, dirtyFields, isValid },
     handleSubmit,
     register,
-    reset,
     setError,
-  } = useForm<Inputs>({
+    control,
+    clearErrors,
+  } = useForm<RegisterSchemaType>({
     resolver: zodResolver(UserRegisterSchema),
     defaultValues: {
       firstName: "",
@@ -72,132 +44,190 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     },
   });
 
+  const watchedEmail = useWatch({ control, name: "email", defaultValue: "" });
+
+  useDebouncedEffect(
+    () => {
+      if (watchedEmail.length > 6) {
+        const emailCheck =
+          UserRegisterSchema._def.schema.shape.email.safeParse(watchedEmail);
+        if (emailCheck.success) {
+          (async () => {
+            const { error, isFree } = await checkEmail(watchedEmail);
+            if (error) {
+              return setError("email", error);
+            }
+          })();
+          clearErrors("email");
+        }
+      }
+    },
+    500,
+    [watchedEmail]
+  );
+
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
-    const res = await fetch("http://localhost:3001/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      cache: "no-store",
-    });
 
-    if (!res.ok) {
-      //Check the error from the res itself
-      setError("root.apiError", { message: "Registration failed" });
+    const { repassword, ...registerData } = data;
+    const { error, result } = await registerUser(registerData);
+
+    if (error) {
+      setError("root.apiError", error);
       setIsLoading(false);
+      return;
     }
 
-    const result = await res.json();
-    setAuth(result);
-    setIsLoading(false);
-    router.replace("/");
+    if (result) {
+      setAuth(result);
+      setIsLoading(false);
+      router.replace("/");
+    }
   });
 
   return (
     <form
       onSubmit={processSubmit}
       ref={formRef}
-      className="register flex flex-col items-center justify-start gap-8  w-[90%] sm:w-[80%] "
+      className="register flex flex-col items-center justify-start gap-8 w-full"
     >
       <div className={`heading pt-8 ${ptSerif.className}`}>
-        <h1 className="text-3xl text-new-peach-100">Register your account</h1>
+        <h1 className="text-[2rem] text-new-mint">Register your account</h1>
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.email ? "after:w-full after:border-[1px]" : "after:w-[0]"
+        } `}
+      >
         <input
           type="text"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="Email"
           {...register("email")}
         />
         {errors.email && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.email.message}
           </span>
         )}
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.firstName
+            ? "after:w-full after:border-[1px]"
+            : "after:w-[0]"
+        } `}
+      >
         <input
           type="text"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="First name"
           {...register("firstName")}
         />
         {errors.firstName && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.firstName.message}
           </span>
         )}
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.lastName
+            ? "after:w-full after:border-[1px]"
+            : "after:w-[0]"
+        } `}
+      >
         <input
           type="text"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="Last name"
           {...register("lastName")}
         />
         {errors.lastName && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.lastName.message}
           </span>
         )}
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.username
+            ? "after:w-full after:border-[1px]"
+            : "after:w-[0]"
+        } `}
+      >
         <input
           type="text"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="Username"
           {...register("username")}
         />
         {errors.username && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.username.message}
           </span>
         )}
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.password
+            ? "after:w-full after:border-[1px]"
+            : "after:w-[0]"
+        } `}
+      >
         <input
           type="password"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="Password"
           {...register("password")}
         />
         {errors.password && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.password.message}
           </span>
         )}
       </div>
-      <div className="relative flex flex-col input-group w-[80%]">
+      <div
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoClasses} ${
+          dirtyFields.repassword
+            ? "after:w-full after:border-[1px]"
+            : "after:w-[0]"
+        } `}
+      >
         <input
           type="password"
-          className="text-new-darkblue rounded-md min-h-9 w-[100%] text-lg border-0 px-3 focus:outline-none focus:outline-[1px] focus:outline-peach focus:border-0"
+          className="text-lg relative border-0 w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
           placeholder="Repeat password"
           {...register("repassword")}
         />
         {errors.repassword && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.repassword.message}
           </span>
         )}
         {errors.root?.apiError && (
-          <span className="absolute bottom-[-1.5em]">
+          <span className="absolute bottom-[-1.5em] text-new-peach-90">
             {errors.root.apiError.message}
           </span>
         )}
       </div>
       <button
+        type="submit"
         disabled={isLoading}
-        className="relative flex flex-col w-[80%] py-1 text-xl rounded-md border-new-peach border-[1px] duration-150 bg-new-peach-100 text-new-darkblue after:content-[''] after:absolute after:bottom-[-1em] after:block after:h-[1px] after:bg-gray-200 after:w-[100%] enabled:hover:border-new-mint disabled:cursor-default"
+        className={`relative flex overflow-hidden items-stretch uppercase py-2.5 px-6 z-10 border-b-2 duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
+          isValid
+            ? "bg-neutral-700  border-new-peach-90 hover:after:w-full"
+            : "bg-neutral-600 border-new-midnight-100 hover:text-white"
+        } ${isLoading ? "after:w-full pointer-events-none" : ""}`}
       >
         {isLoading ? (
-          <div className="flex flex-row justify-center gap-2 p-1.5">
-            <div className="w-3 h-3 rounded-full bg-white animate-bounce"></div>
-            <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
-            <div className="w-3 h-3 rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+          <div className="flex flex-row justify-around gap-1.5 py-[0.4rem] px-0.5">
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce"></div>
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
           </div>
         ) : (
-          <p className="text-xl">Register</p>
+          <p className="text-lg uppercase">Register</p>
         )}
       </button>
     </form>

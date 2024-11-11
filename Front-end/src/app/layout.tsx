@@ -7,7 +7,7 @@ import { AuthProvider } from "@/contexts/AuthProvider";
 
 export const ptSerif = PT_Serif({ weight: ["400"], subsets: ["latin"] });
 export const sourseSans = Source_Sans_3({
-  weight: ["400", "500", "600", "700"],
+  weight: ["300","400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-source-sans",
 });
@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <Header />
-          <main className="bg-new-darkblue flex justify-center">
+          <main className="bg-new-darkblue flex-1 flex justify-center">
             {children}
           </main>
           <Footer />

@@ -1,27 +1,40 @@
 "use client";
 
-import { getSortedBrands } from "@/app/lib/data";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { IoWarning } from "react-icons/io5";
+
 import {
   postProductSchema,
   postProductSchemaType,
 } from "@/zodSchemas/postProductSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { getSortedBrands } from "@/app/lib/data";
 
-import { IoWarning } from "react-icons/io5";
 import AddNewCategoryDialog from "./dialogs/add-new-category-dialog";
-import { Categories, Product } from "@/types/Product";
 import AddNewBrandDialog from "./dialogs/add-new-brand-dialog";
 import ProductPostSucessDialog from "./dialogs/product-post-success-dialog";
 
+import { Categories, PopulatedProduct, Product } from "@/types/Product";
+import { editProduct, postProduct } from "@/app/lib/actions";
+
+const inputWrapperPseudoElClasses =
+  "before:absolute before:top-0 before:left-0 before:w-full before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
+const buttonWrapperPseudoElClasses =
+  "before:absolute before:top-0 before:left-0 before:w-full before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-1/2 after:-translate-x-1/2 after:top-0 after:h-full after:duration-500 after:w-0 after:ease-in-out after:border-new-peach-80 after:z-10 hover:after:border-[1px] hover:after:w-full";
+
 export default function PostProductForm({
   categories,
+  product,
 }: {
   categories: { id: number; name: string }[];
+  product: PopulatedProduct | null;
 }) {
   const [brands, setBrands] = useState<{ id: number; name: string }[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const [cats, setCats] = useState(categories);
   const [isLoading, setIsLoading] = useState(false);
   const [createdProd, setCreatedProd] = useState<{
@@ -47,8 +60,26 @@ export default function PostProductForm({
     control,
     setError,
     handleSubmit,
+    reset,
   } = useForm<postProductSchemaType>({
     resolver: zodResolver(postProductSchema),
+    defaultValues: product
+      ? {
+          brandId: product.brandId,
+          categoryId: product.categoryId,
+          model: product.model,
+          price: product.price,
+          stock: product.stock,
+          description: product.description,
+        }
+      : {
+          brandId: 0,
+          categoryId: 0,
+          model: "",
+          price: "",
+          stock: "",
+          description: "",
+        },
   });
 
   const watchedCatId = useWatch({
@@ -91,24 +122,22 @@ export default function PostProductForm({
 
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
-    const res = await fetch("http://localhost:3001/api/products/upload", {
-      method: "post",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-      cache: "no-cache",
-      credentials: "include",
-    });
 
-    if (!res.ok) {
-      const error = await res.json();
-      setError("root.apiError", { message: error.message });
+    const { result, error } = product?.id
+      ? await editProduct(data, product.id)
+      : await postProduct(data);
+
+    if (error) {
+      setError("root.apiError", error);
       setIsLoading(false);
       return;
     }
-
-    const product: Product = await res.json();
-    setIsLoading(false);
-    setCreatedProd({ id: product.id, name: product.name });
+    if (result) {
+      const product: Product = result;
+      setCreatedProd(product);
+      setIsLoading(false);
+      reset();
+    }
   });
 
   return (
@@ -122,11 +151,11 @@ export default function PostProductForm({
         setShowAddCategory={setShowAddCategory}
         onAddNewCategory={onAddNewCategory}
       />
-      <div className="relative w-[90%] flex justify-between gap-4">
+      <div className="relative w-full flex justify-between gap-4">
         <select
           {...register("categoryId", { valueAsNumber: true })}
-          className={`bg-transparent text-xl border-[2px] basis-[60%] px-2 py-1 ${
-            watchedCatId != 0 ? "border-new-peach-100" : "border-new-mint"
+          className={`bg-transparent text-xl border-[1px] basis-[60%] py-2 px-3 cursor-pointer ${
+            watchedCatId != 0 ? "border-new-peach-90" : "border-[#6a6a6a]"
           }`}
           defaultValue={0}
         >
@@ -153,11 +182,13 @@ export default function PostProductForm({
             {errors.categoryId.message}
           </span>
         )}
-        <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
+        <div
+          className={`bg-transparent text-xl relative p-0.5 z-0 ${buttonWrapperPseudoElClasses}`}
+        >
           <button
             type="button"
             onClick={() => setShowAddCategory(true)}
-            className="relative bg-new-darkblue px-2 py-1 z-20 "
+            className="relative bg-new-darkblue px-3 py-2 z-20"
           >
             Add new category
           </button>
@@ -168,11 +199,11 @@ export default function PostProductForm({
         setShowAddBrand={setShowAddBrand}
         onAddNewBrand={onAddNewBrand}
       />
-      <div className="relative w-[90%] flex justify-between gap-4">
+      <div className="relative w-full flex justify-between gap-4">
         <select
           {...register("brandId", { valueAsNumber: true })}
-          className={`bg-transparent text-xl border-[2px] basis-[60%] px-2 py-1 ${
-            wathedBrandId != 0 ? "border-new-peach-100" : "border-new-mint"
+          className={`bg-transparent text-xl border-[1px] basis-[60%] py-2 px-3 cursor-pointer ${
+            wathedBrandId != 0 ? "border-new-peach-90" : "border-[#6a6a6a]"
           }`}
           defaultValue={0}
         >
@@ -200,26 +231,28 @@ export default function PostProductForm({
             {errors.brandId.message}
           </span>
         )}
-        <div className="group text-xl relative p-0.5 bg-new-mint after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2  after:w-0 after:h-full after:bg-new-peach-100 after:duration-700 hover:after:w-full after:z-10">
+        <div
+          className={`bg-transparent text-xl relative p-0.5 z-0 ${buttonWrapperPseudoElClasses}`}
+        >
           <button
             onClick={(e) => setShowAddBrand(true)}
             type="button"
-            className="relative bg-new-darkblue px-2 py-1 z-20 "
+            className="relative bg-new-darkblue px-3 py-2 z-20"
           >
             Add new brand
           </button>
         </div>
       </div>
       <div
-        className={`w-[90%] relative bg-new-mint p-0.5 after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
-          dirtyFields.model && "after:w-full"
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoElClasses} ${
+          dirtyFields.model ? "after:w-full after:border-[1px]" : "after:w-0"
         } `}
       >
         <input
           type="text"
           {...register("model")}
           placeholder="Model"
-          className="text-xl relative w-full h-full bg-new-darkblue outline-none px-2 py-1 z-20"
+          className="text-lg relative w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
         />
         {errors.model && (
           <>
@@ -234,17 +267,17 @@ export default function PostProductForm({
         )}
       </div>
       <div
-        className={`w-[90%] relative bg-new-mint p-0.5 after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
-          dirtyFields.price && "after:w-full"
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoElClasses} ${
+          dirtyFields.price ? "after:w-full after:border-[1px]" : "after:w-0"
         } `}
       >
         <input
           {...register("price", {
             valueAsNumber: true,
           })}
-          type="number"
+          type="string"
           placeholder="Price"
-          className=" text-xl relative w-full h-full bg-new-darkblue outline-none px-2 py-1 z-20"
+          className="text-lg relative w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
         />
         {errors.price && (
           <>
@@ -259,9 +292,9 @@ export default function PostProductForm({
         )}
       </div>
       <div
-        className={`w-[90%] relative bg-new-mint p-0.5 after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
-          dirtyFields.stock && "after:w-full"
-        }`}
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoElClasses} ${
+          dirtyFields.stock ? "after:w-full after:border-[1px]" : "after:w-0"
+        } `}
       >
         <input
           type="number"
@@ -269,7 +302,7 @@ export default function PostProductForm({
             valueAsNumber: true,
           })}
           placeholder="Stock"
-          className=" text-xl relative w-full h-full bg-new-darkblue outline-none px-2 py-1 z-20"
+          className="text-lg relative w-full h-full bg-new-darkblue outline-none py-2 px-3 z-20"
         />
         {errors.stock && (
           <>
@@ -284,14 +317,16 @@ export default function PostProductForm({
         )}
       </div>
       <div
-        className={`w-[90%] relative bg-new-mint p-[2px_2px_1px_2px] after:absolute after:top-0 after:left-0 after:w-0 after:h-full after:duration-700 after:ease-in-out after:bg-new-peach-100 after:z-0 focus-within:after:w-full ${
-          dirtyFields.description && "after:w-full"
+        className={`w-full p-[1px] flex flex-col relative bg-transparent z-0 ${inputWrapperPseudoElClasses} ${
+          dirtyFields.description
+            ? "after:w-full after:border-[1px]"
+            : "after:w-0"
         }`}
       >
         <textarea
           {...register("description")}
           placeholder="Description"
-          className="relative text-xl w-full bg-new-darkblue min-h-20 max-h-[180px] outline-none px-2 py-1 z-20"
+          className="relative text-lg w-full bg-new-darkblue min-h-20 max-h-[180px] outline-none px-2 py-1 z-20"
         />
         {errors.description && (
           <>
@@ -307,13 +342,22 @@ export default function PostProductForm({
       </div>
       <button
         type="submit"
+        disabled={isLoading}
         className={`relative capitalize py-2 px-5 z-10 text-lg duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
           isValid
             ? "bg-neutral-700 border-b-2 border-new-peach-90 hover:after:w-full"
             : "bg-neutral-500 hover:text-white"
-        }`}
+        } ${isLoading ? "after:w-full pointer-events-none" : ""}`}
       >
-        Next
+        {isLoading ? (
+          <div className="flex flex-row justify-around gap-1.5 py-[0.4rem] px-0.5">
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce"></div>
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
+            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
+          </div>
+        ) : (
+          <p className="text-lg uppercase">Post</p>
+        )}
       </button>
       {errors.root?.apiError && (
         <span className="absolute text-[0.9em] bottom-[-1.5em] left-1/2 -translate-x-1/2 text-red-400">

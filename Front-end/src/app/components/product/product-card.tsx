@@ -7,9 +7,9 @@ import { useState } from "react";
 import { FaRegHeart, FaRegEye } from "react-icons/fa";
 
 import useCartStore from "@/app/store/cart";
-import { PopulatedProduct } from "../../../types/Product";
+import { APIProduct } from "../../../types/Product";
 
-export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
+export default function ProductCard({ prod }: { prod: APIProduct }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -28,12 +28,12 @@ export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       key={prod.id}
-      className={`"duration-500 flex gap-5 ${
-        viewType == "grid" ? "w-[48%] mdl:w-[32%] flex-col" : "w-full flex-col items-center sm:items-start sm:flex-row"
+      className={`duration-500 flex gap-5 ${
+        viewType == "grid" ? "w-[48%] mdl:w-[32%] flex-col" : "w-full flex-col items-center sm:flex-row"
       }`}
     >
       <div
-        className={`relative flex flex-col items-center justify-start gap-2  p-3 py-8 shadow-s duration-100 z-10 before:absolute before:top-0 before:left-0 before:right-0 before:w-full  before:duration-500 before:z-[-1] ${
+        className={`relative flex flex-col items-center justify-start gap-2 px-3 py-8 shadow-s duration-100 z-10 before:absolute before:top-0 before:left-0 before:right-0 before:w-full  before:duration-500 before:z-[-1] ${
           viewType == "grid" ? "" : "w-2/3 sm:w-1/3"
         } ${
           isHovered
@@ -51,7 +51,7 @@ export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
             alt={prod.name}
             width={200}
             height={200}
-            className="w-[92%]"
+            className="w-[92%] aspect-[4/3]"
           />
         </div>
         <div
@@ -82,8 +82,8 @@ export default function ProductCard({ prod }: { prod: PopulatedProduct }) {
         </div>
       </div>
       <div
-        className={`flex flex-col duration-150 gap-2 ${
-          viewType == "grid" ? "items-center" : "items-center justify-center sm:items-start"
+        className={`flex flex-col duration-150 gap-2 items-center ${
+          viewType == "grid" ? "" : "justify-center sm:items-start"
         }`}
       >
         <h2 className="text-2xl">{prod.name}</h2>

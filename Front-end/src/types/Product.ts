@@ -15,11 +15,11 @@ export type Product = {
 };
 
 export type APIProduct = Product & {
-  _ownerId: string; // Not yet returned from BE
+  ownerId: string;
 };
 
 export type PopulatedProduct = Omit<APIProduct, "_ownerId"> & {
-  _ownerId: User;
+  ownerId: User;
 };
 
 export type ProductWithImages = {

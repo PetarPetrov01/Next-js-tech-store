@@ -127,7 +127,6 @@ async function deleteProductImages(req: CustomRequest, res: Response) {
     ];
 
     deletedFromCloudinary.forEach((img, index) => {
-      console.log(img.result);
       if (img.result == "ok") {
         successfullyDeletedURLs.push(imageUrls[index]);
       } else {

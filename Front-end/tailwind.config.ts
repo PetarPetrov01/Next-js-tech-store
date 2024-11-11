@@ -15,11 +15,11 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontFamily: {
-        "source-sans": ['var(--font-source-sans)'],
-        "playfair-display": ['var(--font-playfair-display)']
+        "source-sans": ["var(--font-source-sans)"],
+        "playfair-display": ["var(--font-playfair-display)"],
       },
       screens: {
-        'mdl': '940px'
+        mdl: "940px",
       },
       colors: {
         darkblue: "#03045e",
@@ -46,6 +46,7 @@ const config: Config = {
       animation: {
         "fast-bounce": "bounceFast 0.7s infinite",
         "fill-right": "fillRight ease-in 0.7s forwards",
+        "skeleton-load": "skeletonLoad linear 1s infinite",
       },
       keyframes: {
         bounceFast: {
@@ -57,6 +58,11 @@ const config: Config = {
           "40%": { width: "30%", height: "100%" },
           "60%": { width: "80%", height: "100%" },
           "100%": { width: "100%", height: "100%" },
+        },
+        skeletonLoad: {
+          "0%": { left: "-100%" },
+          "75%": { left: "100%" },
+          "100%": { left: "100%" },
         },
       },
     },

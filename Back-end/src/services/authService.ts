@@ -22,8 +22,6 @@ async function login(email: string, password: string) {
     },
   });
 
-  console.log(existingUser)
-
   if (!existingUser || !existingUser.password) {
     throw new Error("Invalid email or password");
   }
@@ -36,17 +34,16 @@ async function login(email: string, password: string) {
   const userPayload = {
     _id: existingUser.id,
     email: existingUser.email,
-  }
+  };
+
+  const { password: _, ...safeUser } = existingUser;
 
   return {
-    user:{
-      ...userPayload,
-      firstName: existingUser.firstName,
-      lastName: existingUser.lastName,
-      username: existingUser.username,
+    user: {
+      ...safeUser,
     },
-    authToken: await signJWT(userPayload)
-  }
+    authToken: await signJWT(userPayload),
+  };
 }
 
 async function register(
@@ -75,17 +72,27 @@ async function register(
   const userPayload = {
     _id: newUser.id,
     email: newUser.email,
-  }
+  };
+
+  const { password: _, ...safeUser } = newUser;
 
   return {
-    user:{
-      ...userPayload,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      username: newUser.username,
+    user: {
+      ...safeUser,
     },
-    authToken: await signJWT(userPayload)
-  }
+    authToken: await signJWT(userPayload),
+  };
+}
+
+async function checkEmail(email: string) {
+  const existingEmail = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      email: true,
+    },
+  });
+
+  return existingEmail;
 }
 
 async function updateImage(imageUrl: string, id: string) {
@@ -102,6 +109,7 @@ export function verifyJWT(token: string): UserPayload {
 const authService = {
   login,
   register,
+  checkEmail,
   updateImage,
 };
 export default authService;
