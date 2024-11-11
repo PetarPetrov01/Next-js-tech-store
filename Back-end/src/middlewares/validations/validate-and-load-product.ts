@@ -12,6 +12,7 @@ export async function checkProductId(
     const existingProduct = await productService.checkProductExistence(
       productId
     );
+    console.log('checking id')
     if (existingProduct) {
       if (req.user!._id != existingProduct.ownerId) {
         throw new Error("You are not the owner of this product!");

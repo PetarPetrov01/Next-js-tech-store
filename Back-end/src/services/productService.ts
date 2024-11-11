@@ -128,6 +128,30 @@ async function uploadProduct(data: PostProductSchemaType, userId: string) {
   return createdProd;
 }
 
+async function editProduct(data: PostProductSchemaType, productId: string) {
+  const editedProduct = await prisma.$transaction(async (tx) => {
+    const category = await tx.category.findUnique({
+      where: { id: data.categoryId },
+    });
+
+    if (!category) {
+      throw new Error("The category does not exist!");
+    }
+
+    const brand = await tx.brand.findUnique({ where: { id: data.brandId } });
+
+    if (!brand) {
+      throw new Error("The brand does not exist!");
+    }
+
+    return await tx.product.update({
+      where: { id: productId },
+      data: { ...data, name: `${brand.name} ${data.model}` },
+    });
+  });
+  return editedProduct;
+}
+
 async function updateProductImages(productId: string, imageUrls: string[]) {
   const result = await prisma.product.update({
     where: { id: productId },
@@ -185,6 +209,7 @@ export default {
   getProducts,
   getProductById,
   uploadProduct,
+  editProduct,
   updateProductImages,
   deleteProductImages,
   checkProductExistence,

@@ -25,7 +25,7 @@ const postProductSchema = z.object({
     .trim()
     .min(1, { message: "Description is required" })
     .min(30, { message: "Description must be alteast 30 characters long" })
-    .max(250, { message: "Description no more than 250 characters long" }),
+    .max(350, { message: "Description no more than 350 characters long" }),
 });
 
 const validatePostProduct = validateRequestBody(postProductSchema, {
