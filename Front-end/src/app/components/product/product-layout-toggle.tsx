@@ -1,7 +1,9 @@
 "use client";
 
+import useMounted from "@/hooks/useMounted";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { LayoutToggleSkeleton } from "../ui/loaders/skeletons";
 
 type ToggleOption = {
   value: string;
@@ -23,6 +25,8 @@ export default function LayoutToggle({
   const searchParams = useSearchParams();
   const { replace } = useRouter();
 
+  const hasMounted = useMounted();
+
   const [selectedOption, setSelectedOption] = useState<string>(
     searchParams.get(paramName) || defaultValue
   );
@@ -36,7 +40,7 @@ export default function LayoutToggle({
     replace(`${pathname}?${params}`, { scroll: false });
   };
 
-  return (
+  return hasMounted ? (
     <div className="flex justify-between border-[1px] border-new-peach-100 w-24 h-12 mdl:w-20 mdl:h-10 cursor-pointer">
       {options.map(({ value, icon }) => (
         <div
@@ -52,5 +56,7 @@ export default function LayoutToggle({
         </div>
       ))}
     </div>
+  ) : (
+    <LayoutToggleSkeleton />
   );
 }

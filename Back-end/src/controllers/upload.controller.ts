@@ -111,7 +111,22 @@ async function deleteProductImages(req: CustomRequest, res: Response) {
   try {
     const imageUrls = req.body.images;
     const productBrand = res.locals.product.brand;
-    const imagePublicIds = imageUrls.map((imageUrl: string) =>
+
+    const { cloudinaryImages, otherImages } = imageUrls.reduce(
+      (acc: { cloudinaryImages: []; otherImages: [] }, imageUrl: string) =>
+        imageUrl.includes("res.cloudinary.com")
+          ? {
+              cloudinaryImages: [...acc.cloudinaryImages, imageUrl],
+              otherImages: [...acc.otherImages],
+            }
+          : {
+              cloudinaryImages: [...acc.cloudinaryImages],
+              otherImages: [...acc.otherImages, imageUrl],
+            },
+      { cloudinaryImages: [], otherImages: [] }
+    );
+
+    const imagePublicIds = cloudinaryImages.map((imageUrl: string) =>
       imageUrl.substring(
         imageUrl.indexOf(`Images/${productBrand}/`),
         imageUrl.lastIndexOf(".")
@@ -134,11 +149,12 @@ async function deleteProductImages(req: CustomRequest, res: Response) {
       }
     });
 
-    await productService.deleteProductImages(
+    const remainingImages = await productService.deleteProductImages(
       req.params.id,
-      successfullyDeletedURLs
+      [...successfullyDeletedURLs, ...otherImages]
     );
-    res.status(204).json();
+
+    res.status(200).json(remainingImages);
   } catch (error: any) {
     console.log(error);
     res.status(400).json({ message: error.message });

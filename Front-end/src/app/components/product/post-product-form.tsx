@@ -19,6 +19,7 @@ import ProductPostSucessDialog from "./dialogs/product-post-success-dialog";
 
 import { Categories, PopulatedProduct, Product } from "@/types/Product";
 import { editProduct, postProduct } from "@/app/lib/actions";
+import { ButtonLoader } from "../ui/loaders/button-loader";
 
 const inputWrapperPseudoElClasses =
   "before:absolute before:top-0 before:left-0 before:w-full before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
@@ -41,6 +42,8 @@ export default function PostProductForm({
     id: string;
     name: string;
   } | null>(null);
+
+  const isEditing = Boolean(product);
 
   const [pendingNewCategoryId, setPendingNewCategoryId] = useState<
     number | null
@@ -133,10 +136,16 @@ export default function PostProductForm({
       return;
     }
     if (result) {
-      const product: Product = result;
-      setCreatedProd(product);
-      setIsLoading(false);
-      reset();
+      const newProduct: Product = result;
+
+      if (product) {
+        setIsLoading(false);
+        router.push(`/products/${product.id}`);
+      } else {
+        setCreatedProd(newProduct);
+        setIsLoading(false);
+        reset();
+      }
     }
   });
 
@@ -340,25 +349,23 @@ export default function PostProductForm({
           </>
         )}
       </div>
-      <button
-        type="submit"
-        disabled={isLoading}
-        className={`relative capitalize py-2 px-5 z-10 text-lg duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
-          isValid
-            ? "bg-neutral-700 border-b-2 border-new-peach-90 hover:after:w-full"
-            : "bg-neutral-500 hover:text-white"
-        } ${isLoading ? "after:w-full pointer-events-none" : ""}`}
-      >
-        {isLoading ? (
-          <div className="flex flex-row justify-around gap-1.5 py-[0.4rem] px-0.5">
-            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce"></div>
-            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
-            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
-          </div>
-        ) : (
-          <p className="text-lg uppercase">Post</p>
-        )}
-      </button>
+      <div className="relative">
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`relative capitalize py-2 px-5 z-10 text-lg duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
+            isValid
+              ? "bg-neutral-700 border-b-2 border-new-peach-90 hover:after:w-full"
+              : "bg-neutral-500 hover:text-white"
+          } ${
+            isLoading ? "after:w-full pointer-events-none text-transparent" : ""
+          }`}
+        >
+          {isEditing ? "Edit" : "Post"}
+        </button>
+        {isLoading && <ButtonLoader />}
+      </div>
+
       {errors.root?.apiError && (
         <span className="absolute text-[0.9em] bottom-[-1.5em] left-1/2 -translate-x-1/2 text-red-400">
           {errors.root.apiError.message}

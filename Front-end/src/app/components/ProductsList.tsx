@@ -5,7 +5,7 @@ import { getProds } from "../lib/data";
 import ProductCard from "./product/product-card";
 import { APIProduct } from "@/types/Product";
 import { useSearchParams } from "next/navigation";
-import { ProductListSkeleton } from "./ui/skeletons";
+import { ProductListSkeleton } from "./ui/loaders/skeletons";
 import useMounted from "@/hooks/useMounted";
 
 const emptyArr = new Array(3).fill("");
@@ -27,7 +27,6 @@ export default function ProductsList() {
   }, [searchParams]);
 
   const viewType = searchParams.get("view") || "grid";
-  console.log(viewType);
   return (
     <div
       className={`flex flex-wrap w-full mt-6  ${

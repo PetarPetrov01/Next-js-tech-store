@@ -22,8 +22,6 @@ export default function MobileNav({
     setOpenDrawer(false);
   };
 
-  console.log(user);
-
   return (
     <>
       <div className="flex gap-2 items-center">

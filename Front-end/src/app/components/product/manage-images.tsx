@@ -27,9 +27,12 @@ export default function ManageProductImages({
   const [images, setImages] = useState(product.images);
   const [selectedImageURLs, setSelectedImageURLs] = useState<string[]>([]);
   const [showDeleteImages, setShowDeleteImages] = useState(false);
-  const [showUploadImages, setShowUploadImages] = useState(false);
+  const [showUploadImages, setShowUploadImages] = useState(
+    product.images.length < 1
+  );
 
   const { windowWidth } = useWindowWidth();
+  console.log(windowWidth)
 
   const searchParams = useSearchParams();
 
@@ -68,10 +71,10 @@ export default function ManageProductImages({
       return;
     }
 
+    const remainingImageUrls = await res.json();
+
     setSelectedImageURLs([]);
-    setImages((images) =>
-      images.filter((img) => selectedImageURLs.includes(img.url) == false)
-    );
+    setImages(remainingImageUrls);
   };
 
   const handleUploadImages = async (data: File[]) => {
@@ -213,7 +216,6 @@ export default function ManageProductImages({
                     {selectedImageURLs.includes(im.url) ? (
                       <FaSquareCheck
                         onClick={(e) => {
-                          console.log("click deselect");
                           e.stopPropagation();
                           e.preventDefault();
                           handleDeselectImage(im.url);
@@ -224,7 +226,6 @@ export default function ManageProductImages({
                     ) : (
                       <FaRegSquare
                         onClick={(e) => {
-                          console.log("click select");
                           e.stopPropagation();
                           e.preventDefault();
                           handleSelectImage(im.url);
@@ -247,14 +248,18 @@ export default function ManageProductImages({
         </>
       )}
       <div className="flex flex-col items-center gap-8 w-[90%] sm:w-[80%]">
-        <a
-          onClick={toggleUploadImages}
-          className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
-        >
-          Upload {images.length > 0 && "more "}images
-        </a>
-        {showUploadImages && (
-          <UploadImages handleUploadImages={handleUploadImages} />
+        {showUploadImages ? (
+          <a
+            onClick={toggleUploadImages}
+            className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
+          >
+            Upload {images.length > 0 && "more "}images
+          </a>
+        ) : (
+          <UploadImages
+            handleUploadImages={handleUploadImages}
+            toggleUploadImages={toggleUploadImages}
+          />
         )}
       </div>
     </div>

@@ -28,6 +28,13 @@ productsRouter.post(
   multerUpload.productImages,
   uploadController.uploadProductImages
 );
+productsRouter.put(
+  "/:id/edit",
+  isUser(),
+  checkProductId,
+  validatePostProduct,
+  productController.editProduct
+);
 productsRouter.post("/category", categoryController.createCategory);
 
 productsRouter.delete(
