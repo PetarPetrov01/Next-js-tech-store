@@ -3,7 +3,6 @@ import { CustomRequest } from "./sesssion";
 
 export function isUser() {
   return (req: CustomRequest, res: Response, next: NextFunction) => {
-    console.log('is user')
     if (req.user) {
       next();
     } else {

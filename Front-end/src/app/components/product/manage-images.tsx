@@ -68,10 +68,10 @@ export default function ManageProductImages({
       return;
     }
 
+    const remainingImageUrls = await res.json();
+
     setSelectedImageURLs([]);
-    setImages((images) =>
-      images.filter((img) => selectedImageURLs.includes(img.url) == false)
-    );
+    setImages(remainingImageUrls);
   };
 
   const handleUploadImages = async (data: File[]) => {
@@ -213,7 +213,6 @@ export default function ManageProductImages({
                     {selectedImageURLs.includes(im.url) ? (
                       <FaSquareCheck
                         onClick={(e) => {
-                          console.log("click deselect");
                           e.stopPropagation();
                           e.preventDefault();
                           handleDeselectImage(im.url);
@@ -224,7 +223,6 @@ export default function ManageProductImages({
                     ) : (
                       <FaRegSquare
                         onClick={(e) => {
-                          console.log("click select");
                           e.stopPropagation();
                           e.preventDefault();
                           handleSelectImage(im.url);

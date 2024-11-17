@@ -60,9 +60,7 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
       return;
     }
 
-    console.log(result);
     if (result) {
-      console.log("in result");
       setAuth(result);
       setIsLoading(false);
       router.replace("/");

@@ -27,7 +27,6 @@ export default function ProductsList() {
   }, [searchParams]);
 
   const viewType = searchParams.get("view") || "grid";
-  console.log(viewType);
   return (
     <div
       className={`flex flex-wrap w-full mt-6  ${

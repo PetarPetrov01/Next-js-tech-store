@@ -169,7 +169,11 @@ async function deleteProductImages(productId: string, imageUrls: string[]) {
     where: { productId, url: { in: imageUrls } },
   });
 
-  return;
+  const remainingImages = await prisma.productImage.findMany({
+    where: { productId },
+    select: { url: true, id: true },
+  });
+  return remainingImages
 }
 
 async function checkProductExistence(

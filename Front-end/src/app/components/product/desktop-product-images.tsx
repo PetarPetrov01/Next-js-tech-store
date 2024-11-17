@@ -95,7 +95,7 @@ export default function DesktopProductImages({
         {currentScrollPage > 1 && (
           <button
             onClick={scrollLeft}
-            className="absolute left-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-2 duration-200 hover:bg-neutral-600"
+            className="absolute left-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-1.5 md:p-2 duration-200 hover:bg-neutral-600"
           >
             <IoIosArrowBack size={"1.3em"} />
           </button>
@@ -132,7 +132,7 @@ export default function DesktopProductImages({
         {currentScrollPage < scrollPages && (
           <button
             onClick={scrollRight}
-            className="absolute right-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-2 duration-200 hover:bg-neutral-600"
+            className="absolute right-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-1.5 md:p-2 duration-200 hover:bg-neutral-600"
           >
             <IoIosArrowForward size={"1.3em"} />
           </button>

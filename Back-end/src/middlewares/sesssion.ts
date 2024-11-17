@@ -28,7 +28,6 @@ export default function session(
 
       req.user = verifiedToken.payload;
 
-      console.log('Session passed')
     } catch (error: any) {
       res.cookie("authToken", "", expiredCookie);
       res.status(401).json({ message: error.message });
