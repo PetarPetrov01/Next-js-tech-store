@@ -25,7 +25,7 @@ export default function ProductImages({
   const { windowWidth } = useWindowWidth();
 
   return (
-    <div className="w-full flex flex-col items-center gap-6 overflow-hidden">
+    <div className="relative w-full flex flex-col items-center gap-6 overflow-hidden">
       {hasMounted ? (
         windowWidth < 640 ? (
           <MobileProductImages
