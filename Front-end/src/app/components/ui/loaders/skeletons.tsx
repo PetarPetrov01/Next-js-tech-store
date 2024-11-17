@@ -77,3 +77,18 @@ export function ProductListSkeleton({ viewType }: { viewType: string }) {
     </div>
   );
 }
+
+export function ProductFormSkeleton() {
+  return (
+    <div className="relative overflow-hidden select-none flex flex-col gap-2 p-3 mt-4">
+      <p className="z-10 bg-new-darkblue text-transparent">Loading</p>
+      <div className="flex justify-between gap-8">
+        <div className="flex-[1_1_45%] z-10 p-2 text-transparent bg-new-darkblue">Loading</div>
+        <div className="flex-[1_1_45%] z-10 p-2 text-transparent bg-new-darkblue">
+          Loading
+        </div>
+      </div>
+      <div className={`absolute left-0 top-0 w-full h-full ${animateSkeletonClasses}`}></div>
+    </div>
+  );
+}
