@@ -5,7 +5,7 @@ import { getProds } from "../lib/data";
 import ProductCard from "./product/product-card";
 import { APIProduct } from "@/types/Product";
 import { useSearchParams } from "next/navigation";
-import { ProductListSkeleton } from "./ui/skeletons";
+import { ProductListSkeleton } from "./ui/loaders/skeletons";
 import useMounted from "@/hooks/useMounted";
 
 const emptyArr = new Array(3).fill("");

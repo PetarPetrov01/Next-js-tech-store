@@ -19,6 +19,22 @@ export function ProductImageSkeleton() {
   );
 }
 
+export function LayoutToggleSkeleton() {
+  return (
+    <div className="relative flex overflow-hidden justify-between border-[1px] border-neutral-200/15 w-24 h-12 mdl:w-20 mdl:h-10">
+      {["", ""].map((_, i) => (
+        <div
+          key={i}
+          className={`relative flex-1 z-10 flex items-center justify-center p-1 `}
+        >
+          <span className="w-full h-full bg-new-darkblue"></span>
+        </div>
+      ))}
+      <div className={`absolute w-full h-full ${animateSkeletonClasses}`}></div>
+    </div>
+  );
+}
+
 export function ProductListSkeleton({ viewType }: { viewType: string }) {
   return (
     <div

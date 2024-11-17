@@ -12,6 +12,7 @@ import { LoginSchemaType, UserLoginSchema } from "@/zodSchemas/loginSchema";
 import { login } from "@/app/lib/actions";
 import { checkAuth } from "@/app/utils/checkAuth";
 import { useAuthContext } from "@/contexts/AuthProvider";
+import { ButtonLoader } from "../ui/loaders/button-loader";
 
 const inputWrapperPseudoClasses =
   "before:absolute before:top-0 before:left-0 before:w-full before:duration-150 before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
@@ -117,29 +118,22 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
           </span>
         )}
       </div>
-      <button
-        type="submit"
-        disabled={isLoading}
-        className={`relative flex overflow-hidden items-stretch uppercase py-2.5 px-6 z-10 border-b-2 duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
-          isValid
-            ? "bg-neutral-700  border-new-peach-90 hover:after:w-full"
-            : "bg-neutral-600 border-new-midnight-100 hover:text-white"
-        } ${
-          isLoading
-            ? "after:w-full pointer-events-none"
-            : ""
-        }`}
-      >
-        {isLoading ? (
-          <div className="flex flex-row justify-around gap-1.5 py-[0.4rem] px-0.5">
-            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce"></div>
-            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.3s]"></div>
-            <div className="w-[0.7rem] aspect-square h-auto rounded-full bg-white animate-bounce [animation-delay:-.5s]"></div>
-          </div>
-        ) : (
-          <p className="text-lg uppercase">Login</p>
-        )}
-      </button>
+      <div className="relative">
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`relative flex overflow-hidden items-stretch uppercase py-2.5 px-6 z-10 border-b-2 duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
+            isValid
+              ? "bg-neutral-700  border-new-peach-90 hover:after:w-full"
+              : "bg-neutral-600 border-new-midnight-100 hover:text-white"
+          } ${
+            isLoading ? "after:w-full pointer-events-none text-transparent" : ""
+          }`}
+        >
+          Login
+        </button>
+        {isLoading && <ButtonLoader />}
+      </div>
     </form>
   );
 }

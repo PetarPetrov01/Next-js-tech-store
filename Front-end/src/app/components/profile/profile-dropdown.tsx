@@ -16,7 +16,7 @@ export function ProfileDropdown({
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className={`absolute right-0 top-full z-10 opacity-100 cursor-auto min-w-40 bg-gray-50 rounded-md px-4 pointer-events-auto ${
+      className={`absolute right-0 top-full z-20 opacity-100 cursor-auto min-w-40 bg-gray-50 rounded-md px-4 pointer-events-auto ${
         profileDropdown
           ? "min-h-60 py-2 duration-200"
           : "opacity-0 h-0 p-0 overflow-hidden duration-75 pointer-events-none"
