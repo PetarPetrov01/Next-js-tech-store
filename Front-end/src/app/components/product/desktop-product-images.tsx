@@ -1,7 +1,7 @@
+import { useThrottle } from "@/hooks/useThrottle";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { RiImageEditFill } from "react-icons/ri";
 
@@ -22,40 +22,53 @@ export default function DesktopProductImages({
   const [currentScrollPage, setCurrentScrollPage] = useState(1);
 
   const totalImages = images.length;
-  const scrollPages = Math.ceil(totalImages / 4);
+  const scrollPages = useMemo(() => Math.ceil(totalImages / 4), [totalImages]);
   const changeImageIndex = (index: number) => {
     setDisplayImageIndex(index);
   };
 
-  const scrollRight = () => {
+  useEffect(() => {
     if (sliderRef.current) {
       const sliderWidth = sliderRef.current.clientWidth;
-      sliderRef.current.scrollBy({
-        left: sliderWidth + IMAGES_GAP_IN_PERCENT * sliderWidth,
-      });
-      setCurrentScrollPage((prev) => prev + 1);
-    }
-  };
+      const fullPageWidth =
+        (IMAGE_CONTAINER_WIDTH_IN_PERCENT + IMAGES_GAP_IN_PERCENT) *
+        sliderWidth *
+        4;
 
-  const scrollLeft = () => {
-    if (sliderRef.current) {
-      const sliderWidth = sliderRef.current?.clientWidth;
-      let scrollAmount: number;
-
+      let scrollPosition = 0;
       if (currentScrollPage == scrollPages) {
-        const lastPageItemsCount = totalImages % 4;
+        const itemsOnLastPage = totalImages % 4 || 4;
 
-        scrollAmount =
-          (IMAGE_CONTAINER_WIDTH_IN_PERCENT + IMAGES_GAP_IN_PERCENT) *
-          sliderWidth *
-          lastPageItemsCount;
+        scrollPosition =
+          fullPageWidth * (currentScrollPage - 2) +
+          itemsOnLastPage * sliderWidth;
       } else {
-        scrollAmount = sliderWidth + IMAGES_GAP_IN_PERCENT * sliderWidth;
+        scrollPosition = fullPageWidth * (currentScrollPage - 1);
       }
 
-      console.log(scrollAmount);
-      sliderRef.current?.scrollBy({ left: -scrollAmount });
+      sliderRef.current.scrollTo({ left: scrollPosition });
+    }
+  }, [currentScrollPage, scrollPages, totalImages]);
+
+  const scrollRight = useThrottle(() => {
+    if (sliderRef.current) {
+      setCurrentScrollPage((prev) => prev + 1);
+    }
+  }, 300);
+
+  const scrollLeft = useThrottle(() => {
+    if (sliderRef.current) {
       setCurrentScrollPage((prev) => prev - 1);
+    }
+  }, 300);
+
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    if (e.deltaX > 0 || e.deltaY > 0) {
+      scrollRight();
+    } else {
+      scrollLeft();
     }
   };
 
@@ -82,7 +95,7 @@ export default function DesktopProductImages({
         {currentScrollPage > 1 && (
           <button
             onClick={scrollLeft}
-            className="absolute left-[4%] top-1/2 -translate-y-1/2 rounded-full bg-transparent p-2 duration-200 hover:bg-neutral-600"
+            className="absolute left-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-2 duration-200 hover:bg-neutral-600"
           >
             <IoIosArrowBack size={"1.3em"} />
           </button>
@@ -90,13 +103,14 @@ export default function DesktopProductImages({
         <div
           id="slider"
           ref={sliderRef}
-          className="flex gap-[2%] overflow-x-scroll w-[80%] scrollbar-hide scroll-smooth touch-none"
+          onWheel={handleWheel}
+          className="flex gap-[2%] overflow-hidden w-[80%] scroll-smooth touch-none"
         >
           {images.map((image, i) => (
             <div
               key={i}
               onClick={() => changeImageIndex(i)}
-              className={`min-w-[23.5%] p-2 aspect-[5/4] h-auto border-[1px] rounded-md cursor-pointer flex justify-center items-center hover:bg-gray-50/20 duration-75 ${
+              className={`flex-[0_0_23.5%] p-2 aspect-[5/4] h-auto border-[1px] rounded-md cursor-pointer flex justify-center items-center hover:bg-gray-50/20 duration-75 ${
                 i == displayImageIndex
                   ? "border-neutral-400"
                   : "border-transparent"
@@ -118,7 +132,7 @@ export default function DesktopProductImages({
         {currentScrollPage < scrollPages && (
           <button
             onClick={scrollRight}
-            className="absolute right-[4%] top-1/2 -translate-y-1/2 rounded-full bg-transparent p-2 duration-200 hover:bg-neutral-600"
+            className="absolute right-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-2 duration-200 hover:bg-neutral-600"
           >
             <IoIosArrowForward size={"1.3em"} />
           </button>

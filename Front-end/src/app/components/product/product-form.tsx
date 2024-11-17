@@ -25,8 +25,6 @@ export default function ProductForm({
   const [stockWarning, setStockWarning] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
 
-  console.log("re-rend");
-
   const isOwner = product.ownerId == user?.id;
 
   const changeQty = (action: "increase" | "decrease") => {
@@ -60,7 +58,7 @@ export default function ProductForm({
       {user?.email ? (
         isOwner ? (
           <div className="flex flex-col gap-2 p-3 mt-4 bg-gray-50/20">
-          <p>Modify this product's details</p>
+          <p>Modify this product&apos;s details</p>
           <div className="flex justify-between gap-8">
             <Link
               href={`/products/${product.id}/edit`}

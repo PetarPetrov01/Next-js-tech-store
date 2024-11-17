@@ -133,10 +133,16 @@ export default function PostProductForm({
       return;
     }
     if (result) {
-      const product: Product = result;
-      setCreatedProd(product);
-      setIsLoading(false);
-      reset();
+      const newProduct: Product = result;
+
+      if (product) {
+        setIsLoading(false);
+        router.push(`/products/${product.id}`);
+      } else {
+        setCreatedProd(newProduct);
+        setIsLoading(false);
+        reset();
+      }
     }
   });
 
