@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { LoginSchemaType, UserLoginSchema } from "@/zodSchemas/loginSchema";
 
-import { login } from "@/app/lib/actions";
+import { login } from "@/app/lib/actions/auth";
 import { checkAuth } from "@/app/utils/checkAuth";
 import { useAuthContext } from "@/contexts/AuthProvider";
 import { ButtonLoader, ButtonLoaderWrapper } from "../ui/loaders/button-loader";

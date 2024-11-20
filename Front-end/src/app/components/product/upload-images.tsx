@@ -4,7 +4,7 @@ import Image from "next/image";
 import { FaXmark } from "react-icons/fa6";
 import { formatDataSize } from "@/app/utils/formatDataSize";
 import { ButtonLoader, ButtonLoaderWrapper } from "../ui/loaders/button-loader";
-import { uploadImages } from "@/app/lib/actions";
+import { uploadImages } from "@/app/lib/actions/product";
 
 const IMAGE_MAX_SIZE = 1024 * 1024 * 3;
 const MAX_FILES = 7;

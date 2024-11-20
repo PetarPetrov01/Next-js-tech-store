@@ -12,7 +12,7 @@ import LayoutToggle from "./product-layout-toggle";
 import { ProductWithImages } from "@/types/Product";
 import UploadImages from "./upload-images";
 import useWindowWidth from "@/hooks/useWindowWidth";
-import { uploadImages } from "@/app/lib/actions";
+import { uploadImages } from "@/app/lib/actions/product";
 
 export default function ManageProductImages({
   product,

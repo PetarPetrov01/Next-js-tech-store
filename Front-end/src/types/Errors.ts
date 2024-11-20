@@ -5,3 +5,9 @@ export type ErrorsState = {
     };
     message?: null | string;
   };
+
+  export interface FormattedError {
+    message: string;
+  }
+  
+  export type FormattedErrorArray = Error[];

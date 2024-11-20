@@ -1,4 +1,4 @@
-import { deleteProduct } from "@/app/lib/actions";
+import { deleteProduct } from "@/app/lib/actions/product";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";

@@ -86,6 +86,7 @@ export default function ProductForm({
                 open={showDeleteProduct}
                 productName={product.name}
                 setShowDeleteProduct={setShowDeleteProduct}
+                productId={product.id}
               />
             </>
           ) : (

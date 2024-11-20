@@ -8,7 +8,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useAuthContext } from "@/contexts/AuthProvider";
-import { checkEmail, registerUser } from "@/app/lib/actions";
+import { checkEmail, registerUser } from "@/app/lib/actions/auth";
 import useDebouncedEffect from "@/hooks/useDebouncedEffect";
 
 import {
