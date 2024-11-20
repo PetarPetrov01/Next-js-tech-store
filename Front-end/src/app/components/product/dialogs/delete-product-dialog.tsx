@@ -3,7 +3,6 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import {
-  ButtonLoader,
   ButtonLoaderWrapper,
 } from "../../ui/loaders/button-loader";
 import Link from "next/link";

@@ -15,7 +15,7 @@ import {
   RegisterSchemaType,
   UserRegisterSchema,
 } from "@/zodSchemas/registerSchema";
-import { ButtonLoader } from "../ui/loaders/button-loader";
+import { ButtonLoaderWrapper } from "../ui/loaders/button-loader";
 
 const inputWrapperPseudoClasses =
   "before:absolute before:top-0 before:left-0 before:w-full before:duration-150 before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
@@ -212,7 +212,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
           </span>
         )}
       </div>
-      <div className="relative">
+      <ButtonLoaderWrapper isLoading={isLoading}>
         <button
           type="submit"
           disabled={isLoading}
@@ -220,12 +220,11 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
             isValid
               ? "bg-neutral-700  border-new-peach-90 hover:after:w-full"
               : "bg-neutral-600 border-new-midnight-100 hover:text-white"
-          } ${isLoading ? "after:w-full pointer-events-none" : ""}`}
+          } ${isLoading ? "after:w-full pointer-events-none text-transparent" : ""}`}
         >
           Register
         </button>
-        {isLoading && <ButtonLoader />}
-      </div>
+      </ButtonLoaderWrapper>
     </form>
   );
 }

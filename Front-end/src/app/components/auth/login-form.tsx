@@ -12,7 +12,7 @@ import { LoginSchemaType, UserLoginSchema } from "@/zodSchemas/loginSchema";
 import { login } from "@/app/lib/actions/auth";
 import { checkAuth } from "@/app/utils/checkAuth";
 import { useAuthContext } from "@/contexts/AuthProvider";
-import { ButtonLoader, ButtonLoaderWrapper } from "../ui/loaders/button-loader";
+import { ButtonLoaderWrapper } from "../ui/loaders/button-loader";
 
 const inputWrapperPseudoClasses =
   "before:absolute before:top-0 before:left-0 before:w-full before:duration-150 before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";

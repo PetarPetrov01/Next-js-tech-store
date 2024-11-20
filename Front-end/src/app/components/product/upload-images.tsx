@@ -3,7 +3,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { FaXmark } from "react-icons/fa6";
 import { formatDataSize } from "@/app/utils/formatDataSize";
-import { ButtonLoader, ButtonLoaderWrapper } from "../ui/loaders/button-loader";
+import { ButtonLoaderWrapper } from "../ui/loaders/button-loader";
 import { uploadImages } from "@/app/lib/actions/product";
 
 const IMAGE_MAX_SIZE = 1024 * 1024 * 3;
@@ -176,7 +176,7 @@ export default function UploadImages({
                   </button>
                 </ButtonLoaderWrapper>
                 {error && (
-                  <span className="absolute w-1/2 text-red-300 text-center bottom-[-1.35em]">
+                  <span className="absolute w-4/5 text-red-300 text-center bottom-0 translate-y-[110%]">
                     {error}
                   </span>
                 )}

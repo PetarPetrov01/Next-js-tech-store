@@ -16,6 +16,7 @@ import {
   useState,
 } from "react";
 import { SubmitHandler } from "react-hook-form";
+import { ButtonLoaderWrapper } from "../../ui/loaders/button-loader";
 
 export default function AddNewCategoryDialog({
   open = false,
@@ -28,6 +29,7 @@ export default function AddNewCategoryDialog({
 }) {
   const [category, setCategory] = useState<string>("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -65,24 +67,30 @@ export default function AddNewCategoryDialog({
     const validationError = validateInput(category);
     if (validationError) {
       setError(validationError);
+      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     const res = await fetch("http://localhost:3001/api/products/category", {
       method: "post",
       body: JSON.stringify({ name: category }),
       headers: { "Content-Type": "application/json" },
+      credentials: 'include',
       cache: "no-store",
     });
 
     if (!res.ok) {
       const err = await res.json();
       setError(err.message);
+      setIsLoading(false);
       return;
     }
 
     const result = await res.json();
     router.refresh();
+    setIsLoading(false);
     onAddNewCategory(result);
     setShowAddCategory(false);
   };
@@ -119,12 +127,16 @@ export default function AddNewCategoryDialog({
             )}
           </div>
           <div className="flex justify-between gap-6 text-new-mint">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-red-400/90 hover:bg-red-400 duration-200"
-            >
-              Add brand
-            </button>
+            <ButtonLoaderWrapper isLoading={isLoading}>
+              <button
+                type="submit"
+                className={`px-4 py-2 bg-red-400/90 hover:bg-red-400 duration-200 ${
+                  isLoading ? "text-transparent pointer-events-none" : ""
+                }`}
+              >
+                Add category
+              </button>
+            </ButtonLoaderWrapper>
             <button
               type="button"
               onClick={handleCancel}

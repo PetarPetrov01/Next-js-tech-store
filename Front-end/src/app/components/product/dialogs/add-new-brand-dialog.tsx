@@ -16,6 +16,7 @@ import {
   useState,
 } from "react";
 import { SubmitHandler } from "react-hook-form";
+import { ButtonLoaderWrapper } from "../../ui/loaders/button-loader";
 
 export default function AddNewBrandDialog({
   open = false,
@@ -28,6 +29,7 @@ export default function AddNewBrandDialog({
 }) {
   const [brand, setBrand] = useState<string>("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +46,8 @@ export default function AddNewBrandDialog({
   const validateInput = (value: string): string | null => {
     if (value == "") return "The field is required";
 
-    if (value.length < 3)
-      return "The brand should be atleast 3 characters long";
+    if (value.length < 2)
+      return "The brand should be atleast 2 characters long";
 
     if (value.length > 15)
       return "The brand can't be more than 15 characters long";
@@ -55,7 +57,8 @@ export default function AddNewBrandDialog({
 
   const handleBlur = () => {
     const validateError = validateInput(brand);
-    setError(validateError || "");
+
+      setError(validateError || '');
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -65,8 +68,10 @@ export default function AddNewBrandDialog({
     const validationError = validateInput(brand);
     if (validationError) {
       setError(validationError);
-      return;
+      setIsLoading(false);
     }
+
+    setIsLoading(true);
 
     const res = await fetch("http://localhost:3001/api/brands", {
       method: "post",
@@ -78,10 +83,12 @@ export default function AddNewBrandDialog({
     if (!res.ok) {
       const err = await res.json();
       setError(err.message);
+      setIsLoading(false);
       return;
     }
 
     const result = await res.json();
+    setIsLoading(false);
     router.refresh();
     onAddNewBrand(result.id);
     setShowAddBrand(false);
@@ -94,7 +101,9 @@ export default function AddNewBrandDialog({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle className="text-center bg-new-midnight-100 text-new-mint">Add new brand</DialogTitle>
+      <DialogTitle className="text-center bg-new-midnight-100 text-new-mint">
+        Add new brand
+      </DialogTitle>
       <DialogContent className="min-w-[320px] sm:min-w-[400px]  bg-new-midnight-100">
         <form
           onSubmit={handleSubmit}
@@ -108,21 +117,24 @@ export default function AddNewBrandDialog({
               onChange={handleInputChange}
               onBlur={handleBlur}
               className="px-2 py-1 text-lg w-full outline-none  bg-slate-300 focus:bg-neutral-100 duration-200"
-              
             />
             {error && (
-              <span className="text-center text-red-400 italic text-sm absolute bottom-0 translate-y-[110%] leading-3">
+              <span className="text-center text-red-400 italic text-sm absolute bottom-0 translate-y-[115%] leading-3">
                 {error}
               </span>
             )}
           </div>
-          <div className="flex justify-between gap-6 text-new-mint" >
-            <button
-              type="submit"
-              className="px-4 py-2 bg-red-400/90 hover:bg-red-400 duration-200"
-            >
-              Add brand
-            </button>
+          <div className="flex justify-between gap-6 text-new-mint">
+            <ButtonLoaderWrapper isLoading={isLoading}>
+              <button
+                type="submit"
+                className={`px-4 py-2 bg-red-400/90 hover:bg-red-400 duration-200 ${
+                  isLoading ? "text-transparent pointer-events-none" : ""
+                }`}
+              >
+                Add brand
+              </button>
+            </ButtonLoaderWrapper>
             <button
               type="button"
               onClick={handleCancel}
