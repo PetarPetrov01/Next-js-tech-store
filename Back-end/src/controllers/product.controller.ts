@@ -56,6 +56,15 @@ async function editProduct(req: CustomRequest, res: Response) {
   }
 }
 
+async function deleteProduct(req: CustomRequest, res: Response) {
+  try {
+    await productService.deleteProduct(req.params.id);
+    res.status(204).end();
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 async function getProductImages(req: CustomRequest, res: Response) {
   try {
     const productWithImages = await productService.checkProductExistence(
@@ -73,5 +82,6 @@ export default {
   getProductById,
   uploadProduct,
   editProduct,
+  deleteProduct,
   getProductImages,
 };

@@ -15,6 +15,7 @@ productsRouter.get("/categories", categoryController.getCategories);
 productsRouter.get("/:id", productController.getProductById);
 productsRouter.get("/:id/images", isUser(), productController.getProductImages);
 
+productsRouter.post("/category", isUser(), categoryController.createCategory);
 productsRouter.post(
   "/upload",
   isUser(),
@@ -28,6 +29,7 @@ productsRouter.post(
   multerUpload.productImages,
   uploadController.uploadProductImages
 );
+
 productsRouter.put(
   "/:id/edit",
   isUser(),
@@ -35,13 +37,18 @@ productsRouter.put(
   validatePostProduct,
   productController.editProduct
 );
-productsRouter.post("/category", categoryController.createCategory);
 
 productsRouter.delete(
   "/:id/images",
   isUser(),
   checkProductId,
   uploadController.deleteProductImages
+);
+productsRouter.delete(
+  "/:id",
+  isUser(),
+  checkProductId,
+  productController.deleteProduct
 );
 
 export default productsRouter;

@@ -152,6 +152,10 @@ async function editProduct(data: PostProductSchemaType, productId: string) {
   return editedProduct;
 }
 
+async function deleteProduct(productId: string) {
+  return await prisma.product.delete({ where: { id: productId } });
+}
+
 async function updateProductImages(productId: string, imageUrls: string[]) {
   const result = await prisma.product.update({
     where: { id: productId },
@@ -173,7 +177,7 @@ async function deleteProductImages(productId: string, imageUrls: string[]) {
     where: { productId },
     select: { url: true, id: true },
   });
-  return remainingImages
+  return remainingImages;
 }
 
 async function checkProductExistence(
@@ -214,6 +218,7 @@ export default {
   getProductById,
   uploadProduct,
   editProduct,
+  deleteProduct,
   updateProductImages,
   deleteProductImages,
   checkProductExistence,
