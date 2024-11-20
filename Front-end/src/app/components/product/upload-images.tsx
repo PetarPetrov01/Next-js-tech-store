@@ -161,12 +161,20 @@ export default function UploadImages({
         <div className="w-full flex flex-col items-center gap-8">
           {uploadedImages.length > 0 && (
             <>
-              <button
-                onClick={handleUploadClick}
-                className="py-2 px-4 border-[1px] border-new-peach-100"
-              >
-                Upload images
-              </button>
+              <div className="relative w-full flex justify-center">
+                <ButtonLoaderWrapper isLoading={isLoading}>
+                  <button
+                    onClick={handleUploadImages}
+                    className={`relative flex overflow-hidden items-stretch uppercase py-2.5 px-6 z-10 border-b-2 duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 bg-neutral-700  border-new-peach-90 hover:after:w-full
+                     ${
+                       isLoading
+                         ? "after:w-full pointer-events-none text-transparent"
+                         : ""
+                     }`}
+                  >
+                    Upload
+                  </button>
+                </ButtonLoaderWrapper>
                 {error && (
                   <span className="absolute w-1/2 text-red-300 text-center bottom-[-1.35em]">
                     {error}
