@@ -18,8 +18,9 @@ import AddNewBrandDialog from "./dialogs/add-new-brand-dialog";
 import ProductPostSucessDialog from "./dialogs/product-post-success-dialog";
 
 import { Categories, PopulatedProduct, Product } from "@/types/Product";
-import { editProduct, postProduct } from "@/app/lib/actions";
+import { editProduct, postProduct } from "@/app/lib/actions/product";
 import { ButtonLoader } from "../ui/loaders/button-loader";
+import Link from "next/link";
 
 const inputWrapperPseudoElClasses =
   "before:absolute before:top-0 before:left-0 before:w-full before:h-full before:border-[1px] before:border-[#6a6a6a] after:absolute after:block after:left-0 after:top-0 after:h-full after:duration-500 after:ease-in-out after:border-new-peach-80 after:z-10 focus-within:after:border-[1px] focus-within:after:w-full";
@@ -353,7 +354,7 @@ export default function PostProductForm({
         <button
           type="submit"
           disabled={isLoading}
-          className={`relative capitalize py-2 px-5 z-10 text-lg duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
+          className={`relative py-2 px-5 z-10 text-lg uppercase duration-150 after:absolute after:z-[-1] after:bottom-0 after:right-0 after:left-0 after:h-full after:w-0 after:bg-new-peach-90 after:duration-500 ${
             isValid
               ? "bg-neutral-700 border-b-2 border-new-peach-90 hover:after:w-full"
               : "bg-neutral-500 hover:text-white"
@@ -364,13 +365,21 @@ export default function PostProductForm({
           {isEditing ? "Edit" : "Post"}
         </button>
         {isLoading && <ButtonLoader />}
+
+        {errors.root?.apiError && (
+          <span className="absolute text-[0.9em] bottom-[-1.5em] left-1/2 -translate-x-1/2 text-red-400">
+            {errors.root.apiError.message}
+          </span>
+        )}
       </div>
 
-      {errors.root?.apiError && (
-        <span className="absolute text-[0.9em] bottom-[-1.5em] left-1/2 -translate-x-1/2 text-red-400">
-          {errors.root.apiError.message}
-        </span>
+      {isEditing && product && (
+        <div className="flex flex-col gap-1.5 items-center">
+          <p>or</p>
+          <Link href={`/products/${product?.id}/images`} className="relative text-lg after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:bg-new-mint after:w-0 after:h-[1px] hover:after:w-full after:duration-300">Manage images</Link>
+        </div>
       )}
+
       {createdProd?.id && (
         <ProductPostSucessDialog open={true} product={createdProd} />
       )}

@@ -2,7 +2,11 @@ import { deleteProduct } from "@/app/lib/actions/product";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import { ButtonLoader } from "../../ui/loaders/button-loader";
+import {
+  ButtonLoader,
+  ButtonLoaderWrapper,
+} from "../../ui/loaders/button-loader";
+import Link from "next/link";
 
 export default function DeleteProductDialog({
   open,
@@ -17,6 +21,8 @@ export default function DeleteProductDialog({
 }) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
+
   const router = useRouter();
 
   const handleDeleteProduct = async () => {
@@ -31,13 +37,16 @@ export default function DeleteProductDialog({
     }
 
     setIsLoading(false);
-    router.push("/products");
+    setIsSuccessful(true);
   };
 
   const onClose = () => {
     setShowDeleteProduct(false);
     setError("");
     setIsLoading(false);
+    setIsSuccessful(false);
+
+    if (isSuccessful) router.replace("/");
   };
 
   return (
@@ -49,31 +58,49 @@ export default function DeleteProductDialog({
         Delete product
       </DialogTitle>
       <DialogContent className="bg-new-midnight-100">
-        <>
+        {isSuccessful ? (
           <p className="text-new-mint">
-            Are you sure you want to delete {productName}?
+            Product {productName} successfully deleted!
           </p>
-          {error && <p className={"text-red-300"}>Failed: {error}</p>}
-        </>
+        ) : (
+          <>
+            <p className="text-new-mint">
+              Are you sure you want to delete {productName}?
+            </p>
+            {error && <p className={"text-red-300"}>Failed: {error}</p>}
+          </>
+        )}
         <div className="flex justify-center gap-4 pt-3 text-new-mint">
-          <div className="relative">
-            <button
-              onClick={handleDeleteProduct}
-              className={`px-4 py-2 bg-red-400/90 hover:bg-red-400 duration-200 ${
-                isLoading && "text-transparent"
-              }`}
-            >
-              {error ? "Try again" : "Delete"}
-            </button>
-            {isLoading && <ButtonLoader />}
-          </div>
-          <button
-            onClick={onClose}
-            className=" px-4 py-2 bg-black hover:bg-gray-800 duration-150"
-            autoFocus
-          >
-            Cancel
-          </button>
+          {isSuccessful ? (
+            <>
+              <Link
+                href={"/"}
+                className="px-4 py-2 bg-black hover:bg-gray-800 duration-150"
+              >
+                Home
+              </Link>
+            </>
+          ) : (
+            <>
+              <ButtonLoaderWrapper isLoading={isLoading}>
+                <button
+                  onClick={handleDeleteProduct}
+                  className={`px-4 py-2 bg-red-400/90 hover:bg-red-400 duration-200 ${
+                    isLoading && "text-transparent"
+                  }`}
+                >
+                  {error ? "Try again" : "Delete"}
+                </button>
+              </ButtonLoaderWrapper>
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-black hover:bg-gray-800 duration-150"
+                autoFocus
+              >
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>
