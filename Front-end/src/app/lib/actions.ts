@@ -13,6 +13,12 @@ interface ErrorObject {
   message: string;
 }
 
+interface ReturnedImages {
+  id: number;
+  url: string;
+  productId: string;
+}
+
 type RegisterData = Omit<RegisterSchemaType, "repassword">;
 
 type ErrorArray = Error[];
@@ -176,6 +182,36 @@ export const postProduct = async (
 
     const product: Product = await res.json();
     return { result: product, error: null };
+  } catch (error: any) {
+    console.log(error.message);
+    return { error: formatError(error), result: null };
+  }
+};
+
+export const uploadImages = async (
+  productId: string,
+  formData: FormData
+): Promise<{
+  result: { images: ReturnedImages[] } | null;
+  error: ErrorObject | null;
+}> => {
+  try {
+    const response = await fetch(`${baseUrl}/products/${productId}/images`, {
+      method: "post",
+      body: formData,
+      headers: {
+        Cookie: cookies().toString(),
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return { error: formatError(error), result: null };
+    }
+
+    const images = await response.json();
+
+    return { error: null, result: images };
   } catch (error: any) {
     console.log(error.message);
     return { error: formatError(error), result: null };

@@ -35,7 +35,7 @@ const options: multer.Options = {
 
 const multipleOptions: multer.Options = {
   ...options,
-  limits: { fileSize: options.limits?.fileSize, files: 6 },
+  limits: { fileSize: options.limits?.fileSize, files: 7 },
 };
 
 const uploadSingle = multer(options).single("image");
