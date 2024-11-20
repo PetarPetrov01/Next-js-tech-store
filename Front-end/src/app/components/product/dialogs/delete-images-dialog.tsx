@@ -2,7 +2,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";

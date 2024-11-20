@@ -13,6 +13,7 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 import { PopulatedProduct } from "@/types/Product";
 import useMounted from "@/hooks/useMounted";
 import { ProductFormSkeleton } from "../ui/loaders/skeletons";
+import DeleteProductDialog from "./dialogs/delete-product-dialog";
 
 export default function ProductForm({
   product,
@@ -28,6 +29,7 @@ export default function ProductForm({
   const [quantity, setQuantity] = useState(1);
   const [stockWarning, setStockWarning] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
+  const [showDeleteProduct, setShowDeleteProduct] = useState(false);
 
   const isOwner = product.ownerId == user?.id;
 
@@ -62,23 +64,30 @@ export default function ProductForm({
       {hasMounted ? (
         user?.email ? (
           isOwner ? (
-            <div className="flex flex-col gap-2 p-3 mt-4 bg-gray-50/20">
-              <p>Modify this product&apos;s details</p>
-              <div className="flex justify-between gap-8">
-                <Link
-                  href={`/products/${product.id}/edit`}
-                  className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
-                >
-                  Edit
-                </Link>
-                <Link
-                  href={`/products/${product.id}/images`}
-                  className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
-                >
-                  Manage images
-                </Link>
+            <>
+              <div className="flex flex-col gap-2 p-3 mt-4 bg-gray-50/20">
+                <p>Modify this product&apos;s details</p>
+                <div className="flex justify-between gap-8">
+                  <Link
+                    href={`/products/${product.id}/edit`}
+                    className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => setShowDeleteProduct(true)}
+                    className="text-center flex-[1_1_45%] p-2 bg-new-mint text-new-darkblue hover:bg-new-darkblue hover:text-new-mint duration-150"
+                  >
+                    Delete product
+                  </button>
+                </div>
               </div>
-            </div>
+              <DeleteProductDialog
+                open={showDeleteProduct}
+                productName={product.name}
+                setShowDeleteProduct={setShowDeleteProduct}
+              />
+            </>
           ) : (
             <div className="flex flex-col gap-1">
               <p className="mb-3">Choose quantity</p>
