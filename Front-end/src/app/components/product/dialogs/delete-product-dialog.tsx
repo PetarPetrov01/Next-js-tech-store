@@ -20,6 +20,18 @@ export default function DeleteProductDialog({
   const router = useRouter();
 
   const handleDeleteProduct = async () => {
+    setError("");
+    setIsLoading(true);
+    const { error, result } = await deleteProduct(productId);
+
+    if (error) {
+      setError(error.message);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(false);
+    router.push("/products");
   };
 
   const onClose = () => {

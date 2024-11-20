@@ -5,6 +5,7 @@ import { User } from "@/types/User";
 import { RegisterSchemaType } from "@/zodSchemas/registerSchema";
 import { postProductSchemaType } from "@/zodSchemas/postProductSchema";
 import { Product } from "@/types/Product";
+import { error } from "console";
 
 const baseUrl = "http://localhost:3001/api";
 
@@ -175,6 +176,29 @@ export const postProduct = async (
 
     const product: Product = await res.json();
     return { result: product, error: null };
+  } catch (error: any) {
+    console.log(error.message);
+    return { error: formatError(error), result: null };
+  }
+};
+
+export const deleteProduct = async (productId: string) => {
+  try {
+    const response = await fetch(`${baseUrl}/products/${productId}`, {
+      method: "delete",
+      headers: {
+        "Content-type": "application/json",
+        Cookie: cookies().toString(),
+      },
+      cache: "no-cache",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return { error: formatError(error), result: null };
+    }
+
+    return { error: null, result: true };
   } catch (error: any) {
     console.log(error.message);
     return { error: formatError(error), result: null };
