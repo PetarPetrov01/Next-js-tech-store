@@ -12,12 +12,7 @@ import LayoutToggle from "./product-layout-toggle";
 import { ProductWithImages } from "@/types/Product";
 import UploadImages from "./upload-images";
 import useWindowWidth from "@/hooks/useWindowWidth";
-
-interface ReturnedImages {
-  id: number;
-  url: string;
-  productId: string;
-}
+import { uploadImages } from "@/app/lib/actions";
 
 export default function ManageProductImages({
   product,
@@ -30,9 +25,9 @@ export default function ManageProductImages({
   const [showUploadImages, setShowUploadImages] = useState(
     product.images.length < 1
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const { windowWidth } = useWindowWidth();
-  console.log(windowWidth)
 
   const searchParams = useSearchParams();
 
@@ -75,33 +70,6 @@ export default function ManageProductImages({
 
     setSelectedImageURLs([]);
     setImages(remainingImageUrls);
-  };
-
-  const handleUploadImages = async (data: File[]) => {
-    const formData = new FormData();
-    if (data && data.length > 0) {
-      data.forEach((file) => formData.append("images", file));
-    }
-
-    const res = await fetch(
-      `http://localhost:3001/api/products/${product.id}/images`,
-      {
-        method: "post",
-        body: formData,
-        credentials: "include",
-      }
-    );
-
-    if (!res.ok) {
-      console.log("error");
-      return;
-    }
-
-    const returnedData: { images: ReturnedImages[] } = await res.json();
-    const { images } = returnedData;
-
-    setImages(images.map((image) => ({ id: image.id, url: image.url })));
-    console.log(images);
   };
 
   return (
@@ -257,8 +225,9 @@ export default function ManageProductImages({
           </a>
         ) : (
           <UploadImages
-            handleUploadImages={handleUploadImages}
             toggleUploadImages={toggleUploadImages}
+            productId={product.id}
+            setImages={setImages}
           />
         )}
       </div>

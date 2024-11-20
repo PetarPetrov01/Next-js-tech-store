@@ -1,33 +1,47 @@
-import { useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { FaXmark } from "react-icons/fa6";
 import { formatDataSize } from "@/app/utils/formatDataSize";
+import { ButtonLoader, ButtonLoaderWrapper } from "../ui/loaders/button-loader";
+import { uploadImages } from "@/app/lib/actions";
 
 const IMAGE_MAX_SIZE = 1024 * 1024 * 3;
+const MAX_FILES = 7;
 
 type FileWithPreview = File & {
   previewUrl: string;
 };
 
 export default function UploadImages({
-  handleUploadImages,
   toggleUploadImages,
+  productId,
+  setImages,
 }: {
-  handleUploadImages: (data: File[]) => void;
   toggleUploadImages: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  productId: string;
+  setImages: Dispatch<SetStateAction<{ id: number; url: string }[]>>;
 }) {
-  const [images, setImages] = useState<FileWithPreview[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<FileWithPreview[]>([]);
   const [rejectedFiles, setRejectedFiles] = useState<FileRejection[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
-      setImages((prev) => [
-        ...prev,
-        ...acceptedFiles.map((file) =>
-          Object.assign(file, { previewUrl: URL.createObjectURL(file) })
-        ),
-      ]);
+      setUploadedImages((prev) => {
+        if (prev.length + acceptedFiles.length > MAX_FILES) {
+          setError("Max files exceeded");
+          return prev;
+        }
+
+        return [
+          ...prev,
+          ...acceptedFiles.map((file) =>
+            Object.assign(file, { previewUrl: URL.createObjectURL(file) })
+          ),
+        ];
+      });
 
       if (rejectedFiles.length > 0) {
         setRejectedFiles((prev) => {
@@ -45,7 +59,9 @@ export default function UploadImages({
   );
 
   const onRemoveImage = (fileName: string) => {
-    setImages((files) => files.filter((file) => file.name !== fileName));
+    setUploadedImages((files) =>
+      files.filter((file) => file.name !== fileName)
+    );
   };
 
   const onRemoveRejected = (fileName: string) => {
@@ -60,8 +76,9 @@ export default function UploadImages({
       "image/*": [],
     },
     maxSize: IMAGE_MAX_SIZE,
+    maxFiles: MAX_FILES,
     validator: (file) => {
-      if (images.some((im) => im.name == file.name)) {
+      if (uploadedImages.some((im) => im.name == file.name)) {
         return {
           code: "same-image",
           message: "An image with the same name already exists",
@@ -71,15 +88,39 @@ export default function UploadImages({
     },
   });
 
-  const handleUploadClick = () => {
-    handleUploadImages(images);
-    setImages([]);
-    setRejectedFiles([]);
+  const handleUploadImages = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    setError("");
+    setIsLoading(true);
+
+    const data = uploadedImages;
+
+    const formData = new FormData();
+    if (data && data.length > 0) {
+      data.forEach((file) => formData.append("images", file));
+    }
+
+    const { result, error } = await uploadImages(productId, formData);
+
+    if (error) {
+      setIsLoading(false);
+      setError(error.message);
+      return;
+    }
+
+    if (result) {
+      const { images } = result;
+      setImages(images.map((image) => ({ id: image.id, url: image.url })));
+      setIsLoading(false);
+      setRejectedFiles([]);
+      setUploadedImages([]);
+    }
   };
 
   const handleCloseClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     toggleUploadImages(e);
-    setImages([]);
+    setUploadedImages([]);
     setRejectedFiles([]);
   };
 
@@ -94,21 +135,31 @@ export default function UploadImages({
       <article className="bg-new-darkblue w-full min-h-[300px] flex flex-col items-center duration-300 overflow-hidden gap-8 py-8 text-new-mint">
         <div
           {...getRootProps({
-            className:
-              "flex justify-center items-center w-[90%] sm:w-[70%] h-48 border-[3px] border-dashed rounded-3xl border-gray-400 p-4 bg-neutral-200/15 duration-150 hover:bg-neutral-200/20  text-center cursor-pointer",
+            className: `${
+              uploadedImages.length < MAX_FILES
+                ? "h-48 w-[90%] sm:w-[70%] border-[3px] p-4"
+                : "h-0 w-0 border-0 p-0"
+            } flex flex-col gap-1 justify-center items-center border-dashed rounded-3xl border-gray-400 bg-neutral-200/15 duration-150 hover:bg-neutral-200/20  text-center cursor-pointer`,
           })}
         >
           <input {...getInputProps()} />
-          {isDragActive ? (
-            <p className="text-xl">Drop the files here...</p>
-          ) : (
-            <p className="text-xl">
-              Drag and drop images here, or click to select
-            </p>
-          )}
+          {uploadedImages.length < MAX_FILES &&
+            (isDragActive ? (
+              <p className="text-xl">Drop the files here...</p>
+            ) : (
+              <>
+                <p className="text-xl">
+                  Drag and drop images here, or click to select
+                </p>
+                <p className="text-xs">
+                  *The maximum amount of files to be uploaded at once is{" "}
+                  {MAX_FILES}
+                </p>
+              </>
+            ))}
         </div>
         <div className="w-full flex flex-col items-center gap-8">
-          {images.length > 0 && (
+          {uploadedImages.length > 0 && (
             <>
               <button
                 onClick={handleUploadClick}
@@ -116,9 +167,15 @@ export default function UploadImages({
               >
                 Upload images
               </button>
+                {error && (
+                  <span className="absolute w-1/2 text-red-300 text-center bottom-[-1.35em]">
+                    {error}
+                  </span>
+                )}
+              </div>
               <h3>Accepted Images</h3>
               <ul className="w-full flex flex-wrap gap-6 justify-center">
-                {images.map((f) => (
+                {uploadedImages.map((f) => (
                   <li
                     key={f.name}
                     className="relative basis-[40%] sm:basis-[30%] md:basis-[22%] mdl:basis-[17%]"
