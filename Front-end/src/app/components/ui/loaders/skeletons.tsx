@@ -83,12 +83,34 @@ export function ProductFormSkeleton() {
     <div className="relative overflow-hidden select-none flex flex-col gap-2 p-3 mt-4">
       <p className="z-10 bg-new-darkblue text-transparent">Loading</p>
       <div className="flex justify-between gap-8">
-        <div className="flex-[1_1_45%] z-10 p-2 text-transparent bg-new-darkblue">Loading</div>
+        <div className="flex-[1_1_45%] z-10 p-2 text-transparent bg-new-darkblue">
+          Loading
+        </div>
         <div className="flex-[1_1_45%] z-10 p-2 text-transparent bg-new-darkblue">
           Loading
         </div>
       </div>
-      <div className={`absolute left-0 top-0 w-full h-full ${animateSkeletonClasses}`}></div>
+      <div
+        className={`absolute left-0 top-0 w-full h-full ${animateSkeletonClasses}`}
+      ></div>
     </div>
   );
+}
+
+export function ManageImagesListSkeleton({ viewType }: { viewType: string }) {
+  return new Array(viewType == "big" ? 3 : 5).fill("").map((_, i) => (
+    <div
+      key={i}
+      className={`relative z-10 overflow-hidden bg-transparent bg-new-darkblue group h-auto aspect-[4/3] p-4 rounded-lg ${
+        viewType == "big"
+          ? "flex-[0_0_100%] sm:flex-[0_0_48%] mdl:flex-[0_0_32%]"
+          : "flex-[0_0_48%] sm:flex-[0_0_32%] mdl:flex-[0_0_19.2%]"
+      }`}
+    >
+      <div className="relative z-10 w-full h-full  bg-new-darkblue opacity-75"></div>
+      <div
+        className={`absolute left-0 top-0 w-full h-full ${animateSkeletonClasses}`}
+      ></div>
+    </div>
+  ));
 }

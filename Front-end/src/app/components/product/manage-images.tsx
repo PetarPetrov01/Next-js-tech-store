@@ -12,7 +12,7 @@ import LayoutToggle from "./product-layout-toggle";
 import { ProductWithImages } from "@/types/Product";
 import UploadImages from "./upload-images";
 import useWindowWidth from "@/hooks/useWindowWidth";
-import { uploadImages } from "@/app/lib/actions/product";
+import { ManageImagesListSkeleton } from "../ui/loaders/skeletons";
 
 export default function ManageProductImages({
   product,
@@ -31,7 +31,10 @@ export default function ManageProductImages({
 
   const searchParams = useSearchParams();
 
-  const gridSize = useMemo(() => searchParams.get("grid-size"), [searchParams]);
+  const gridSize = useMemo(
+    () => searchParams.get("grid-size") || "normal",
+    [searchParams]
+  );
 
   const handleSelectImage = (url: string) => {
     setSelectedImageURLs((prev) => [...prev, url]);
@@ -51,6 +54,8 @@ export default function ManageProductImages({
   };
 
   const handleDeleteImages = async () => {
+    setIsLoading(true);
+
     const res = await fetch(
       `http://localhost:3001/api/products/${product.id}/images`,
       {
@@ -69,7 +74,8 @@ export default function ManageProductImages({
     const remainingImageUrls = await res.json();
 
     setSelectedImageURLs([]);
-    setImages(remainingImageUrls);
+    setIsLoading(false);
+    setImages(remainingImageUrls || []);
   };
 
   return (
@@ -147,64 +153,68 @@ export default function ManageProductImages({
                 : "gap-[4%] gap-y-8 sm:gap-[2%] sm:gap-y-6 mdl:gap-[1%] mdl:gap-y-2"
             }`}
           >
-            {images.map((im, i) => (
-              <div
-                onTouchStart={(e) => {
-                  e.preventDefault();
-                  handleSelectImage(im.url);
-                }}
-                key={`${i}-${im.id}`}
-                className={`relative group h-auto aspect-[4/3] duration-200 p-4 hover:bg-neutral-300/30 rounded-lg ${
-                  gridSize == "big"
-                    ? "flex-[0_0_100%] sm:flex-[0_0_48%] mdl:flex-[0_0_32%]"
-                    : "flex-[0_0_48%] sm:flex-[0_0_32%] mdl:flex-[0_0_19.2%]"
-                } ${
-                  selectedImageURLs.includes(im.url)
-                    ? "bg-neutral-300/30"
-                    : "bg-neutral-400/25"
-                }`}
-              >
-                <div className="relative w-full h-full group-hover:opacity-75 duration-200">
-                  <Image
-                    fill={true}
-                    sizes="(min-width: 1280px) 292px, (min-width: 940px) 23vw, (min-width: 640px) 34vw, 82vw"
-                    src={im.url}
-                    alt={`${product.id}-image-${i}`}
-                    className="object-cover pointer-events-none group-hover:scale-105 duration-150"
-                  />
-                </div>
+            {isLoading ? (
+              <ManageImagesListSkeleton viewType={gridSize} />
+            ) : (
+              images.map((im, i) => (
                 <div
-                  className={`absolute duration-200 top-6 right-6 ${
-                    selectedImageURLs.length > 0
-                      ? "opacity-100"
-                      : "opacity-0 group-hover:opacity-100"
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    handleSelectImage(im.url);
+                  }}
+                  key={`${i}-${im.id}`}
+                  className={`relative group h-auto aspect-[4/3] duration-200 p-4 hover:bg-neutral-300/30 rounded-lg ${
+                    gridSize == "big"
+                      ? "flex-[0_0_100%] sm:flex-[0_0_48%] mdl:flex-[0_0_32%]"
+                      : "flex-[0_0_48%] sm:flex-[0_0_32%] mdl:flex-[0_0_19.2%]"
+                  } ${
+                    selectedImageURLs.includes(im.url)
+                      ? "bg-neutral-300/30"
+                      : "bg-neutral-400/25"
                   }`}
                 >
-                  <button>
-                    {selectedImageURLs.includes(im.url) ? (
-                      <FaSquareCheck
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          handleDeselectImage(im.url);
-                        }}
-                        size={"1.85em"}
-                        className="text-new-peach-100"
-                      />
-                    ) : (
-                      <FaRegSquare
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          handleSelectImage(im.url);
-                        }}
-                        size={"1.85em"}
-                      />
-                    )}
-                  </button>
+                  <div className="relative w-full h-full group-hover:opacity-75 duration-200">
+                    <Image
+                      fill={true}
+                      sizes="(min-width: 1280px) 292px, (min-width: 940px) 23vw, (min-width: 640px) 34vw, 82vw"
+                      src={im.url}
+                      alt={`${product.id}-image-${i}`}
+                      className="object-cover pointer-events-none group-hover:scale-105 duration-150"
+                    />
+                  </div>
+                  <div
+                    className={`absolute duration-200 top-6 right-6 ${
+                      selectedImageURLs.length > 0
+                        ? "opacity-100"
+                        : "opacity-0 group-hover:opacity-100"
+                    }`}
+                  >
+                    <button>
+                      {selectedImageURLs.includes(im.url) ? (
+                        <FaSquareCheck
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handleDeselectImage(im.url);
+                          }}
+                          size={"1.85em"}
+                          className="text-new-peach-100"
+                        />
+                      ) : (
+                        <FaRegSquare
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            handleSelectImage(im.url);
+                          }}
+                          size={"1.85em"}
+                        />
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </>
       ) : (
