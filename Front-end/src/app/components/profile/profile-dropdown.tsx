@@ -1,6 +1,7 @@
-import { User } from "@/types/User";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
+
+import { User } from "@/types/User";
 
 export function ProfileDropdown({
   user,

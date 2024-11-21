@@ -1,10 +1,13 @@
+import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { z } from "zod";
 
-import { SubmitHandler, useForm } from "react-hook-form";
-import { XMarkIcon } from "@heroicons/react/20/solid";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import { ImageSchema } from "@/zodSchemas/imageSchema";
+import { XMarkIcon } from "@heroicons/react/20/solid";
+
+import { ButtonLoaderWrapper } from "../ui/loaders/button-loader";
 
 type Inputs = z.infer<typeof ImageSchema>;
 
@@ -115,21 +118,17 @@ export default function UploadImageForm({
                   <XMarkIcon width={24} />
                 </a>
               </div>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="bg-new-peach-100 w-20 h-10 enabled:hover:bg-new-sandstone duration-150"
-              >
-                {isLoading ? (
-                  <div className="flex flex-row justify-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-white animate-fast-bounce"></div>
-                    <div className="w-3 h-3 rounded-full bg-white animate-fast-bounce [animation-delay:-.15s]"></div>
-                    <div className="w-3 h-3 rounded-full bg-white animate-fast-bounce [animation-delay:-.3s]"></div>
-                  </div>
-                ) : (
+              <ButtonLoaderWrapper isLoading={isLoading}>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className={`bg-new-peach-100 w-20 h-10 enabled:hover:bg-new-sandstone duration-150 ${
+                    isLoading && "text-transparent"
+                  }`}
+                >
                   <p className="text-xl">Save</p>
-                )}
-              </button>
+                </button>
+              </ButtonLoaderWrapper>
             </>
           )}
         </form>

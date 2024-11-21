@@ -1,13 +1,16 @@
 "use client";
 
-import { User } from "@/types/User";
-import { CameraIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { ChangeEvent, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useState } from "react";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { z } from "zod";
+
 import UploadImageForm from "./upload-form";
+import { User } from "@/types/User";
+import { CameraIcon } from "@heroicons/react/20/solid";
 
 const userSchema = z.object({
   username: z
@@ -73,7 +76,7 @@ export default function ProfileForm({ user }: { user: User }) {
               className="absolute top-[-35%] sm:top-[-25%] left-[50%] translate-x-[-50%] rounded-full border-4 border-new-peach shadow-md shadow-new-sandstone"
             >
               <Image
-                src={user?.image ? user.image : "/default-company-pic.png"}
+                src={user?.image || "/default-company-pic.png"}
                 alt="profile pic"
                 width={150}
                 height={150}
