@@ -55,24 +55,24 @@ export default function DesktopNav({
                 logout={onLogoutClick}
               />
               <li
-                className="flex items-center gap-2 cursor-pointer relative text-white text-lg mx-3 py-1 "
                 onClick={handleClick}
+                className="flex items-center gap-2 cursor-pointer relative text-new-mint text-lg mx-3 py-1 "
               >
-                <div className="rounded-full overflow-hidden flex justify-center items-center">
+                <div className="rounded-full overflow-hidden border-[1px] border-new-mint flex justify-center items-center">
                   <Image
                     src={user.image || "/default-profile.jpg"}
-                    width={40}
-                    height={40}
+                    width={45}
+                    height={45}
                     alt={user.email}
                     className="aspect-square object-cover"
                   />
                 </div>
               </li>
-              <li className="flex items-center cursor-pointer text-white text-lg mx-3 py-1">
+              <li className="flex items-center cursor-pointer text-new-mint text-lg mx-3 py-1">
                 <Cart size="1.9em" />
                 <Link
                   href={"/cart"}
-                  className="text-white text-lg py-1 hover:text-new-peach-90 duration-200"
+                  className="text-new-mint text-lg py-1 hover:text-new-peach-90 duration-200"
                 >
                   CART
                 </Link>

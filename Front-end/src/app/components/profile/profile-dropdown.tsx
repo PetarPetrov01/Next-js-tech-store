@@ -21,12 +21,14 @@ export function ProfileDropdown({
       open={open}
       onClose={onClose}
       anchorEl={anchorEl}
+      sx={{
+        "& .MuiPaper-root": {
+          backgroundColor: "#091349",
+        },
       }}
     >
-      <h3 className="relative text-new-midnight-100 font-bold after:absolute after:left-[-1rem] after:top-[calc(100%+0.2rem)] after:h-[1px] after:bg-new-midnight-100 after:w-[calc(100%+2rem)]">
-            className="text-new-midnight-100 text-xl hover:border-pink hover:text-new-darkblue duration-200 cursor-pointer"
-            className="text-new-midnight-100 text-xl hover:border-pink hover:text-new-darkblue duration-200 cursor-pointer"
       <div className="min-w-32 px-2 text-new-mint">
+        <h3 className="relative font-bold after:absolute after:left-[-1rem] after:top-[calc(100%+0.2rem)] after:h-[1px] after:bg-new-mint after:w-[calc(100%+2rem)]">
           {user.username}
         </h3>
         <ul className="flex flex-col justify-start pt-2">
@@ -34,6 +36,7 @@ export function ProfileDropdown({
             <Link
               href={"/profile"}
               onClick={onClose}
+              className="hover:text-new-peach-100  text-lg duration-200 cursor-pointer"
             >
               Profile page
             </Link>
@@ -41,6 +44,7 @@ export function ProfileDropdown({
           <li className="">
             <a
               onClick={logout}
+              className="hover:text-new-peach-100  text-lg duration-200 cursor-pointer"
             >
               Logout
             </a>
