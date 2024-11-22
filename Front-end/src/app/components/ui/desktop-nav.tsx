@@ -1,9 +1,11 @@
 import Link from "next/link";
-import ProfileDropdown from "../profile/profile-dropdown";
-import Cart from "../cart/cart";
-import { Links } from "./header";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+
+import ProfileDropdown from "../profile/profile-dropdown";
+import { Links } from "./header";
+import Cart from "../cart/cart";
+
 import { User } from "@/types/User";
 
 export default function DesktopNav({
@@ -15,32 +17,19 @@ export default function DesktopNav({
   logout: () => Promise<void>;
   user: User | null;
 }) {
-  const [profileDropdown, setProfileDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLLIElement>(null);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLLIElement | null>(null);
 
-  const handleOutsideClick = (event: Event) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setProfileDropdown(false);
-    }
+  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    setMenuAnchorEl(event.currentTarget);
   };
 
-  useEffect(() => {
-    if (profileDropdown) {
-      document.addEventListener("click", handleOutsideClick);
-    } else {
-      document.removeEventListener("click", handleOutsideClick);
-    }
+  const handleClose = () => {
+    setMenuAnchorEl(null);
+  };
 
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, [profileDropdown]);
-
-  const toggleProfileDropdown = () => {
-    setProfileDropdown((state) => !state);
+  const onLogoutClick = () => {
+    setMenuAnchorEl(null);
+    logout();
   };
 
   return (
@@ -59,17 +48,16 @@ export default function DesktopNav({
           ))}
           {user?.email && (
             <>
+              <ProfileDropdown
+                user={user}
+                onClose={handleClose}
+                anchorEl={menuAnchorEl}
+                logout={onLogoutClick}
+              />
               <li
-                ref={dropdownRef}
-                onClick={toggleProfileDropdown}
                 className="flex items-center gap-2 cursor-pointer relative text-white text-lg mx-3 py-1 "
+                onClick={handleClick}
               >
-                <ProfileDropdown
-                  user={user}
-                  profileDropdown={profileDropdown}
-                  logout={logout}
-                  setProfileDropdown={setProfileDropdown}
-                />
                 <div className="rounded-full overflow-hidden flex justify-center items-center">
                   <Image
                     src={user.image || "/default-profile.jpg"}
@@ -79,9 +67,6 @@ export default function DesktopNav({
                     className="aspect-square object-cover"
                   />
                 </div>
-                <p className="text-lg hover:text-new-peach-90 duration-200">
-                  PROFILE
-                </p>
               </li>
               <li className="flex items-center cursor-pointer text-white text-lg mx-3 py-1">
                 <Cart size="1.9em" />

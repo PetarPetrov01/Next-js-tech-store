@@ -1,13 +1,16 @@
 "use client";
-import { useAuthContext } from "@/contexts/AuthProvider";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+
+import { useAuthContext } from "@/contexts/AuthProvider";
 import useWindowWidth from "@/hooks/useWindowWidth";
+import useMounted from "@/hooks/useMounted";
+
 import DesktopNav from "./desktop-nav";
 import MobileNav from "./mobile-nav";
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import useMounted from "@/hooks/useMounted";
 
 export type Links = { href: string; label: string }[];
 export type LinksObject = {
@@ -29,7 +32,7 @@ const userLinks = [
 export default function Header() {
   const { user, clearAuth } = useAuthContext();
   const { windowWidth } = useWindowWidth();
-  const mounted = useMounted()
+  const mounted = useMounted();
   const router = useRouter();
 
   const links = useMemo(() => {
