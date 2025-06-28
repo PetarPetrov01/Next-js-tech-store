@@ -9,7 +9,7 @@ import { ProductListSkeleton } from "./ui/loaders/skeletons";
 
 import useMounted from "@/hooks/useMounted";
 import { parseSearchParams } from "../utils/parseSearchParams";
-import { getProds } from "../lib/data";
+import { getProducts } from "../lib/data";
 
 const emptyArr = new Array(3).fill("");
 
@@ -22,7 +22,7 @@ export default function ProductsList() {
   useEffect(() => {
     setIsLoading(true);
     const fetchProds = async () => {
-      const prods = await getProds(parseSearchParams(searchParams));
+      const prods = await getProducts(parseSearchParams(searchParams));
       setIsLoading(false);
       setProducts(prods);
     };

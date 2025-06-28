@@ -22,7 +22,7 @@ export default async function ProductDetails({
             <ProductImages
               ownerId={product.ownerId}
               images={
-                product.images?.length > 0 ? product.images : ["/no-image.png"]
+                product.images?.length > 0 ? product.images.map((img) => img.url) : ["/no-image.png"]
               }
             />
           </article>

@@ -7,6 +7,7 @@ import {
   APIProduct,
   Brands,
   Categories,
+  populatedProductInclude,
   PopulatedProduct,
   ProductQueryParams,
   ProductWithImages,
@@ -14,30 +15,27 @@ import {
 
 const baseUrl = "http://localhost:3001/api";
 
+const getOrderByClause = (sortParam: any) => {
+  if (!sortParam) {
+    return { name: "asc" } as Prisma.ProductOrderByWithRelationInput;
+  }
 
-export const getProds = async (
+  if (sortParam.key == "brand") {
+    return {
+      ["brand"]: {
+        ["name"]: sortParam.order,
+      },
+    };
+  } else {
+    return {
+      [sortParam.key]: sortParam.order,
+    };
+  }
+};
+
+export const getProducts = async (
   searchParams: ProductQueryParams
 ): Promise<APIProduct[]> => {
-  console.log(searchParams)
-
-  const getOrderByClause = (sortParam: any) => {
-    if (!sortParam) {
-      return { name: "asc" } as Prisma.ProductOrderByWithRelationInput;
-    }
-
-    if (sortParam.key == "brand") {
-      return {
-        ["brand"]: {
-          ["name"]: sortParam.order,
-        },
-      };
-    } else {
-      return {
-        [sortParam.key]: sortParam.order,
-      };
-    }
-  };
-
   const orderBy = getOrderByClause(searchParams?.sort);
 
   const prods = await prisma.product.findMany({
@@ -118,14 +116,19 @@ export const getBrandsByCategory = async (
   return data;
 };
 
-export const getProduct = async (prodId: string): Promise<PopulatedProduct> => {
-  const res = await fetch(`${baseUrl}/products/${prodId}`, {
-    cache: "no-cache",
+export const getProduct = async (productId: string): Promise<PopulatedProduct> => {
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    include: populatedProductInclude
   });
-  if(!res.ok){
-    notFound()
+
+  if (!product) {
+    throw new Error('Product not found');
   }
-  return res.json();
+
+  console.log(product);
+
+  return product;
 };
 
 export const getProductImages = async (
