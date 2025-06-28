@@ -1,37 +1,81 @@
-"use server";
+"use server"
 
+import { prisma } from '../config/db-config'
+import { Prisma } from '@prisma/client'
 import { notFound, redirect } from "next/navigation";
 import {
   APIProduct,
   Brands,
   Categories,
   PopulatedProduct,
+  ProductQueryParams,
   ProductWithImages,
 } from "../../types/Product";
 
 const baseUrl = "http://localhost:3001/api";
 
+
 export const getProds = async (
-  queryParams: URLSearchParams
+  searchParams: ProductQueryParams
 ): Promise<APIProduct[]> => {
-  const queryParamsArr: string[] = [];
+  console.log(searchParams)
 
-  if (queryParams) {
-    Object.values(queryParams).forEach(
-      ([key, val]: [string, [keyof URLSearchParams]]) => {
-        if (val) {
-          queryParamsArr.push(`${key}=${encodeURIComponent(val.toString())}`);
-        }
-      }
-    );
-  }
+  const getOrderByClause = (sortParam: any) => {
+    if (!sortParam) {
+      return { name: "asc" } as Prisma.ProductOrderByWithRelationInput;
+    }
 
-  const res = await fetch(`${baseUrl}/products?${queryParamsArr.join("&")}`, {
-    cache: "no-cache",
-    credentials: "include",
+    if (sortParam.key == "brand") {
+      return {
+        ["brand"]: {
+          ["name"]: sortParam.order,
+        },
+      };
+    } else {
+      return {
+        [sortParam.key]: sortParam.order,
+      };
+    }
+  };
+
+  const orderBy = getOrderByClause(searchParams?.sort);
+
+  const prods = await prisma.product.findMany({
+    where: {
+      OR: [
+        {
+          name: { contains: searchParams.search || undefined, mode: "insensitive" },
+        },
+        {
+          brand: {
+            name: { contains: searchParams.search || undefined, mode: "insensitive" },
+          },
+        },
+        {
+          model: { contains: searchParams.search || undefined, mode: "insensitive" },
+        },
+      ],
+      category: { id: Number(searchParams.category) || undefined },
+      brand: { id: Number(searchParams.brand) || undefined },
+      price: {
+        gte: Number(searchParams.price?.gte) || undefined,
+        lte: Number(searchParams.price?.lte) || undefined,
+      },
+    },
+    include: {
+      category: { select: { name: true } },
+      brand: { select: { name: true } },
+      images: { select: { url: true } },
+    },
+    orderBy,
   });
-  const data = await res.json();
-  return data;
+
+  return prods.map((p) => ({
+    ...p,
+    category: p.category.name,
+    brand: p.brand.name,
+    images: p.images.map((i) => i.url),
+  }));
 };
 
 export const getCategories = async (): Promise<Categories> => {

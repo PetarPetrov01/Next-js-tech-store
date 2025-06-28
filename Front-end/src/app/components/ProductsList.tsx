@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProds } from "../lib/data";
-import ProductCard from "./product/product-card";
-import { APIProduct } from "@/types/Product";
 import { useSearchParams } from "next/navigation";
+import { APIProduct } from "@/types/Product";
+
+import ProductCard from "./product/product-card";
 import { ProductListSkeleton } from "./ui/loaders/skeletons";
+
 import useMounted from "@/hooks/useMounted";
+import { parseSearchParams } from "../utils/parseSearchParams";
+import { getProds } from "../lib/data";
 
 const emptyArr = new Array(3).fill("");
 
@@ -19,7 +22,7 @@ export default function ProductsList() {
   useEffect(() => {
     setIsLoading(true);
     const fetchProds = async () => {
-      const prods = await getProds(searchParams);
+      const prods = await getProds(parseSearchParams(searchParams));
       setIsLoading(false);
       setProducts(prods);
     };

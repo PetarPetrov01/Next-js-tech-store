@@ -38,4 +38,18 @@ export type Categories = {
   _count: number;
 }[];
 
+export interface ProductQueryParams {
+  search?: string;
+  category?: number;
+  brand?: number;
+  price?: {
+    gte?: number;
+    lte?: number;
+  };
+  sort?: {
+    key: string;
+    order: 'asc' | 'desc';
+  };
+}
+
 export type Brands = Categories;
