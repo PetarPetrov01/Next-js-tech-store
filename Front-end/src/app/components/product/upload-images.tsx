@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { FaXmark } from "react-icons/fa6";
@@ -14,15 +14,13 @@ type FileWithPreview = File & {
 };
 
 export default function UploadImages({
-  toggleUploadImages,
+  isOpen,
   productId,
   setImages,
-  uploadImagesRef,
 }: {
-  toggleUploadImages: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  isOpen: boolean;
   productId: string;
   setImages: Dispatch<SetStateAction<{ id: number; url: string }[]>>;
-  uploadImagesRef: React.RefObject<HTMLDivElement>;
 }) {
   const [uploadedImages, setUploadedImages] = useState<FileWithPreview[]>([]);
   const [rejectedFiles, setRejectedFiles] = useState<FileRejection[]>([]);
@@ -120,21 +118,16 @@ export default function UploadImages({
     }
   };
 
-  const handleCloseClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    toggleUploadImages(e);
-    setUploadedImages([]);
-    setRejectedFiles([]);
-  };
+  useEffect(() => {
+    if (!isOpen) {
+      setUploadedImages([]);
+      setRejectedFiles([]);
+    }
+  }, [isOpen]);
 
   return (
     <>
-      {/* <a
-        onClick={handleCloseClick}
-        className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
-      >
-        Cancel
-      </a> */}
-      <article className="bg-new-darkblue w-full min-h-[300px] flex flex-col items-center duration-300 overflow-hidden gap-8 py-8 text-new-mint" ref={uploadImagesRef}>
+      <article className="bg-new-darkblue w-full min-h-[300px] flex flex-col items-center duration-300 overflow-hidden gap-8 py-8 text-new-mint">
         <div
           {...getRootProps({
             className: `${
