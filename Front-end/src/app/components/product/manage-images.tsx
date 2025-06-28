@@ -13,6 +13,7 @@ import { ProductWithImages } from "@/types/Product";
 import UploadImages from "./upload-images";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import { ManageImagesListSkeleton } from "../ui/loaders/skeletons";
+import Dropdown from "../Dropdown";
 
 export default function ManageProductImages({
   product,
@@ -25,8 +26,6 @@ export default function ManageProductImages({
   const [showUploadImages, setShowUploadImages] = useState(
     product.images.length < 1
   );
-  const uploadImagesContainerRef = useRef<HTMLDivElement>(null);
-  const uploadImagesRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const { windowWidth } = useWindowWidth();
@@ -48,24 +47,7 @@ export default function ManageProductImages({
 
   const toggleUploadImages = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    setShowUploadImages((prev) => {
-      let timeout: NodeJS.Timeout | null = null;
-      timeout && clearTimeout(timeout);
-
-      if (prev) {
-        uploadImagesContainerRef.current!.style.height = `${uploadImagesRef.current?.offsetHeight}px`;
-        timeout = setTimeout(() => {
-          uploadImagesContainerRef.current!.style.height = "0";
-        });
-      } else {
-        uploadImagesContainerRef.current!.style.height = `${uploadImagesRef.current?.offsetHeight}px`;
-        timeout = setTimeout(() => {
-          uploadImagesContainerRef.current!.style.height = "auto";
-        }, 200);
-      }
-
-      return !prev;
-    });
+    setShowUploadImages((prev) => !prev);
   };
 
   const handleClearSelection = () => {
@@ -245,21 +227,20 @@ export default function ManageProductImages({
         </>
       )}
       <div className="flex flex-col items-center gap-8 w-[90%] sm:w-[80%]">
-          <a
-            onClick={toggleUploadImages}
-            className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
-          >
-            {showUploadImages ? "Cancel" : "Upload " + (images.length > 0 ? "more " : "") + "images"}
-          </a>
+        <a
+          onClick={toggleUploadImages}
+          className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
+        >
+          {showUploadImages ? "Cancel" : "Upload " + (images.length > 0 ? "more " : "") + "images"}
+        </a>
         
-        <div className={`h-0 overflow-hidden duration-300 w-full`} ref={uploadImagesContainerRef}>
+        <Dropdown isOpen={showUploadImages} className="w-full">
           <UploadImages
-            toggleUploadImages={toggleUploadImages}
+            isOpen={showUploadImages}
             productId={product.id}
             setImages={setImages}
-            uploadImagesRef={uploadImagesRef}
           />
-        </div>
+        </Dropdown>
       </div>
     </div>
   );
