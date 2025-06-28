@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 
 import { FaRegSquare, FaSquare, FaSquareCheck, FaXmark } from "react-icons/fa6";
 import { BiSolidGridAlt, BiSolidGrid } from "react-icons/bi";
@@ -25,6 +25,8 @@ export default function ManageProductImages({
   const [showUploadImages, setShowUploadImages] = useState(
     product.images.length < 1
   );
+  const uploadImagesContainerRef = useRef<HTMLDivElement>(null);
+  const uploadImagesRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const { windowWidth } = useWindowWidth();
@@ -46,7 +48,24 @@ export default function ManageProductImages({
 
   const toggleUploadImages = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    setShowUploadImages((prev) => !prev);
+    setShowUploadImages((prev) => {
+      let timeout: NodeJS.Timeout | null = null;
+      timeout && clearTimeout(timeout);
+
+      if (prev) {
+        uploadImagesContainerRef.current!.style.height = `${uploadImagesRef.current?.offsetHeight}px`;
+        timeout = setTimeout(() => {
+          uploadImagesContainerRef.current!.style.height = "0";
+        });
+      } else {
+        uploadImagesContainerRef.current!.style.height = `${uploadImagesRef.current?.offsetHeight}px`;
+        timeout = setTimeout(() => {
+          uploadImagesContainerRef.current!.style.height = "auto";
+        }, 200);
+      }
+
+      return !prev;
+    });
   };
 
   const handleClearSelection = () => {
@@ -226,20 +245,21 @@ export default function ManageProductImages({
         </>
       )}
       <div className="flex flex-col items-center gap-8 w-[90%] sm:w-[80%]">
-        {showUploadImages ? (
           <a
             onClick={toggleUploadImages}
             className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
           >
-            Upload {images.length > 0 && "more "}images
+            {showUploadImages ? "Cancel" : "Upload " + (images.length > 0 ? "more " : "") + "images"}
           </a>
-        ) : (
+        
+        <div className={`h-0 overflow-hidden duration-300 w-full`} ref={uploadImagesContainerRef}>
           <UploadImages
             toggleUploadImages={toggleUploadImages}
             productId={product.id}
             setImages={setImages}
+            uploadImagesRef={uploadImagesRef}
           />
-        )}
+        </div>
       </div>
     </div>
   );

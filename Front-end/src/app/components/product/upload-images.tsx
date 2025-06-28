@@ -17,10 +17,12 @@ export default function UploadImages({
   toggleUploadImages,
   productId,
   setImages,
+  uploadImagesRef,
 }: {
   toggleUploadImages: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   productId: string;
   setImages: Dispatch<SetStateAction<{ id: number; url: string }[]>>;
+  uploadImagesRef: React.RefObject<HTMLDivElement>;
 }) {
   const [uploadedImages, setUploadedImages] = useState<FileWithPreview[]>([]);
   const [rejectedFiles, setRejectedFiles] = useState<FileRejection[]>([]);
@@ -126,13 +128,13 @@ export default function UploadImages({
 
   return (
     <>
-      <a
+      {/* <a
         onClick={handleCloseClick}
         className="py-2 px-4 border-2 border-new-peach-100 cursor-pointer duration-200 hover:text-new-darkblue hover:bg-new-peach-100"
       >
         Cancel
-      </a>
-      <article className="bg-new-darkblue w-full min-h-[300px] flex flex-col items-center duration-300 overflow-hidden gap-8 py-8 text-new-mint">
+      </a> */}
+      <article className="bg-new-darkblue w-full min-h-[300px] flex flex-col items-center duration-300 overflow-hidden gap-8 py-8 text-new-mint" ref={uploadImagesRef}>
         <div
           {...getRootProps({
             className: `${
