@@ -1,58 +1,81 @@
 "use server"
 
 import { prisma } from '../config/db-config'
-import { Prisma } from '@prisma/client'
-import { notFound, redirect } from "next/navigation";
-import {
-  APIProduct,
-  Brands,
-  Categories,
-  populatedProductInclude,
-  PopulatedProduct,
-  ProductQueryParams,
-  ProductWithImages,
-} from "../../../types/Product";
-
-const baseUrl = "http://localhost:3001/api";
+import { Brands, Categories } from "../../../types/Product";
 
 export const getCategories = async (): Promise<Categories> => {
-  const res = await fetch(`${baseUrl}/products/categories`, {
-    next: { revalidate: 50 },
+  const categories = await prisma.category.findMany({
+    include: { _count: true },
+    orderBy: { products: { _count: "desc" } },
   });
 
-  const data = await res.json();
-
-  return data;
+  return categories.map((cat) => ({ ...cat, _count: cat._count.products }));
 };
 
 export const getSortedBrands = async (
   catId: number | null
 ): Promise<Brands> => {
-  const res = await fetch(
-    `${baseUrl}/brands/sorted${catId ? `?category=${catId}` : ""}`,
-    {
-      next: { revalidate: 10 },
-    }
-  );
 
-  const data = await res.json();
+  const allBrands = await prisma.brand.findMany({
+    include: {
+      products: { select: { categoryId: true } },
+      _count: {
+        select: { products: true },
+      },
+    },
+    orderBy: { name: "asc" },
+  });
 
-  return data;
+  if (catId) {
+    const sortedBrands = allBrands.sort((a, b) => {
+      const aMatchesCategory = a.products.some(
+        (p) => p.categoryId == catId
+      );
+      const bMatchesCategory = b.products.some(
+        (p) => p.categoryId == catId
+      );
+
+      if (aMatchesCategory && !bMatchesCategory) return -1;
+      if (!aMatchesCategory && bMatchesCategory) return 1;
+
+      return a.name.localeCompare(b.name);
+    });
+
+    return sortedBrands.map((brand) => ({
+      id: brand.id,
+      name: brand.name,
+      _count: brand._count.products,
+    }));
+  }
+
+  return allBrands.map((brand) => ({
+    id: brand.id,
+    name: brand.name,
+    _count: brand._count.products,
+  }));
 };
 
 export const getBrandsByCategory = async (
   catId: number | null
 ): Promise<Brands> => {
-  const res = await fetch(
-    `${baseUrl}${catId ? `/brands?category=${catId}` : "/brands"}`,
-    {
-      next: { revalidate: 10 },
-    }
-  );
+  let categoryId: number | undefined = undefined;
 
-  const data = await res.json();
+  if (catId) {
+    categoryId = Number(catId);
+  }
 
-  return data;
+  const brands = await prisma.brand.findMany({
+    where: {
+      products: {
+        some: { ...(categoryId !== undefined ? { categoryId } : {}) },
+      },
+    },
+    include: { _count: true },
+    orderBy: { name: "asc" },
+  });
+
+  return brands.map((brand) => ({ ...brand, _count: brand._count.products }));
+
 };
 
 
