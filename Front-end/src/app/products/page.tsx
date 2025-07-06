@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import ProductsLayout from "../components/ProductsLayout";
-import { getCategories } from "../lib/data";
+import { getCategories } from "../lib/data/category";
 import Banner from "../components/ui/banner";
 
 export const metadata: Metadata = {

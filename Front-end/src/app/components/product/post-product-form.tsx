@@ -11,7 +11,7 @@ import {
   postProductSchema,
   postProductSchemaType,
 } from "@/zodSchemas/postProductSchema";
-import { getSortedBrands } from "@/app/lib/data";
+import { getSortedBrands } from "@/app/lib/data/category";
 
 import AddNewCategoryDialog from "./dialogs/add-new-category-dialog";
 import AddNewBrandDialog from "./dialogs/add-new-brand-dialog";

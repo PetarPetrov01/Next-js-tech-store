@@ -1,7 +1,7 @@
 "use client";
 
 import { Brands } from "@/types/Product";
-import { getBrandsByCategory } from "../lib/data";
+import { getBrandsByCategory } from "@/app/lib/data/category";
 import BrandFilter from "./BrandFilter";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";

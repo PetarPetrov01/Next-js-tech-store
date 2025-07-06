@@ -1,6 +1,7 @@
 import PostProductForm from "@/app/components/product/post-product-form";
 import Banner from "@/app/components/ui/banner";
-import { getCategories, getProduct } from "@/app/lib/data";
+import { getCategories } from "@/app/lib/data/category";
+import { getProduct } from "@/app/lib/data/product";
 
 export default async function EditPage({ params }: { params: { id: string } }) {
   const categories = await getCategories();

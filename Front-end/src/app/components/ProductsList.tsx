@@ -9,7 +9,7 @@ import { ProductListSkeleton } from "./ui/loaders/skeletons";
 
 import useMounted from "@/hooks/useMounted";
 import { parseSearchParams } from "../utils/parseSearchParams";
-import { getProducts } from "../lib/data";
+import { getProducts } from "@/app/lib/data/product";
 
 const emptyArr = new Array(3).fill("");
 

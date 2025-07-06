@@ -1,5 +1,5 @@
 import ProductImages from "@/app/components/ProductImages";
-import { getProduct } from "@/app/lib/data";
+import { getProduct } from "@/app/lib/data/product";
 import ProductForm from "@/app/components/product/product-form";
 import Banner from "@/app/components/ui/banner";
 

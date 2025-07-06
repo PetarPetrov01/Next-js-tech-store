@@ -1,5 +1,5 @@
 import ManageProductImages from "@/app/components/product/manage-images";
-import { getProductImages } from "@/app/lib/data";
+import { getProductImages } from "@/app/lib/data/product";
 import { cookies } from "next/headers";
 
 export default async function ProductImagesPage({

@@ -1,6 +1,6 @@
 import PostProductForm from "@/app/components/product/post-product-form";
 import Banner from "@/app/components/ui/banner";
-import { getCategories } from "@/app/lib/data";
+import { getCategories } from "@/app/lib/data/category";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
