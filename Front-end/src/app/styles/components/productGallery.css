@@ -4,7 +4,7 @@
             @apply transition-colors duration-150 relative;
             &::before{
                 content: '';
-                @apply absolute top-1/2 left-1/2 w-3/4 h-3/4 bg-slate-500/40 z-[-1] opacity-0 duration-150 -translate-x-[50%] -translate-y-[50%];
+                @apply absolute top-1/2 left-1/2 w-3/4 h-3/4 rounded-sm bg-slate-500/40 z-[-1] opacity-0 duration-150 -translate-x-[50%] -translate-y-[50%];
             }
         }
         .swiper-slide:hover{
@@ -17,6 +17,22 @@
             &::before{
                 @apply opacity-100 w-full h-full;
             }
+        }
+
+        .swiper-button-prev,.swiper-button-next{
+            @apply absolute cursor-pointer flex items-center justify-center rounded-full bg-slate-200/60 w-8 h-8 z-[1] top-1/2 -translate-y-1/2 transition-opacity duration-150;
+        }
+        .swiper-button-prev{
+            @apply left-0;
+        }
+        .swiper-button-next{
+            @apply right-0 ;
+            &::svg{
+                @apply rotate-180;
+            }
+        }
+        .swiper-button-disabled{
+            @apply opacity-0 pointer-events-none;
         }
     }
 }

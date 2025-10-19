@@ -1,4 +1,4 @@
-import ProductImages from "@/app/components/ProductImages";
+import ProductGallery from "@/components/ProductGallery";
 import { getProduct } from "@/app/lib/data/product";
 import ProductForm from "@/app/components/product/product-form";
 import Banner from "@/app/components/ui/banner";
@@ -19,7 +19,7 @@ export default async function ProductDetails({
       <section className="w-full flex justify-center md:min-h-screen">
         <div className="container py-10 px-4 flex flex-col md:flex-row md:justify-between lg:justify-around gap-2 md:gap-[2%] xl:gap-4 items-center md:items-start">
           <article className="md:flex-shrink-0 w-[90%] sm:w-[80%] md:w-[48%] lg:w-[540px] xl:w-[610px]">
-            <ProductImages
+            <ProductGallery
               ownerId={product.ownerId}
               images={
                 product.images?.length > 0 ? product.images.map((img) => img.url) : ["/no-image.png"]
