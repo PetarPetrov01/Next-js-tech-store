@@ -6,5 +6,21 @@
   "arrowParens": "always",
   "bracketSpacing": true,
   "endOfLine": "lf",
-  "printWidth": 120
+  "printWidth": 120,
+  "plugins": ["prettier-plugin-tailwindcss", "@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "@/zodSchemas/postProductSchema",
+    "@/contexts/(.*)$",
+    "@/hooks/(.*)$",
+    "",
+    "@/components/(.*)$",
+    "",
+    "<TYPES>",
+    "@/types/(.*)$",
+    "",
+    "^[./]"
+  ]
 }
