@@ -1,87 +1,41 @@
-import { useThrottle } from "@/hooks/useThrottle";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { RiImageEditFill } from "react-icons/ri";
+import Image from 'next/image'
+import Link from 'next/link'
+import React, { useState } from 'react'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import { RiImageEditFill } from 'react-icons/ri'
+import { Thumbs } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
-const IMAGE_CONTAINER_WIDTH_IN_PERCENT = 23.5 / 100;
-const IMAGES_GAP_IN_PERCENT = 2 / 100;
+import type { Swiper as SwiperType } from 'swiper'
 
 export default function DesktopProductImages({
   images,
   isOwner,
   pathname,
 }: {
-  images: string[];
-  isOwner: boolean;
-  pathname: string;
+  images: string[]
+  isOwner: boolean
+  pathname: string
 }) {
-  const [displayImageIndex, setDisplayImageIndex] = useState(0);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const [currentScrollPage, setCurrentScrollPage] = useState(1);
-
-  const totalImages = images.length;
-  const scrollPages = useMemo(() => Math.ceil(totalImages / 4), [totalImages]);
-  const changeImageIndex = (index: number) => {
-    setDisplayImageIndex(index);
-  };
-
-  useEffect(() => {
-    if (sliderRef.current) {
-      const sliderWidth = sliderRef.current.clientWidth;
-      const fullPageWidth =
-        (IMAGE_CONTAINER_WIDTH_IN_PERCENT + IMAGES_GAP_IN_PERCENT) *
-        sliderWidth *
-        4;
-
-      let scrollPosition = 0;
-      if (currentScrollPage == scrollPages) {
-        const itemsOnLastPage = totalImages % 4 || 4;
-
-        scrollPosition =
-          fullPageWidth * (currentScrollPage - 2) +
-          itemsOnLastPage * sliderWidth;
-      } else {
-        scrollPosition = fullPageWidth * (currentScrollPage - 1);
-      }
-
-      sliderRef.current.scrollTo({ left: scrollPosition });
-    }
-  }, [currentScrollPage, scrollPages, totalImages]);
-
-  const scrollRight = useThrottle(() => {
-    if (sliderRef.current) {
-      setCurrentScrollPage((prev) => prev + 1);
-    }
-  }, 300);
-
-  const scrollLeft = useThrottle(() => {
-    if (sliderRef.current) {
-      setCurrentScrollPage((prev) => prev - 1);
-    }
-  }, 300);
-
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
-    if (e.deltaX > 0 || e.deltaY > 0) {
-      scrollRight();
-    } else {
-      scrollLeft();
-    }
-  };
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null)
 
   return (
     <>
-      <div className="group relative w-[90%] aspect-[5/4] h-auto flex justify-center">
-        <Image
-          src={images[displayImageIndex] || "/no-image.png"}
-          alt={`image-${displayImageIndex.toString()}`}
-          className="w-[90%] object-contain pointer-events-none"
-          fill={true}
-          sizes="(min-width: 1280px) 549px, (min-width: 1024px) 486px,(min-width: 768px) 42vw, 70vw"
-        />
+      <div className="group relative w-[90%] aspect-[5/4] h-auto flex justify-center"
+      >
+        <Swiper className="w-full"  thumbs={{ swiper: thumbsSwiper }} modules={[Thumbs]}>
+          {images.map((image, index) => (
+            <SwiperSlide key={index}>
+              <Image
+                src={image || '/no-image.png'}
+                alt=''
+                className="w-[90%] object-contain pointer-events-none"
+                fill={true}
+                sizes="(min-width: 1280px) 549px, (min-width: 1024px) 486px,(min-width: 768px) 42vw, 70vw"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
         {isOwner && (
           <Link
             href={`${pathname}/images`}
@@ -92,29 +46,21 @@ export default function DesktopProductImages({
         )}
       </div>
       <div className="relative flex justify-center w-full">
-        {currentScrollPage > 1 && (
-          <button
-            onClick={scrollLeft}
-            className="absolute left-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-1.5 md:p-2 duration-200 hover:bg-neutral-600"
-          >
-            <IoIosArrowBack size={"1.3em"} />
-          </button>
-        )}
-        <div
-          id="slider"
-          ref={sliderRef}
-          onWheel={handleWheel}
-          className="flex gap-[2%] overflow-hidden w-[80%] scroll-smooth touch-none"
+        <Swiper
+          className="w-full thumb-slider"
+          slidesPerView={4}
+          spaceBetween={6}
+          onSwiper={setThumbsSwiper}
+          watchSlidesProgress={true}
+          modules={[Thumbs]}
         >
+          {/* <button className="absolute left-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-1.5 md:p-2 duration-200 hover:bg-neutral-600">
+          <IoIosArrowBack size={'1.3em'} />
+        </button> */}
           {images.map((image, i) => (
-            <div
+            <SwiperSlide
               key={i}
-              onClick={() => changeImageIndex(i)}
-              className={`flex-[0_0_23.5%] p-2 aspect-[5/4] h-auto border-[1px] rounded-md cursor-pointer flex justify-center items-center hover:bg-gray-50/20 duration-75 ${
-                i == displayImageIndex
-                  ? "border-neutral-400"
-                  : "border-transparent"
-              }`}
+              className={'p-2 aspect-[5/4] h-auto border-[1px] border-transparent rounded-md cursor-pointer flex justify-center items-center'}
             >
               <div className="relative w-full h-full">
                 <Image
@@ -126,18 +72,13 @@ export default function DesktopProductImages({
                   className="object-contain pointer-events-none"
                 />
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
-        {currentScrollPage < scrollPages && (
-          <button
-            onClick={scrollRight}
-            className="absolute right-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-1.5 md:p-2 duration-200 hover:bg-neutral-600"
-          >
-            <IoIosArrowForward size={"1.3em"} />
-          </button>
-        )}
+        </Swiper>
+        {/* <button className="absolute right-[4%] top-1/2 -translate-y-1/2 rounded-full bg-neutral-300/20 p-1.5 md:p-2 duration-200 hover:bg-neutral-600">
+          <IoIosArrowForward size={'1.3em'} />
+        </button> */}
       </div>
     </>
-  );
+  )
 }

@@ -1,0 +1,22 @@
+@layer components{
+    .thumb-slider {
+        .swiper-slide{
+            @apply transition-colors duration-150 relative;
+            &::before{
+                content: '';
+                @apply absolute top-1/2 left-1/2 w-3/4 h-3/4 bg-slate-500/40 z-[-1] opacity-0 duration-150 -translate-x-[50%] -translate-y-[50%];
+            }
+        }
+        .swiper-slide:hover{
+            &::before{
+                @apply opacity-100 w-full h-full;
+            }
+        }
+        .swiper-slide-thumb-active{
+            @apply border-slate-200;
+            &::before{
+                @apply opacity-100 w-full h-full;
+            }
+        }
+    }
+}
