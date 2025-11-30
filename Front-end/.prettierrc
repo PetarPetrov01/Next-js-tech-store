@@ -2,12 +2,15 @@
   "tabWidth": 2,
   "useTabs": false,
   "singleQuote": true,
-  "semi": false,
+  "semi": true,
   "arrowParens": "always",
   "bracketSpacing": true,
   "endOfLine": "lf",
   "printWidth": 120,
-  "plugins": ["prettier-plugin-tailwindcss", "@ianvs/prettier-plugin-sort-imports"],
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@ianvs/prettier-plugin-sort-imports"
+  ],
   "importOrder": [
     "<BUILTIN_MODULES>",
     "<THIRD_PARTY_MODULES>",

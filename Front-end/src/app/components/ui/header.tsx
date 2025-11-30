@@ -11,6 +11,7 @@ import useMounted from "@/hooks/useMounted";
 
 import DesktopNav from "./desktop-nav";
 import MobileNav from "./mobile-nav";
+import StickyHeader from "../StickyHeader";
 
 export type Links = { href: string; label: string }[];
 export type LinksObject = {
@@ -59,7 +60,7 @@ export default function Header() {
   }
 
   return (
-    <header className="flex items-center justify-center ">
+    <StickyHeader className="mx-[20px] mt-2 rounded-xl w-[calc(100%-40px)] flex items-center justify-center bg-new-darkblue">
       <div className="container px-12 sm:px-20 py-3 flex justify-between items-center">
         <Link href={"/"} className="relative logo w-24 h-24">
           <Image
@@ -76,6 +77,6 @@ export default function Header() {
           <DesktopNav links={links} user={user} logout={logout} />
         )}
       </div>
-    </header>
+    </StickyHeader >
   );
 }
