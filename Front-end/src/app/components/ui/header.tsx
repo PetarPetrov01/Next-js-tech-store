@@ -60,7 +60,7 @@ export default function Header() {
   }
 
   return (
-    <StickyHeader className="mx-[20px] mt-2 rounded-xl w-[calc(100%-40px)] flex items-center justify-center bg-new-darkblue">
+    <StickyHeader className="mx-[10px] mt-2 rounded-xl w-[calc(100%-20px)] flex items-center justify-center bg-new-darkblue">
       <div className="container px-12 sm:px-20 py-3 flex justify-between items-center">
         <Link href={"/"} className="relative logo w-24 h-24">
           <Image

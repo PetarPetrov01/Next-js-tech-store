@@ -21,7 +21,7 @@
         }
 
         .swiper-button-prev,.swiper-button-next{
-            @apply absolute cursor-pointer flex items-center justify-center rounded-full bg-slate-200/60 w-8 h-8 z-[1] top-1/2 -translate-y-1/2 transition-opacity duration-150;
+            @apply absolute cursor-pointer flex items-center justify-center rounded-full bg-slate-200/60 w-8 h-8 z-1 top-1/2 -translate-y-1/2 transition-opacity duration-150;
         }
         .swiper-button-prev{
             @apply left-0;

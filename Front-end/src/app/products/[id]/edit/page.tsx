@@ -10,7 +10,7 @@ export default async function EditPage({ params }: { params: { id: string } }) {
   return (
     <div className="w-full flex flex-col items-center">
       <Banner>
-        <h1 className="text-black z-[1] uppercase">Edit product</h1>
+        <h1 className="text-black z-1 uppercase">Edit product</h1>
       </Banner>
       <div className="container mx-auto p-8">
         <section className="w-full flex flex-col gap-8 items-center">

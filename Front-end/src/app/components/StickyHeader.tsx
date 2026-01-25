@@ -31,7 +31,7 @@ export default function StickyHeader({
 
   return (
     <header ref={headerRef} className={`sticky z-20 ${cls[stickyState] + transitionCls}`}>
-      <div className={`${className}${overSection ? ' absolute top-0' : ''} w-full`}>{children}</div>
+      <div className={`${className}${overSection ? ' absolute top-0' : ''}`}>{children}</div>
     </header>
   );
 }

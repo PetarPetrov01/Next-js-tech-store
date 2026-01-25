@@ -13,12 +13,12 @@ export default async function ProductDetails({
   return (
     <div className="w-full flex flex-col items-center">
       <Banner>
-        <h1 className="text-black z-[1] uppercase">Product</h1>
+        <h1 className="text-black z-1 uppercase">Product</h1>
       </Banner>
 
       <section className="w-full flex justify-center md:min-h-screen">
         <div className="container py-10 px-4 flex flex-col md:flex-row md:justify-between lg:justify-around gap-2 md:gap-[2%] xl:gap-4 items-center md:items-start">
-          <article className="md:flex-shrink-0 w-[90%] sm:w-[80%] md:w-[48%] lg:w-[540px] xl:w-[610px]">
+          <article className="md:shrink-0 w-[90%] sm:w-[80%] md:w-[48%] lg:w-[540px] xl:w-[610px]">
             <ProductGallery
               ownerId={product.ownerId}
               images={

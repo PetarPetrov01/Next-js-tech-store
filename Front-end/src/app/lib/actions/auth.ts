@@ -1,7 +1,6 @@
 "use server";
 
 import * as bcrypt from "bcrypt";
-import { AuthError } from "next-auth";
 
 import { signIn as nextAuthSignIn, signOut as nextAuthSignOut, auth } from "@/auth";
 import { prisma } from "@/app/lib/config/db-config";
@@ -44,9 +43,11 @@ export async function login(data: {
         image: session.user.image ?? undefined,
       },
     };
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
+  } catch (error: unknown) {
+    // Check if it's a NextAuth error with a type property
+    if (error && typeof error === "object" && "type" in error) {
+      const authError = error as { type: string };
+      switch (authError.type) {
         case "CredentialsSignin":
           return { error: { message: "Invalid email or password" }, result: null };
         default:

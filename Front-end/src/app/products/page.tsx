@@ -21,7 +21,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   return (
     <div className="w-full flex flex-col items-center">
       <Banner>
-        <h1 className="text-black z-[1] uppercase">Catalog</h1>
+        <h1 className="text-black z-1 uppercase">Catalog</h1>
       </Banner>
 
       <section className="container max-w-[1450px] flex flex-col items-center py-20 px-4">

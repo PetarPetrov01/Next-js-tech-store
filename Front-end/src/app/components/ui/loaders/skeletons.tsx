@@ -1,5 +1,5 @@
 const animateSkeletonClasses =
-  "animate-skeleton-load bg-gradient-to-r from-transparent via-neutral-300/15 to-transparent";
+  "animate-skeleton-load bg-linear-to-r from-transparent via-neutral-300/15 to-transparent";
 
 const productCardContentDimensions: {
   width: { gridWidth: string; listWidth: string };
@@ -13,7 +13,7 @@ const productCardContentDimensions: {
 
 export function ProductImageSkeleton() {
   return (
-    <div className="relative w-full sm:w-[90%] aspect-[5/4] h-auto border-new-mint rounded-md overflow-hidden">
+    <div className="relative w-full sm:w-[90%] aspect-5/4 h-auto border-new-mint rounded-md overflow-hidden">
       <div className={`absolute w-full h-full ${animateSkeletonClasses}`}></div>
     </div>
   );
@@ -21,7 +21,7 @@ export function ProductImageSkeleton() {
 
 export function LayoutToggleSkeleton() {
   return (
-    <div className="relative flex overflow-hidden justify-between border-[1px] border-neutral-200/15 w-24 h-12 mdl:w-20 mdl:h-10">
+    <div className="relative flex overflow-hidden justify-between border border-neutral-200/15 w-24 h-12 mdl:w-20 mdl:h-10">
       {["", ""].map((_, i) => (
         <div
           key={i}
@@ -45,7 +45,7 @@ export function ProductListSkeleton({ viewType }: { viewType: string }) {
       }  flex flex-col gap-5 rounded-sm overflow-hidden`}
     >
       <div
-        className={`absolute left-0 top-0 -z-0 w-full h-full ${animateSkeletonClasses}`}
+        className={`absolute left-0 top-0 z-0 w-full h-full ${animateSkeletonClasses}`}
       ></div>
       <div
         className={`${
@@ -55,7 +55,7 @@ export function ProductListSkeleton({ viewType }: { viewType: string }) {
         <div
           className={` ${
             viewType == "grid" ? "w-full self-center" : ""
-          } relative z-10 bg-new-darkblue w-[92%] aspect-[4/3] h-auto`}
+          } relative z-10 bg-new-darkblue w-[92%] aspect-4/3 h-auto`}
         ></div>
       </div>
       <div
@@ -101,7 +101,7 @@ export function ManageImagesListSkeleton({ viewType }: { viewType: string }) {
   return new Array(viewType == "big" ? 3 : 5).fill("").map((_, i) => (
     <div
       key={i}
-      className={`relative z-10 overflow-hidden bg-transparent bg-new-darkblue group h-auto aspect-[4/3] p-4 rounded-lg ${
+      className={`relative z-10 overflow-hidden bg-new-darkblue group h-auto aspect-4/3 p-4 rounded-lg ${
         viewType == "big"
           ? "flex-[0_0_100%] sm:flex-[0_0_48%] mdl:flex-[0_0_32%]"
           : "flex-[0_0_48%] sm:flex-[0_0_32%] mdl:flex-[0_0_19.2%]"
