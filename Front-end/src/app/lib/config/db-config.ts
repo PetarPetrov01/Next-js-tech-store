@@ -1,9 +1,19 @@
-import { PrismaClient} from "@prisma/client"
+import { PrismaClient } from "@prisma/client";
+
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 const globalPrismaClient = globalThis as unknown as { prisma: PrismaClient };
 
-export const prisma = globalPrismaClient.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== "production") globalPrismaClient.prisma = prisma;
+export const prisma = globalPrismaClient.prisma || new PrismaClient({
+  adapter: new PrismaPg(new Pool({
+    connectionString: process.env.DATABASE_URL,
+  })),
+});
+
+if (process.env.NODE_ENV !== "production") {
+  globalPrismaClient.prisma = prisma;
+}
 
 export default async function dbConfig(): Promise<void> {
   try {

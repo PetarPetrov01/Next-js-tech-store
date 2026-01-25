@@ -1,10 +1,66 @@
+@import "tailwindcss";
+
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import './components/productGallery.css';
 
-@tailwind base;
-@tailwind components;
+/* Tailwind CSS v4 Theme Configuration */
+@theme {
+  /* Custom Colors */
+  --color-darkblue: #03045e;
+  --color-lightblue: #00b4d8;
+  --color-purple: #cb00bb;
+  --color-pink: #ff0198;
+  --color-green: #88d42b;
+  
+  /* New Color Palette */
+  --color-new-darkblue: #050421;
+  --color-new-midnight-80: #091349b5;
+  --color-new-midnight-90: #091349e5;
+  --color-new-midnight-100: #091349;
+  --color-new-sandstone: #d9b08c;
+  --color-new-peach-80: #fcc188b5;
+  --color-new-peach-90: #fcc188e5;
+  --color-new-peach-100: #fcc188;
+  --color-new-mint: #e4e8f7;
+  
+  /* Custom Animations */
+  --animate-fast-bounce: bounceFast 0.7s infinite;
+  --animate-fill-right: fillRight ease-in 0.7s forwards;
+  --animate-skeleton-load: skeletonLoad linear 1s infinite;
+  
+  /* Custom Screens */
+  --breakpoint-mdl: 940px;
+  
+  /* Custom Font Families */
+  --font-source-sans: var(--font-source-sans);
+  --font-playfair-display: var(--font-playfair-display);
+  
+  /* Custom Background Images */
+  --bg-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --bg-gradient-conic: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
+}
+
+@import "tailwindcss/preflight";
 @tailwind utilities;
 
+/* Keyframes for custom animations */
+@keyframes bounceFast {
+  0%, 100% { transform: translateY(-35%); }
+  50% { transform: none; }
+}
+
+@keyframes fillRight {
+  0% { width: 0; height: 100%; }
+  40% { width: 30%; height: 100%; }
+  60% { width: 80%; height: 100%; }
+  100% { width: 100%; height: 100%; }
+}
+
+@keyframes skeletonLoad {
+  0% { left: -100%; }
+  75% { left: 100%; }
+  100% { left: 100%; }
+}
 
 :root {
   --foreground-rgb: 228, 232, 247;
@@ -18,7 +74,7 @@
     --background-start-rgb: 5, 4, 33;
     --background-end-rgb: 5, 4, 33;
   }
-}
+} 
 
 body {
   color: rgb(var(--foreground-rgb));

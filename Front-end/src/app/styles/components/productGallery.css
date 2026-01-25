@@ -1,3 +1,4 @@
+@reference "tailwindcss";
 @layer components{
     .thumb-slider {
         .swiper-slide{
@@ -27,7 +28,7 @@
         }
         .swiper-button-next{
             @apply right-0 ;
-            &::svg{
+            & svg{
                 @apply rotate-180;
             }
         }
