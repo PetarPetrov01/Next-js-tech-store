@@ -7,6 +7,8 @@ const nextConfig = {
       { protocol: "https", hostname: "laptop.bg" },
     ],
   },
+  // Required for bcrypt and other native modules
+  serverExternalPackages: ["bcrypt"],
 };
 
 export default nextConfig;
