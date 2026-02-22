@@ -4,9 +4,10 @@ import { getProductImages } from "@/app/lib/data/product";
 export default async function ProductImagesPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const product = await getProductImages(params.id);
+  const { id } = await params;
+  const product = await getProductImages(id);
 
   return (
     <section className="flex w-full justify-center md:min-h-screen">

@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Skill(taches-cc-resources:run-prompt)"
+      "Skill(taches-cc-resources:run-prompt)",
+      "Bash(cd:*)",
+      "Bash(tail:*)",
+      "Bash(curl:*)",
+      "Bash(head:*)",
+      "Bash(grep:*)",
+      "Bash(grep AuthProvider:*)"
     ]
   }
 }

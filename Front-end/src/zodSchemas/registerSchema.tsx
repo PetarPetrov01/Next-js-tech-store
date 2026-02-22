@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export const emailSchema = z
+  .string()
+  .trim()
+  .min(1, { message: "Email is required" })
+  .email({ message: "Invalid email" });
+
 export const UserRegisterSchema = z
   .object({
     firstName: z
@@ -12,11 +18,7 @@ export const UserRegisterSchema = z
       .trim()
       .min(1, { message: "Last name is required" })
       .min(3, { message: "Last name must be atleast 3 characters long" }),
-    email: z
-      .string()
-      .trim()
-      .min(1, { message: "Email is required" })
-      .email({ message: "Invalid email" }),
+    email: emailSchema,
     username: z
       .string()
       .trim()

@@ -6,9 +6,10 @@ import Banner from "@/app/components/ui/banner";
 export default async function ProductDetails({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const product = await getProduct(params.id);
+  const { id } = await params;
+  const product = await getProduct(id);
 
   return (
     <div className="w-full flex flex-col items-center">

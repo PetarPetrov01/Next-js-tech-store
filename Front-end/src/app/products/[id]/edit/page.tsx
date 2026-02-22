@@ -3,9 +3,10 @@ import Banner from "@/app/components/ui/banner";
 import { getCategories } from "@/app/lib/data/category";
 import { getProduct } from "@/app/lib/data/product";
 
-export default async function EditPage({ params }: { params: { id: string } }) {
+export default async function EditPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const categories = await getCategories();
-  const product = await getProduct(params.id);
+  const product = await getProduct(id);
 
   return (
     <div className="w-full flex flex-col items-center">

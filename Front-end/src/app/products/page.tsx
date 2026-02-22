@@ -10,8 +10,9 @@ export const metadata: Metadata = {
   title: "Products",
 };
 
-export default async function Page({ searchParams }: { searchParams: any }) {
-  const category = searchParams.category;
+export default async function Page({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedParams = await searchParams;
+  const category = resolvedParams.category;
   const categories = await getCategories();
 
   if (category && !categories.some((cat) => cat.id == category)) {
