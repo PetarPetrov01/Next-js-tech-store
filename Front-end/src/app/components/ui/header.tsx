@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 import { useAuthContext } from "@/contexts/AuthProvider";
+import { logout as authLogout } from "@/app/lib/actions/auth";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import useMounted from "@/hooks/useMounted";
 
@@ -42,19 +43,10 @@ export default function Header() {
 
   async function logout() {
     try {
-      const res = await fetch("http://localhost:3001/api/auth/logout", {
-        credentials: "include",
-        cache: "no-cache",
-      });
-
-      if (res.ok) {
-        const result = await res.json();
-        clearAuth();
-        router.replace("/");
-      } else {
-        throw new Error(await res.json());
-      }
+      clearAuth();
+      await authLogout();
     } catch (error: any) {
+      // authLogout triggers a redirect which may throw
       console.log(error.message);
     }
   }

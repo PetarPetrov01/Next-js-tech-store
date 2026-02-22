@@ -1,13 +1,12 @@
 import { redirect } from "next/navigation";
 import CartOrder from "../components/cart/cart-order";
 import CartProducts from "../components/cart/cart-products";
-import { checkAuth } from "../utils/checkAuth";
-import { cookies } from "next/headers";
+import { auth } from "@/auth";
 
 export default async function CartPage() {
-  const isLogged = await checkAuth(cookies().toString());
+  const session = await auth();
 
-  if (!isLogged) redirect("/login");
+  if (!session?.user) redirect("/login");
 
   return (
     <div className="container flex justify-center m-auto p-5">
