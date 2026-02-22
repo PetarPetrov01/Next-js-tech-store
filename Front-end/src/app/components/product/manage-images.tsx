@@ -7,6 +7,7 @@ import { useMemo, useState, useRef } from "react";
 import { FaRegSquare, FaSquare, FaSquareCheck, FaXmark } from "react-icons/fa6";
 import { BiSolidGridAlt, BiSolidGrid } from "react-icons/bi";
 
+import { deleteProductImages } from "@/app/lib/actions/image";
 import DeleteImagesDialog from "./dialogs/delete-images-dialog";
 import LayoutToggle from "./product-layout-toggle";
 import { ProductWithImages } from "@/types/Product";
@@ -57,26 +58,17 @@ export default function ManageProductImages({
   const handleDeleteImages = async () => {
     setIsLoading(true);
 
-    const res = await fetch(
-      `http://localhost:3001/api/products/${product.id}/images`,
-      {
-        method: "delete",
-        body: JSON.stringify({ images: selectedImageURLs }),
-        headers: { "Content-type": "application/json" },
-        credentials: "include",
-      }
-    );
+    const { error, result } = await deleteProductImages(product.id, selectedImageURLs);
 
-    if (!res.ok) {
-      console.log("Failed");
+    if (error) {
+      console.error(error.message);
+      setIsLoading(false);
       return;
     }
 
-    const remainingImageUrls = await res.json();
-
     setSelectedImageURLs([]);
     setIsLoading(false);
-    setImages(remainingImageUrls || []);
+    setImages(result || []);
   };
 
   return (

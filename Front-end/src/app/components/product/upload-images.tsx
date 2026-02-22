@@ -4,7 +4,8 @@ import Image from "next/image";
 import { FaXmark } from "react-icons/fa6";
 import { formatDataSize } from "@/app/utils/formatDataSize";
 import { ButtonLoaderWrapper } from "../ui/loaders/button-loader";
-import { uploadImages } from "@/app/lib/actions/product";
+import { uploadMultipleToCloudinary } from "@/app/lib/utils/cloudinary-client";
+import { saveProductImages } from "@/app/lib/actions/image";
 
 const IMAGE_MAX_SIZE = 1024 * 1024 * 3;
 const MAX_FILES = 7;
@@ -94,27 +95,26 @@ export default function UploadImages({
     setError("");
     setIsLoading(true);
 
-    const data = uploadedImages;
+    try {
+      const urls = await uploadMultipleToCloudinary(uploadedImages, "tech-store/products");
 
-    const formData = new FormData();
-    if (data && data.length > 0) {
-      data.forEach((file) => formData.append("images", file));
-    }
+      const { result, error } = await saveProductImages(productId, urls);
 
-    const { result, error } = await uploadImages(productId, formData);
+      if (error) {
+        setIsLoading(false);
+        setError(error.message);
+        return;
+      }
 
-    if (error) {
+      if (result) {
+        setImages(result);
+        setIsLoading(false);
+        setRejectedFiles([]);
+        setUploadedImages([]);
+      }
+    } catch (err: any) {
       setIsLoading(false);
-      setError(error.message);
-      return;
-    }
-
-    if (result) {
-      const { images } = result;
-      setImages(images.map((image) => ({ id: image.id, url: image.url })));
-      setIsLoading(false);
-      setRejectedFiles([]);
-      setUploadedImages([]);
+      setError(err.message || "Upload failed");
     }
   };
 

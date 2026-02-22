@@ -17,6 +17,7 @@ import {
 } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { ButtonLoaderWrapper } from "../../ui/loaders/button-loader";
+import { createBrand } from "@/app/lib/actions/brand";
 
 export default function AddNewBrandDialog({
   open = false,
@@ -73,21 +74,14 @@ export default function AddNewBrandDialog({
 
     setIsLoading(true);
 
-    const res = await fetch("http://localhost:3001/api/brands", {
-      method: "post",
-      body: JSON.stringify({ name: brand }),
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
+    const { error, result } = await createBrand(brand);
 
-    if (!res.ok) {
-      const err = await res.json();
-      setError(err.message);
+    if (error) {
+      setError(error.message);
       setIsLoading(false);
       return;
     }
 
-    const result = await res.json();
     setIsLoading(false);
     router.refresh();
     onAddNewBrand(result.id);

@@ -17,6 +17,7 @@ import {
 } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { ButtonLoaderWrapper } from "../../ui/loaders/button-loader";
+import { createCategory } from "@/app/lib/actions/category";
 
 export default function AddNewCategoryDialog({
   open = false,
@@ -73,22 +74,14 @@ export default function AddNewCategoryDialog({
 
     setIsLoading(true);
 
-    const res = await fetch("http://localhost:3001/api/products/category", {
-      method: "post",
-      body: JSON.stringify({ name: category }),
-      headers: { "Content-Type": "application/json" },
-      credentials: 'include',
-      cache: "no-store",
-    });
+    const { error, result } = await createCategory(category);
 
-    if (!res.ok) {
-      const err = await res.json();
-      setError(err.message);
+    if (error) {
+      setError(error.message);
       setIsLoading(false);
       return;
     }
 
-    const result = await res.json();
     router.refresh();
     setIsLoading(false);
     onAddNewCategory(result);
