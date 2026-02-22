@@ -11,8 +11,6 @@ import { prisma } from '../config/db-config'
 import { Prisma } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
-const baseUrl = 'http://localhost:3001/api'
-
 const getOrderByClause = (sortParam: any) => {
   if (!sortParam) {
     return { name: 'asc' } as Prisma.ProductOrderByWithRelationInput
@@ -87,18 +85,20 @@ export const getProducts = async (searchParams: ProductQueryParams): Promise<API
   }))
 }
 
-export const getProductImages = async (prodId: string, cookie: string): Promise<ProductWithImages> => {
-  const res = await fetch(`${baseUrl}/products/${prodId}/images`, {
-    headers: { Cookie: cookie },
-    cache: 'no-cache',
+export const getProductImages = async (prodId: string): Promise<ProductWithImages> => {
+  const product = await prisma.product.findUnique({
+    where: { id: prodId },
+    select: {
+      id: true,
+      ownerId: true,
+      name: true,
+      images: { select: { id: true, url: true } },
+    },
   })
 
-  if (!res.ok) {
-    const error = await res.json()
+  if (!product) {
     redirect('/login')
   }
-
-  const product = await res.json()
 
   return product
 }

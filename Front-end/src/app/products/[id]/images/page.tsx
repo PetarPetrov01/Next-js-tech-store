@@ -1,15 +1,12 @@
 import ManageProductImages from "@/app/components/product/manage-images";
 import { getProductImages } from "@/app/lib/data/product";
-import { cookies } from "next/headers";
 
 export default async function ProductImagesPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const cookie = cookies().toString();
-
-  const product = await getProductImages(params.id, cookie);
+  const product = await getProductImages(params.id);
 
   return (
     <section className="flex w-full justify-center md:min-h-screen">
