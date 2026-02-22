@@ -5,6 +5,7 @@ import 'swiper/css'
 
 import { Playfair_Display, PT_Serif, Source_Sans_3 } from 'next/font/google'
 
+import { auth } from '@/auth'
 import { AuthProvider } from '@/contexts/AuthProvider'
 
 import Footer from './components/ui/footer'
@@ -29,17 +30,29 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await auth()
+  const user = session?.user
+    ? {
+        id: session.user.id ?? '',
+        email: session.user.email ?? '',
+        username: session.user.username ?? '',
+        firstName: session.user.firstName ?? '',
+        lastName: session.user.lastName ?? '',
+        image: session.user.image ?? undefined,
+      }
+    : null
+
   return (
     <html lang="en">
       <body
         className={`${sourseSans.className} ${playfairDisplay.variable} ${sourseSans.variable} flex flex-col min-h-[100vh]`}
       >
-        <AuthProvider>
+        <AuthProvider initialUser={user}>
           <Header />
           <main className="bg-new-darkblue flex-1 flex justify-center">{children}</main>
           <Footer />

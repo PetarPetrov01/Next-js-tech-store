@@ -1,6 +1,5 @@
 "use client";
 
-import { checkAuth } from "@/app/utils/checkAuth";
 import { User } from "@/types/User";
 import {
   ReactNode,
@@ -36,24 +35,31 @@ interface AuthHandlersInterface {
 
 interface AuthInterface extends AuthDataInterface, AuthHandlersInterface {}
 
-const initialState: ReducerState = {
-  user: {
-    id: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    username: "",
-  },
-};
-
 export const AuthContext = createContext<AuthInterface | null>(null);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+export const AuthProvider = ({
+  children,
+  initialUser,
+}: {
+  children: ReactNode;
+  initialUser: User | null;
+}) => {
+  const [state, dispatch] = useReducer(authReducer, { user: initialUser });
+
+  // Sync server-provided initialUser into reducer state.
+  // After redirect (e.g. login/logout), the layout re-renders server-side
+  // with a new initialUser, but useReducer ignores prop changes after mount.
+  useEffect(() => {
+    if (initialUser) {
+      dispatch({ type: ActionTypes.SETAUTH, payload: initialUser });
+    } else {
+      dispatch({ type: ActionTypes.CLEARAUTH });
+    }
+  }, [initialUser?.id]);
 
   const data: AuthDataInterface = useMemo(() => {
     return {
-      user: { ...state.user! },
+      user: state.user ? { ...state.user } : null,
     };
   }, [state]);
 
@@ -64,20 +70,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       },
       clearAuth: () => dispatch({ type: ActionTypes.CLEARAUTH }),
     };
-  }, []);
-
-  useEffect(() => {
-    const initAuth = async () => {
-      
-      const user = await checkAuth();
-      if (user) {
-        dispatch({ type: ActionTypes.SETAUTH, payload: user });
-      } else {
-        dispatch({ type: ActionTypes.CLEARAUTH });
-      }
-    };
-
-    initAuth();
   }, []);
 
   const context = {
