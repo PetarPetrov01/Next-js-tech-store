@@ -1,17 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { NextFont } from "next/dist/compiled/@next/font";
 
-import { HTMLAttributes, useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { LoginSchemaType, UserLoginSchema } from "@/zodSchemas/loginSchema";
 
 import { login } from "@/app/lib/actions/auth";
-import { checkAuth } from "@/app/utils/checkAuth";
-import { useAuthContext } from "@/contexts/AuthProvider";
 import { ButtonLoaderWrapper } from "../ui/loaders/button-loader";
 
 const inputWrapperPseudoClasses =
@@ -21,21 +18,6 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const formRef = useRef<HTMLFormElement>(null);
-  const { setAuth, clearAuth, user } = useAuthContext();
-  const router = useRouter();
-
-  useLayoutEffect(() => {
-    if (user?.email) {
-      const initAuth = async () => {
-        const user = await checkAuth();
-        if (!user?.email) {
-          clearAuth();
-        }
-      };
-
-      initAuth();
-    }
-  }, []);
 
   const {
     register,
@@ -53,19 +35,14 @@ export default function LoginForm({ ptSerif }: { ptSerif: NextFont }) {
   const processSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
 
-    const { error, result } = await login(data);
+    const result = await login(data);
 
-    if (error) {
-      setError("root.apiError", error);
-      setIsLoading(false);
-      return;
+    // If login returns, it means there was an error
+    // (success redirects and never returns)
+    if (result?.error) {
+      setError("root.apiError", result.error);
     }
-
-    if (result) {
-      setAuth(result);
-      setIsLoading(false);
-      router.back();
-    }
+    setIsLoading(false);
   });
 
   return (

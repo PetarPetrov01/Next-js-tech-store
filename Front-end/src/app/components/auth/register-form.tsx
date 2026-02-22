@@ -1,19 +1,18 @@
 "use client";
 
 import { NextFont } from "next/dist/compiled/@next/font";
-import { useRouter } from "next/navigation";
 
 import { useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useAuthContext } from "@/contexts/AuthProvider";
 import { checkEmail, registerUser } from "@/app/lib/actions/auth";
 import useDebouncedEffect from "@/hooks/useDebouncedEffect";
 
 import {
   RegisterSchemaType,
   UserRegisterSchema,
+  emailSchema,
 } from "@/zodSchemas/registerSchema";
 import { ButtonLoaderWrapper } from "../ui/loaders/button-loader";
 
@@ -23,8 +22,6 @@ const inputWrapperPseudoClasses =
 export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const router = useRouter();
-  const { setAuth } = useAuthContext();
 
   const {
     formState: { errors, dirtyFields, isValid },
@@ -50,8 +47,7 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
   useDebouncedEffect(
     () => {
       if (watchedEmail.length > 6) {
-        const emailCheck =
-          UserRegisterSchema._def.schema.shape.email.safeParse(watchedEmail);
+        const emailCheck = emailSchema.safeParse(watchedEmail);
         if (emailCheck.success) {
           (async () => {
             const { error, isFree } = await checkEmail(watchedEmail);
@@ -71,19 +67,14 @@ export default function RegisterForm({ ptSerif }: { ptSerif: NextFont }) {
     setIsLoading(true);
 
     const { repassword, ...registerData } = data;
-    const { error, result } = await registerUser(registerData);
+    const result = await registerUser(registerData);
 
-    if (error) {
-      setError("root.apiError", error);
-      setIsLoading(false);
-      return;
+    // If registerUser returns, it means there was an error
+    // (success redirects and never returns)
+    if (result?.error) {
+      setError("root.apiError", result.error);
     }
-
-    if (result) {
-      setAuth(result);
-      setIsLoading(false);
-      router.replace("/");
-    }
+    setIsLoading(false);
   });
 
   return (
