@@ -2,7 +2,9 @@
 
 import * as bcrypt from "bcrypt";
 
+import { AuthError } from "next-auth";
 import { signIn as nextAuthSignIn, signOut as nextAuthSignOut, auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { prisma } from "@/app/lib/config/db-config";
 
 import { User } from "@/types/User";
@@ -12,51 +14,29 @@ import { FormattedError } from "@/types/Errors";
 const SALT_ROUNDS = 10;
 
 /**
- * Sign in with credentials (email/password)
+ * Sign in with credentials (email/password).
+ * On success, redirects to "/" (the redirect triggers a server render where
+ * auth() can read the newly-set session cookie).
+ * Only returns on error.
  */
 export async function login(data: {
   email: string;
   password: string;
-}): Promise<{ error: FormattedError | null; result: User | null }> {
+}): Promise<{ error: FormattedError }> {
   try {
     await nextAuthSignIn("credentials", {
       email: data.email,
       password: data.password,
       redirect: false,
     });
-
-    // Get the session to return user data
-    const session = await auth();
-
-    if (!session?.user) {
-      return { error: { message: "Failed to get user session" }, result: null };
-    }
-
-    return {
-      error: null,
-      result: {
-        id: session.user.id,
-        email: session.user.email,
-        username: session.user.username,
-        firstName: session.user.firstName,
-        lastName: session.user.lastName,
-        image: session.user.image ?? undefined,
-      },
-    };
   } catch (error: unknown) {
-    // Check if it's a NextAuth error with a type property
-    if (error && typeof error === "object" && "type" in error) {
-      const authError = error as { type: string };
-      switch (authError.type) {
-        case "CredentialsSignin":
-          return { error: { message: "Invalid email or password" }, result: null };
-        default:
-          return { error: { message: "Authentication failed" }, result: null };
-      }
+    if (error instanceof AuthError) {
+      return { error: { message: "Invalid email or password" } };
     }
-    // Re-throw if it's a redirect (NextAuth handles redirects via errors)
+    // Re-throw non-auth errors (e.g. redirects)
     throw error;
   }
+  redirect("/");
 }
 
 /**
@@ -74,11 +54,13 @@ export async function logout() {
 }
 
 /**
- * Register a new user and sign them in
+ * Register a new user and sign them in.
+ * On success, redirects to "/".
+ * Only returns on error.
  */
 export async function registerUser(
   data: RegisterData
-): Promise<{ error: FormattedError | null; result: User | null }> {
+): Promise<{ error: FormattedError }> {
   try {
     // Check if email already exists
     const existingUser = await prisma.user.findUnique({
@@ -86,14 +68,14 @@ export async function registerUser(
     });
 
     if (existingUser) {
-      return { error: { message: "This email is already taken" }, result: null };
+      return { error: { message: "This email is already taken" } };
     }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
 
     // Create new user
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email: data.email,
         firstName: data.firstName,
@@ -109,25 +91,14 @@ export async function registerUser(
       password: data.password,
       redirect: false,
     });
-
-    return {
-      error: null,
-      result: {
-        id: newUser.id,
-        email: newUser.email,
-        username: newUser.username,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        image: newUser.image ?? undefined,
-      },
-    };
   } catch (error: unknown) {
     console.error("Registration error:", error);
     if (error instanceof Error) {
-      return { error: { message: error.message }, result: null };
+      return { error: { message: error.message } };
     }
-    return { error: { message: "Registration failed" }, result: null };
+    return { error: { message: "Registration failed" } };
   }
+  redirect("/");
 }
 
 /**
